@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B82128B8-B262-4C08-AB1B-41BA376BC5E7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BowlKitchen</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6D13172475F3C85960FC60008CD558869F067527</key>
+		<string>https://github.com/greenorangeSeven/BowlKitchen.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BowlKitchen.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6D13172475F3C85960FC60008CD558869F067527</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/greenorangeSeven/BowlKitchen.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6D13172475F3C85960FC60008CD558869F067527</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6D13172475F3C85960FC60008CD558869F067527</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BowlKitchen</string>
+		</dict>
+	</array>
+</dict>
+</plist>
