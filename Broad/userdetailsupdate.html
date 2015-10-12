@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-theme.min.css">
+    <link rel="stylesheet" href="normalize.css">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div
+        {
+        padding: 0;
+        }
+
+        .Absolute-Center {
+        height: 30%;
+        width: 30%;
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        }
+
+        .text-vertical-center
+        {
+        margin-right: auto;
+        margin-left: auto;
+        vertical-align: middle;
+        }
+
+        .mytxt {
+        color:#333;
+        line-height:normal;
+        font-family:"Microsoft YaHei",Tahoma,Verdana,SimSun;
+        font-style:normal;
+        font-variant:normal;
+        font-size-adjust:none;
+        font-stretch:normal;
+        font-weight:normal;
+        margin-top:0px;
+        margin-bottom:0px;
+        margin-left:0px;
+        padding-top:4px;
+        padding-right:4px;
+        padding-bottom:4px;
+        padding-left:4px;
+        font-size:15px;
+        outline-width:medium;
+        outline-style:none;
+        outline-color:invert;
+        border-top-left-radius:3px;
+        border-top-right-radius:3px;
+        border-bottom-left-radius:3px;
+        border-bottom-right-radius:3px;
+        text-shadow:0px 1px 2px #fff;
+        background-attachment:scroll;
+        background-repeat:repeat-x;
+        background-position-x:left;
+        background-position-y:top;
+        background-size:auto;
+        background-origin:padding-box;
+        background-clip:border-box;
+        background-color:rgb(255,255,255);
+        margin-right:8px;
+        border-top-color:#ccc;
+        border-right-color:#ccc;
+        border-bottom-color:#ccc;
+        border-left-color:#ccc;
+        border-top-width:1px;
+        border-right-width:1px;
+        border-bottom-width:1px;
+        border-left-width:1px;
+        border-top-style:solid;
+        border-right-style:solid;
+        border-bottom-style:solid;
+        border-left-style:solid;
+        }
+        .mytxt:focus {
+        border: 1px solid #fafafa;
+        -webkit-box-shadow: 0px 0px 6px #007eff;
+        -moz-box-shadow: 0px 0px 5px #007eff;
+        box-shadow: 0px 0px 5px #007eff;
+
+        }
+    </style>
+
+
+    <script type="text/javascript">
+        /**
+         * 将json对象根据属性名找到相应控件并设置
+         * @param userDetails
+         */
+        function bindData(userDetails)
+        {
+            for(var item in userDetails)
+            {
+                var tag = document.getElementById(item);
+                if(tag)
+                {
+                    tag.value = userDetails[item];
+                }
+            }
+        }
+
+        function commit()
+        {
+            var inputArray = document.getElementsByName("yuanda");
+            var jsonStr = "{";
+            if(inputArray)
+            {
+                for(var i = 0; i < inputArray.length; ++i)
+                {
+                    jsonStr += "\"";
+                    jsonStr += inputArray[i].id;
+                    jsonStr +="\":\"";
+                    jsonStr +=inputArray[i].value;
+                    jsonStr +="\"";
+                    if(i < inputArray.length - 1)
+                    {
+                        jsonStr += ",";
+                    }
+                    else
+                    {
+                        jsonStr +="}";
+                    }
+                }
+            }
+            else
+            {
+                alert("false");
+            }
+            var str = navigator.userAgent.toString();
+            if (str.indexOf("Android") != -1)
+            {
+                window.commitinterface.commit(jsonStr);
+                return;
+            } else if (str.indexOf("iPhone") != -1)
+            {
+                commitios(jsonStr);
+                return;
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+
+<div class="container" style="margin: 0;padding: 0">
+
+    <div class="row" style="margin: 0;padding: 0">
+        <div class="col-xs-12" style="line-height: 55px;text-align: center;background: #D4EBFE; height: 55px; color: #007DE3; font-size: 18px;">
+            名称地址
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-5"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">用户全名：
+        </div>
+        <div class="col-xs-7"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="PROJ_Name"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-5"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">用户简称：
+        </div>
+        <div class="col-xs-7"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="CustShortName_CN">
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:70px;margin: 0;padding: 0">
+        <div class="col-xs-5"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">地址：
+        </div>
+        <div class="col-xs-7"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="PostalAdd_CN"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-5"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">国家：
+        </div>
+        <div class="col-xs-7"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Country_CN"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-5"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">城市：
+        </div>
+        <div class="col-xs-7"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text" id="City_CN">
+        </div>
+    </div>
+
+    <div class="row" style="margin:0;margin: 0;padding: 0">
+        <div class="col-xs-12" style="line-height: 55px;text-align: center;background: #D4EBFE; height: 55px; color: #007DE3; font-size: 18px;">
+            联系人
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人职务：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Pos"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层办公电话：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Tel"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层办公传真：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Fax"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层手机：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Mobile">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层部门：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Dept">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层家庭地址：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Add">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层家庭邮编：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Zip">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层邮箱：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Decision_Making_Email">
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人职务：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High_Pos"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人电话：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High_Tel"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人手机：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High_Mobile">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人部门：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High_Dept">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人邮箱：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_High_EMail">
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_Midd"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人职务：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="DeptMgmt_Midd_Pos">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人电话：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="DeptMgmt_Midd_Tel">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人手机：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="DeptMgmt_Midd_Mobile">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人部门：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="DeptMgmt_Midd"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人邮箱：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="DeptMgmt_Midd_EMail">
+        </div>
+    </div>
+
+
+    <hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人职务：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom_Pos">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人电话：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom_Tel">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人手机：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom_Mobile">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人部门：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom_Dept">
+        </div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:55px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人邮箱：
+        </div>
+        <div class="col-xs-6"
+             style="text-align: left; top: 25%; margin-left: -28px"><input style="color:#48494a;font-size:13px" name="yuanda" class="mytxt"
+                                                                           type="text"
+                                                                           id="Mgmt_MachRoom_Email">
+        </div>
+    </div>
+</div>
+
+<script src="jquery.min.js" charset="UTF-8"></script>
+<script src="bootstrap.min.js" charset="UTF-8"></script>
+</body>
+</html>

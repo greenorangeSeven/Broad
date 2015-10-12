@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-theme.min.css">
+    <link rel="stylesheet" href="normalize.css">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div {
+        padding: 0;
+        margin: 0;
+        }
+
+        .Absolute-Center {
+        height: 30%;
+        width: 30%;
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        }
+
+        .text-vertical-center {
+        margin-right: auto;
+        margin-left: auto;
+        vertical-align: middle;
+        }
+
+    </style>
+
+
+    <script type="text/javascript">
+        /**
+         * 将json对象根据属性名找到相应控件并设置
+         * @param userDetails
+         */
+        function bindData(userDetails) {
+            for (var item in userDetails) {
+                var tag = document.getElementById(item);
+                if (tag) {
+                    tag.innerText = userDetails[item];
+                }
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+
+<div class="container" style="margin: 0;padding: 0">
+
+    <div class="row" style="margin: 0;padding: 0">
+        <div class="col-xs-12"
+             style="line-height: 55px;text-align: center;background: #D4EBFE; height: 55px; color: #007DE3; font-size: 18px;">
+            名称地址
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">用户全名：
+        </div>
+        <div id="PROJ_Name" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">用户简称：
+        </div>
+        <div id="CustShortName_CN" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">曾用名：
+        </div>
+        <div id="yhcym" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px">
+
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">地址：
+        </div>
+        <div id="PostalAdd_CN" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">国家：
+        </div>
+        <div id="Country_CN" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-4"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">城市：
+        </div>
+        <div id="City_CN" class="col-xs-8"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+
+    <div class="row" style="margin:0;margin: 0;padding: 0">
+        <div class="col-xs-12"
+             style="line-height: 55px;text-align: center;background: #D4EBFE; height: 55px; color: #007DE3; font-size: 18px;">
+            联系人
+        </div>
+    </div>
+
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人：
+        </div>
+        <div id="Decision_Making" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人职务：
+        </div>
+        <div id="Decision_Making_Pos" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人电话：
+        </div>
+        <div id="Decision_Making_Tel" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人手机：
+        </div>
+        <div id="Decision_Making_Mobile" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层负责人部门：
+        </div>
+        <div id="Decision_Making_Dept" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层家庭地址：
+        </div>
+        <div id="Decision_Making_Add" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层家庭邮编：
+        </div>
+        <div id="Decision_Making_Zip" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+    <hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+    <div class="row" style="height:65px;margin: 0;padding: 0">
+        <div class="col-xs-6"
+             style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">决策层邮箱：
+        </div>
+        <div id="Decision_Making_Email" class="col-xs-6"
+             style="text-align: left; top: 30%; margin-left: -28px"></div>
+    </div>
+</div>
+
+
+<hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人：
+    </div>
+    <div id="Mgmt_High" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人职务：
+    </div>
+    <div id="Mgmt_High_Pos" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人电话：
+    </div>
+    <div id="Mgmt_High_Tel" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人手机：
+    </div>
+    <div id="Mgmt_High_Mobile" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人部门：
+    </div>
+    <div id="Mgmt_High_Dept" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">高层负责人邮箱：
+    </div>
+    <div id="Mgmt_High_EMail" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+
+
+<hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人：
+    </div>
+    <div id="Mgmt_Midd" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人职务：
+    </div>
+    <div id="DeptMgmt_Midd_Pos" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人电话：
+    </div>
+    <div id="DeptMgmt_Midd_Tel" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人手机：
+    </div>
+    <div id="DeptMgmt_Midd_Mobile" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人部门：
+    </div>
+    <div id="DeptMgmt_Midd" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">中层负责人邮箱：
+    </div>
+    <div id="DeptMgmt_Midd_EMail" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+
+
+<hr style="background: #DBD9D7; height: 5px; margin:0; width: 100%">
+
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人：
+    </div>
+    <div id="Mgmt_MachRoom" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人职务：
+    </div>
+    <div id="Mgmt_MachRoom_Pos" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人电话：
+    </div>
+    <div id="Mgmt_MachRoom_Tel" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人手机：
+    </div>
+    <div id="Mgmt_MachRoom_Mobile" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人部门：
+    </div>
+    <div id="Mgmt_MachRoom_Dept" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+<hr style="background: #DBD9D7; height: 1px; margin:0; width: 100%">
+<div class="row" style="height:65px;margin: 0;padding: 0">
+    <div class="col-xs-6"
+         style="color: #0081E4;text-align: right; top: 30%; margin-left: -18px">机房负责人邮箱：
+    </div>
+    <div id="Mgmt_MachRoom_Email" class="col-xs-6"
+         style="text-align: left; top: 30%; margin-left: -28px"></div>
+</div>
+</div>
+
+<script src="jquery.min.js" charset="UTF-8"></script>
+<script src="bootstrap.min.js" charset="UTF-8"></script>
+</body>
+</html>
