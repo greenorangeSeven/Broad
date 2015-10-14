@@ -210,11 +210,12 @@
              NSError *error;
              
              NSArray *table = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             imgArray = nil;
              imgArray = [Tool readJsonToObjArray:table andObjClass:[Img class]];
              hud.hidden = YES;
              if(imgArray && imgArray.count > 0)
              {
-                 self.matnRec.imgList = imgArray;
+                 self.matnRec.imgList = [NSMutableArray arrayWithArray:imgArray];
                  self.matnRec.isOld = isOld;
                  if(isOld)
                  {
@@ -230,7 +231,10 @@
 //                     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 200);
                      [self setImg];
                  }
-                 
+             }
+             else
+             {
+                 [self.imgCollectionView reloadData];
              }
              
          };
@@ -576,6 +580,7 @@
     }
     else
     {
+//        [imgArray removeAllObjects];
         self.imgContain_view.hidden = YES;
         //            ll_img_contain.setVisibility(View.GONE);
         isOld = true;

@@ -200,16 +200,17 @@
              NSError *error;
              
              NSArray *table = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             imgArray = nil;
              imgArray = [Tool readJsonToObjArray:table andObjClass:[Img class]];
              hud.hidden = YES;
+             [self.solution.imgList removeAllObjects];
              if(imgArray && imgArray.count > 0)
              {
                 self.solution.imgList = [NSMutableArray arrayWithArray:imgArray];
                 self.imgCollectionView.hidden = NO;
                 [self reSizeCollectionView];
-                [self.imgCollectionView reloadData];
-                 
              }
+             [self.imgCollectionView reloadData];
              
          };
          

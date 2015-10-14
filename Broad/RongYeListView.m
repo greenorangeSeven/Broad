@@ -168,7 +168,7 @@
         cell.type_label.text = [NSString stringWithFormat:@"出厂编号:%@",solution.OutFactNum];
         if(solution.ExecDate.length > 0)
         {
-            NSString *timeStr = [solution.UploadTime substringToIndex:[solution.UploadTime rangeOfString:@" "].location];
+            NSString *timeStr = [solution.ExecDate substringToIndex:[solution.ExecDate rangeOfString:@" "].location];
             
             if(timeStr)
             {

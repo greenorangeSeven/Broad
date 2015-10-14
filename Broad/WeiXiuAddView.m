@@ -171,7 +171,7 @@
         }
     }
     
-    self.navigationItem.rightBarButtonItem.enabled = NO;
+    //    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     matnRec = [[MatnRec alloc] init];
     matnRec.allfilename = @"";
@@ -188,8 +188,6 @@
     NSInteger year = [datec year];
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
-    
-    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
     {
@@ -241,10 +239,12 @@
                  if([count intValue] > 0)
                  {
                      [Tool showCustomHUD:@"已存在该保养记录,不能重复提交" andView:self.view andImage:nil andAfterDelay:1.2f];
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
                      return;
                  }
                  else
                  {
+                     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
                      [self updateImg];
                  }
              };
@@ -253,11 +253,13 @@
          } failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              hud.hidden = YES;
+             self.navigationItem.rightBarButtonItem.enabled = YES;
              [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
          }];
     }
     else
     {
+        [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
         [self updateImg];
     }
     
@@ -269,10 +271,11 @@
     {
         for(NSString *key in imgDic)
         {
-            UIImage *img = [[UIImage alloc] init];
-            img = imgDic[key];
+            UIImage *imgbegin = [[UIImage alloc] init];
+            imgbegin = nil;
+            imgbegin = imgDic[key];
             
-            if(img)
+            if(imgbegin)
             {
                 int y = (arc4random() % 501) + 500;
                 
@@ -314,9 +317,11 @@
                 {
                     project = self.img9_label.text;
                 }
-                NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+                NSString *reName = [[NSString alloc] init];
+                reName = nil;
+                reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
                 
-                BOOL isOK = [self upload:img oldName:reName Index:[key intValue]];
+                BOOL isOK = [self upload:imgbegin oldName:reName Index:[key intValue]];
                 if(!isOK)
                 {
                     hud.hidden = YES;
@@ -353,9 +358,11 @@
     static BOOL isOK = NO;
     if(img)
     {
-        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+        //        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+        int y = (arc4random() % 501) + 500;
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
         
-        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.00001) base64EncodedStringWithOptions:0];
+        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         
         
         ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@UploadFile",api_base_url]]];
@@ -393,7 +400,7 @@
                 {
                     NSString *response2 = [tworequest responseString];
                     
-//                    if([response containsString:@"true"])
+                    //                    if([response containsString:@"true"])
                     if([response2 rangeOfString:@"true"].length > 0)
                     {
                         isOK = YES;
@@ -438,75 +445,75 @@
                     }
                 }
             }
-//            NSString *response =  @"<?xml version=\"1.0\" encoding=\"utf-8\"?><string xmlns=\"http://61.187.123.138:150/\">/UploadFile/20151012/</string>";
-//            NSLog(response);
-//            XMLParserUtils *utils1 = [[XMLParserUtils alloc] init];
-//            utils1.parserFail = ^()
-//            {
-//                isOK = NO;
-//            };
-//            utils1.parserOK = ^(NSString *string)
-//            {
-//                AppDelegate *app = [[UIApplication sharedApplication] delegate];
-//                NSString *sql = [NSString stringWithFormat:@"insert into ERPSaveFileName(NowName,OldName,Uploader,UploadTime,FileUrl) values('%@','%@','%@',getdate(),'%@')",fileName,reName,app.userinfo.UserName,string];
-//                ASIFormDataRequest *tworequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url]]];
-//                [tworequest setUseCookiePersistence:NO];
-//                [tworequest setTimeOutSeconds:30];
-//                [tworequest setDelegate:self];
-//                [tworequest setPostValue:sql forKey:@"sqlstr"];
-//                [tworequest setDefaultResponseEncoding:NSUTF8StringEncoding];
-//                [tworequest startSynchronous];
-//                
-//                NSError *error = [request error];
-//                if (!error)
-//                {
-//                    NSString *response = [tworequest responseString];
-//                    if([response containsString:@"true"])
-//                    {
-//                        isOK = YES;
-//                        if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
-//                        {
-//                            switch (index)
-//                            {
-//                                case 1:
-//                                    matnRec.allfilename = [NSMutableString stringWithFormat:@"|%@",fileName];
-//                                    
-//                                    break;
-//                                case 2:
-//                                    matnRec.allfilename02 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 3:
-//                                    matnRec.allfilename03 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 4:
-//                                    matnRec.allfilename04 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 5:
-//                                    matnRec.allfilename05 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 6:
-//                                    matnRec.allfilename06 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 7:
-//                                    matnRec.allfilename07 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 8:
-//                                    matnRec.allfilename08 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                                case 9:
-//                                    matnRec.allfilename09 = [NSString stringWithFormat:@"|%@",fileName];
-//                                    break;
-//                            }
-//                        }
-//                        else
-//                        {
-//                            matnRec.allfilename = [NSString stringWithFormat:@"%@|%@",matnRec.allfilename,fileName];
-//                        }
-//                    }
-//                }
-//            };
-//            
-//            [utils1 stringFromparserXML:response target:@"string"];
+            //            NSString *response =  @"<?xml version=\"1.0\" encoding=\"utf-8\"?><string xmlns=\"http://61.187.123.138:150/\">/UploadFile/20151012/</string>";
+            //            NSLog(response);
+            //            XMLParserUtils *utils1 = [[XMLParserUtils alloc] init];
+            //            utils1.parserFail = ^()
+            //            {
+            //                isOK = NO;
+            //            };
+            //            utils1.parserOK = ^(NSString *string)
+            //            {
+            //                AppDelegate *app = [[UIApplication sharedApplication] delegate];
+            //                NSString *sql = [NSString stringWithFormat:@"insert into ERPSaveFileName(NowName,OldName,Uploader,UploadTime,FileUrl) values('%@','%@','%@',getdate(),'%@')",fileName,reName,app.userinfo.UserName,string];
+            //                ASIFormDataRequest *tworequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url]]];
+            //                [tworequest setUseCookiePersistence:NO];
+            //                [tworequest setTimeOutSeconds:30];
+            //                [tworequest setDelegate:self];
+            //                [tworequest setPostValue:sql forKey:@"sqlstr"];
+            //                [tworequest setDefaultResponseEncoding:NSUTF8StringEncoding];
+            //                [tworequest startSynchronous];
+            //
+            //                NSError *error = [request error];
+            //                if (!error)
+            //                {
+            //                    NSString *response = [tworequest responseString];
+            //                    if([response containsString:@"true"])
+            //                    {
+            //                        isOK = YES;
+            //                        if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
+            //                        {
+            //                            switch (index)
+            //                            {
+            //                                case 1:
+            //                                    matnRec.allfilename = [NSMutableString stringWithFormat:@"|%@",fileName];
+            //
+            //                                    break;
+            //                                case 2:
+            //                                    matnRec.allfilename02 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 3:
+            //                                    matnRec.allfilename03 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 4:
+            //                                    matnRec.allfilename04 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 5:
+            //                                    matnRec.allfilename05 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 6:
+            //                                    matnRec.allfilename06 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 7:
+            //                                    matnRec.allfilename07 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 8:
+            //                                    matnRec.allfilename08 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                                case 9:
+            //                                    matnRec.allfilename09 = [NSString stringWithFormat:@"|%@",fileName];
+            //                                    break;
+            //                            }
+            //                        }
+            //                        else
+            //                        {
+            //                            matnRec.allfilename = [NSString stringWithFormat:@"%@|%@",matnRec.allfilename,fileName];
+            //                        }
+            //                    }
+            //                }
+            //            };
+            //
+            //            [utils1 stringFromparserXML:response target:@"string"];
         }
     }
     
@@ -545,20 +552,20 @@
         }
         
         
-//        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
-//        utils.parserFail = ^()
-//        {
-//            [Tool showCustomHUD:@"上传失败" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            self.navigationItem.rightBarButtonItem.enabled = YES;
-//        };
-//        utils.parserOK = ^(NSString *string)
-//        {
-//            [Tool showCustomHUD:@"上传成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
-//            [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
-//        };
-//        
-//        [utils stringFromparserXML:response target:@"string"];
+        //        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+        //        utils.parserFail = ^()
+        //        {
+        //            [Tool showCustomHUD:@"上传失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+        //            self.navigationItem.rightBarButtonItem.enabled = YES;
+        //        };
+        //        utils.parserOK = ^(NSString *string)
+        //        {
+        //            [Tool showCustomHUD:@"上传成功" andView:self.view andImage:nil andAfterDelay:1.2f];
+        //            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
+        //            [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+        //        };
+        //
+        //        [utils stringFromparserXML:response target:@"string"];
     }
 }
 
@@ -567,15 +574,15 @@
 - (void)enginChoice
 {
     [SGActionView showSheetWithTitle:@"请选择机组:"
-                  itemTitles:enginUnitModeArray
-                  itemSubTitles:enginUnitNoArray
-                  selectedIndex:selectedEnginIndex
-                  selectedHandle:^(NSInteger index){
-                  selectedEnginIndex = index;
-                  EnginUnit *unit = [enginUnitArray objectAtIndex:index];
-                  self.chucang_no_label.text = unit.OutFact_Num;
-                  self.engine_no_label.text = unit.AirCondUnit_Mode;
-                              }];
+                          itemTitles:enginUnitModeArray
+                       itemSubTitles:enginUnitNoArray
+                       selectedIndex:selectedEnginIndex
+                      selectedHandle:^(NSInteger index){
+                          selectedEnginIndex = index;
+                          EnginUnit *unit = [enginUnitArray objectAtIndex:index];
+                          self.chucang_no_label.text = unit.OutFact_Num;
+                          self.engine_no_label.text = unit.AirCondUnit_Mode;
+                      }];
 }
 
 //服务类型、项目、时间等输入框不允许弹出输入法界面
@@ -591,7 +598,7 @@
                            selectedIndex:selectedServiceTypeIndex
                           selectedHandle:^(NSInteger index){
                               selectedServiceTypeIndex = index;
-                              
+                              self.servicetime_field.text = @"";
                               textField.text = items[index];
                               if(index == 0)
                               {
@@ -882,26 +889,40 @@
             end = [NSString stringWithFormat:@"%li-01-01",year+1];
         }
         
-        
-        int tag = [Tool compareOneDay:targetDate withAnotherDay:start];
-        //如果为0则两个日期相等,如果为1则服务时间大于起始时间
-        if(tag == 0 || tag == 1)
+        int tag = [Tool compareOneDay:targetDate withAnotherDay:self.uploadtime_label.text];
+        if(tag == 0 || tag == -1)
         {
-            int tag = [Tool compareOneDay:targetDate withAnotherDay:end];
-            //如果为0则两个日期相等,如果为-1则服务时间小于起始时间
-            if(tag == 0 || tag == -1)
+            int tag = [Tool compareOneDay:targetDate withAnotherDay:start];
+            //如果为0则两个日期相等,如果为1则服务时间大于起始时间
+            if(tag == 0 || tag == 1)
             {
-                self.servicetime_field.text = targetDate;
+                int tag = [Tool compareOneDay:targetDate withAnotherDay:end];
+                //如果为0则两个日期相等,如果为-1则服务时间小于起始时间
+                if(tag == 0 || tag == -1)
+                {
+                    self.servicetime_field.text = targetDate;
+                }
+                else
+                {
+                    //                [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示:" message:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+                    alertView.tag = -10;
+                    [alertView show];
+                    return;
+                }
             }
             else
             {
-                [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+                //            [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示:" message:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+                alertView.tag = -10;
+                [alertView show];
                 return;
             }
         }
         else
         {
-            [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+            [Tool showCustomHUD:@"服务时间必须小于上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
             return;
         }
     }
@@ -1011,6 +1032,7 @@
 
 - (IBAction)imgChoiceAction:(id)sender
 {
+    targetImgBtn = nil;
     targetImgBtn = sender;
     //如果存在图片
     if([imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]])
@@ -1033,6 +1055,10 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if(alertView.tag == -10)
+    {
+        return;
+    }
     if(buttonIndex == 0)
     {
         if(alertView.tag == -11)
@@ -1067,66 +1093,67 @@
 
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-        if (buttonIndex == 0)
-        {
-            // 拍照
-            if ([self isCameraAvailable] && [self doesCameraSupportTakingPhotos]) {
-                UIImagePickerController *controller = [[UIImagePickerController alloc] init];
-                controller.sourceType = UIImagePickerControllerSourceTypeCamera;
-                NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
-                [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
-                controller.mediaTypes = mediaTypes;
-                controller.delegate = self;
-                [self presentViewController:controller
-                                   animated:YES
-                                 completion:^(void){
-                                     NSLog(@"Picker View Controller is presented");
-                                 }];
-            }
-        }
-        else if (buttonIndex == 1)
-        {
-            // 从相册中选取
-            IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-            if(actionSheet.tag == 0)
-            {
-                controller.allowsPickingMultipleItems = NO;
-            }
-            else if(actionSheet.tag == 1)
-            {
-                controller.allowsPickingMultipleItems = YES;
-            }
-            controller.pickCount = 9;
+    if (buttonIndex == 0)
+    {
+        // 拍照
+        if ([self isCameraAvailable] && [self doesCameraSupportTakingPhotos]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypeCamera;
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
             controller.delegate = self;
-            controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-            
-            [self.navigationController pushViewController:controller animated:YES];
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
         }
+    }
+    else if (buttonIndex == 1)
+    {
+        // 从相册中选取
+        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
+        if(actionSheet.tag == 0)
+        {
+            controller.allowsPickingMultipleItems = NO;
+        }
+        else if(actionSheet.tag == 1)
+        {
+            controller.allowsPickingMultipleItems = YES;
+        }
+        controller.pickCount = 9;
+        controller.delegate = self;
+        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
+        
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     
 }
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [picker dismissViewControllerAnimated:YES completion:^()
-    {
-        UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-        UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
-        NSData *imageData = UIImageJPEGRepresentation(smallImage,0.00001);
-        
-        UIImage *tImg = [UIImage imageWithData:imageData];
-        if(targetImgBtn)
-        {
-            
-            [targetImgBtn setImage:tImg forState:UIControlStateNormal];
-            [imgDic setObject:tImg forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
-        }
-        else
-        {
-            [imgArray addObject:tImg];
-            [self reSizeCollectionView];
-            [self.imgCollectionView reloadData];
-        }
-    }];
+     {
+         UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+         UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
+         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
+         
+         UIImage *tImg = [UIImage imageWithData:imageData];
+         if(targetImgBtn)
+         {
+             
+             [targetImgBtn setImage:tImg forState:UIControlStateNormal];
+             [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+             [imgDic setObject:tImg forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+         }
+         else
+         {
+             [imgArray addObject:tImg];
+             [self reSizeCollectionView];
+             [self.imgCollectionView reloadData];
+         }
+     }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
@@ -1150,12 +1177,14 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.00001);
+                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
                 img = [UIImage imageWithData:imageData];
                 if(targetImgBtn)
                 {
                     
                     [targetImgBtn setImage:img forState:UIControlStateNormal];
+                    //                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+                    [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
                     [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
                 }
                 else

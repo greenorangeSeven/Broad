@@ -36,6 +36,7 @@
     
     
     NSString *deleteImgStr;
+    NSString *newsAllfilename;
 }
 
 
@@ -87,6 +88,8 @@
     
 //    self.uploadtime_field.delegate = self;
 //    self.uploadtime_field.tag = 3;
+    //删除图片用
+    newsAllfilename = self.solution.allfilename;
     
     [self bindData];
     [self initData];
@@ -174,6 +177,8 @@
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startSynchronous];
     
+    
+    
     NSError *error = [request error];
     if (!error)
     {
@@ -195,9 +200,11 @@
     static BOOL isOK = NO;
     if(img)
     {
-        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+//        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+        int y = (arc4random() % 501) + 500;
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
         
-        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.00001) base64EncodedStringWithOptions:0];
+        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         
         
         ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@UploadFile",api_base_url]]];
@@ -241,7 +248,7 @@
                         isOK = YES;
                         
                         newsolution.allfilename = [NSString stringWithFormat:@"%@|%@",newsolution.allfilename,fileName];
-                        
+                        newsAllfilename = [NSString stringWithFormat:@"%@|%@",newsAllfilename,fileName];
                     }
                 }
             };
@@ -261,7 +268,12 @@
     [request setTimeOutSeconds:30];
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename='%@' where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,self.create_no_label.text,newsolution.allfilename,newsolution.ID];
+    NSString *sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename='%@' where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,self.create_no_label.text,newsAllfilename,newsolution.ID];
+    if([newsAllfilename isEqualToString:@"null"])
+    {
+        sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename=%@ where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,self.create_no_label.text,newsAllfilename,newsolution.ID];
+        newsAllfilename = @"";
+    }
     
     [request setPostValue:sql forKey:@"sqlstr"];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
@@ -286,6 +298,8 @@
             newsolution.OutFactNum = self.chucang_no_label.text;
             newsolution.AirCondUnitMode = self.engine_no_label.text;
             newsolution.ProdNum = self.create_no_label.text;
+            newsolution.allfilename = newsAllfilename;
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notifireSolution" object:nil userInfo:[NSDictionary dictionaryWithObject:newsolution forKey:@"solution"]];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_RongYeListReLoad" object:nil];
@@ -550,6 +564,16 @@
     {
         Img *img = [newsolution.imgList objectAtIndex:alertView.tag];
         NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+        
+        if(newsAllfilename.length > 30)
+        {
+            newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+        }
+        else
+        {
+            newsAllfilename = @"null";
+        }
+        
         deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
         [newsolution.imgList removeObjectAtIndex:alertView.tag];
         [self.imgCollectionView reloadData];
@@ -558,6 +582,16 @@
     {
         Img *img = [newsolution.imgList objectAtIndex:alertView.tag];
         NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+        
+        if(newsAllfilename.length > 30)
+        {
+            newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+        }
+        else
+        {
+            newsAllfilename = @" ";
+        }
+        
         deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
         [newsolution.imgList removeObjectAtIndex:alertView.tag];
         [self.imgCollectionView reloadData];
@@ -631,9 +665,14 @@
      {
          UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
          UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
-         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.00001);
+         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
          
          UIImage *tImg = [UIImage imageWithData:imageData];
+         
+         Img *tem = [[Img alloc] init];
+         tem.img = tImg;
+         
+         [newsolution.imgList addObject:tem];
          
         [imgArray addObject:tImg];
         [self reSizeCollectionView];
@@ -663,7 +702,7 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.00001);
+                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
                 img = [UIImage imageWithData:imageData];
                 Img *tem = [[Img alloc] init];
                 tem.img = img;

@@ -35,6 +35,7 @@
     
     
     NSString *deleteImgStr;
+    NSString *newsAllfilename;
     
     double timeCha;
 }
@@ -70,17 +71,39 @@
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
     
+    [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
+    
+    self.imgCollectionView.hidden = YES;
+    self.imgContain_view.hidden = YES;
+    
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
+    
+    //初始化图片集合
+    imgDic = [[NSMutableDictionary alloc] init];
+    //    imgArray = [[NSMutableArray alloc] init];
+    if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
+    {
+        Img *img = [[Img alloc] init];
+        img.img = [UIImage imageNamed:@"camera_tag"];
+        [newmatnRec.imgList insertObject:img atIndex:0];
+    }
+    
+    [self bindData];
+    [self initData];
+    
+    newsAllfilename = self.matnRec.allfilename;
     
     self.servcetype_field.delegate = self;
     self.servcetype_field.tag = 1;
     
     self.serviceproject_field.delegate = self;
     self.serviceproject_field.tag = 2;
+    [self initField:self.serviceproject_field];
     
     self.servicetime_field.delegate = self;
     self.servicetime_field.tag = 3;
+    [self initField:self.servicetime_field];
     
     self.servicetime2_field.delegate = self;
     self.servicetime2_field.tag = 4;
@@ -93,20 +116,7 @@
     self.enginer_label.text = app.depart.Duty_Engineer;
     self.uploador_label.text = app.userinfo.UserName;
     
-    //初始化图片集合
-    imgDic = [[NSMutableDictionary alloc] init];
-    //    imgArray = [[NSMutableArray alloc] init];
-    if(newmatnRec.isOld)
-    {
-        Img *img = [[Img alloc] init];
-        img.img = [UIImage imageNamed:@"camera_tag"];
-        [newmatnRec.imgList insertObject:img atIndex:0];
-    }
     
-    [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
-    
-    self.imgCollectionView.hidden = YES;
-    self.imgContain_view.hidden = YES;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enginChoice)];
     [self.engine_choice_view addGestureRecognizer:tap];
@@ -138,9 +148,44 @@
     UITapGestureRecognizer *imgTap9 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction9)];
     [self.img9_ImgView addGestureRecognizer:imgTap9];
     
-    [self bindData];
-    [self initData];
+    
+    [self enabledField];
     timeCha = [self intervalSinceNow:newmatnRec.UploadTime];
+}
+
+- (void)enabledField
+{
+    if (self.servicetime_field.text.length > 0) {
+        self.servicetime_field.enabled = NO;
+    }
+    if (self.servicetime2_field.text.length > 0) {
+        self.servicetime2_field.enabled = NO;
+    }
+    if (self.servicetime3_field.text.length > 0) {
+        self.servicetime3_field.enabled = NO;
+    }
+    if ([self.servcetype_field.text isEqualToString:@"年4次保养"]) {
+        self.serviceproject_field.enabled = NO;
+    }
+}
+
+- (void)initField:(UITextField *)textField
+{
+    if ([self.servcetype_field.text isEqualToString:@"异常处理"])
+    {
+        serviceProjects = @[@"燃烧机",@"真空",@"电器控制",@"水系统",@"其它"];
+        self.imgCollectionView.hidden = NO;
+    }
+    else if([self.servcetype_field.text isEqualToString:@"巡视"])
+    {
+        serviceProjects = @[@"巡视"];
+        self.imgCollectionView.hidden = NO;
+    }
+    else if ([self.servcetype_field.text isEqualToString:@"机房管理"])
+    {
+        serviceProjects = @[@"机房管理"];
+        self.imgCollectionView.hidden = NO;
+    }
 }
 
 - (double)intervalSinceNow: (NSString *) theDate
@@ -298,7 +343,7 @@
     
     if(newmatnRec.imgList && newmatnRec.imgList.count > 0)
     {
-        if(newmatnRec.isOld)
+        if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
         {
             self.imgCollectionView.hidden = NO;
             self.imgContain_view.hidden = YES;
@@ -551,7 +596,6 @@
     }
 }
 
-
 - (void)back
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -767,9 +811,11 @@
     static BOOL isOK = NO;
     if(img)
     {
-        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+//        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+        int y = (arc4random() % 501) + 500;
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
         
-        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.00001) base64EncodedStringWithOptions:0];
+        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         
         
         ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@UploadFile",api_base_url]]];
@@ -847,6 +893,7 @@
                         else
                         {
                             newmatnRec.allfilename = [NSString stringWithFormat:@"%@|%@",newmatnRec.allfilename,fileName];
+                            newsAllfilename = [NSString stringWithFormat:@"%@|%@",newsAllfilename,fileName];
                         }
                     }
                 }
@@ -869,7 +916,19 @@
     NSString *time1 = self.servicetime2_field.text.length > 0?[NSString stringWithFormat:@"'%@'",self.servicetime2_field.text]:@"null";
     NSString *time2 = self.servicetime3_field.text.length > 0?[NSString stringWithFormat:@"'%@'",self.servicetime3_field.text]:@"null";
     
-    NSString *sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+    NSString *sql = @"";
+    if ([newmatnRec.Type isEqualToString:@"年4次保养"]) {
+        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+    }
+    else
+    {
+        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+        if([newsAllfilename isEqualToString:@"null"])
+        {
+            sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename=%@,allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+            newsAllfilename = @"";
+        }
+    }
     
     [request setPostValue:sql forKey:@"sqlstr"];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
@@ -896,6 +955,7 @@
             newmatnRec.OutFact_Num = self.chucang_no_label.text;
             newmatnRec.Type = self.servcetype_field.text;
             newmatnRec.Project = self.serviceproject_field.text;
+            newmatnRec.allfilename = newsAllfilename;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notifire" object:nil userInfo:[NSDictionary dictionaryWithObject:newmatnRec forKey:@"matnRec"]];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
@@ -1221,13 +1281,19 @@
             }
             else
             {
-                [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+//                [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示:" message:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+                alertView.tag = -10;
+                [alertView show];
                 return;
             }
         }
         else
         {
-            [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+//            [Tool showCustomHUD:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] andView:self.view andImage:nil andAfterDelay:3.8f];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示:" message:[NSString stringWithFormat:@"服务时间必须在%@到%@之间",start,end] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            alertView.tag = -10;
+            [alertView show];
             return;
         }
     }
@@ -1626,12 +1692,26 @@
     if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"取消"]) {
         return;
     }
+    if(alertView.tag == -10)
+    {
+        return;
+    }
     if(buttonIndex == 0)
     {
         if(self.imgContain_view.hidden == YES)
         {
             Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
             NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+            
+            if(newsAllfilename.length > 30)
+            {
+                newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+            }
+            else
+            {
+                newsAllfilename = @"null";
+            }
+            
             deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
             [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
             [self.imgCollectionView reloadData];
@@ -1643,6 +1723,16 @@
         {
             Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
             NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+            
+            if(newsAllfilename.length > 30)
+            {
+                newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+            }
+            else
+            {
+                newsAllfilename = @"null";
+            }
+            
             deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
             [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
             [self.imgCollectionView reloadData];
@@ -1761,7 +1851,7 @@
      {
          UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
          UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
-         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.00001);
+         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
          
          UIImage *tImg = [UIImage imageWithData:imageData];
          if(selectPicIndex != -1)
@@ -1830,7 +1920,7 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.00001);
+                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
                 img = [UIImage imageWithData:imageData];
                 if(selectPicIndex != -1)
                 {

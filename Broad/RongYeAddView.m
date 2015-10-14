@@ -149,9 +149,11 @@
     static BOOL isOK = NO;
     if(img)
     {
-        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+//        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
+        int y = (arc4random() % 501) + 500;
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
         
-        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.00001) base64EncodedStringWithOptions:0];
+        NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         
         
         ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@UploadFile",api_base_url]]];
@@ -582,7 +584,7 @@
     {
         UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
         UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
-        NSData *imageData = UIImageJPEGRepresentation(smallImage,0.00001);
+        NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
         
         UIImage *tImg = [UIImage imageWithData:imageData];
         if(targetImgBtn)
