@@ -688,7 +688,17 @@
     //    NSInteger year = [datec year];
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
-    [self updateImg];
+//    [self updateImg];
+    //异步请求启动文件上传及后续写库操作！SQL无意义，只为启动提示稍后
+    NSString *sql = @"select getdate() ";
+    
+    [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         [self updateImg];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [self updateImg];
+     }];
     
 }
 

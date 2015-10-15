@@ -6,15 +6,14 @@
 //  Copyright (c) 2015年 greenorange. All rights reserved.
 //
 
-#import "IQAssetsPickerController.h"
-#import "HSDatePickerViewController.h"
 #import "WeiXiuAddView.h"
+#import "HSDatePickerViewController.h"
 #import "EnginUnit.h"
 #import "SGActionView.h"
 #import "MatnRec.h"
 #import "RepairImgCell.h"
 
-@interface WeiXiuAddView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,IQAssetsPickerControllerDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface WeiXiuAddView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     MatnRec *matnRec;
     NSMutableDictionary *imgDic;
@@ -29,6 +28,8 @@
     MBProgressHUD *hud;
     NSDate *serviceDate;
     UIButton *targetImgBtn;
+    
+    MBProgressHUD *hud2;
 }
 
 @end
@@ -95,35 +96,71 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+
+- (void)publishAction
+{
+    NSString *updateUrl = @"http://www.baidu.com";
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:updateUrl]];
+    [request setUseCookiePersistence:[[UserModel Instance] isLogin]];
+    
+    request.delegate = self;
+    [request setDidFailSelector:@selector(requestFailed:)];
+    [request setDidFinishSelector:@selector(requestSubmit:)];
+    [request startAsynchronous];
+    request.hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [Tool showHUD:@"提交发帖" andView:self.view andHUD:request.hud];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    if (request.hud) {
+        [request.hud hide:NO];
+    }
+}
+- (void)requestSubmit:(ASIHTTPRequest *)request
+{
+}
+
 - (void)add
 {
-    hud = [[MBProgressHUD alloc] initWithView:self.view];
-    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
+    [self publishAction];
+    hud2 = [[MBProgressHUD alloc] initWithView:self.view];
+    
+    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud2];
+    
     NSString *type = self.servcetype_field.text;
     NSString *project = self.serviceproject_field.text;
     NSString *time = self.servicetime_field.text;
     NSString *no = self.engine_no_label.text;
     if (type.length == 0)
     {
-        hud.hidden = YES;
+        if (hud2) {
+            [hud2 hide:YES];
+        }
         [Tool showCustomHUD:@"请选择服务类型" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (project.length == 0)
     {
-        hud.hidden = YES;
+        if (hud2) {
+            [hud2 hide:YES];
+        }
         [Tool showCustomHUD:@"请选择服务项目" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (time.length == 0)
     {
-        hud.hidden = YES;
+        if (hud2) {
+            [hud2 hide:YES];
+        }
         [Tool showCustomHUD:@"请选择服务时间" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (no.length == 0)
     {
-        hud.hidden = YES;
+        if (hud2) {
+            [hud2 hide:YES];
+        }
         [Tool showCustomHUD:@"请选择机组" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
@@ -132,7 +169,9 @@
     {
         if([imgDic count] == 0)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -141,7 +180,9 @@
     {
         if([imgArray count] == 0)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -151,7 +192,9 @@
     {
         if([imgDic objectForKey:@"4"] == nil)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -160,7 +203,9 @@
     {
         if([imgDic objectForKey:@"8"] == nil)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -169,7 +214,9 @@
     {
         if([imgDic objectForKey:@"6"] == nil)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -178,7 +225,9 @@
     {
         if([imgDic objectForKey:@"9"] == nil)
         {
-            hud.hidden = YES;
+            if (hud2) {
+                [hud2 hide:YES];
+            }
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -235,7 +284,9 @@
              XMLParserUtils *utils = [[XMLParserUtils alloc] init];
              utils.parserFail = ^()
              {
-                 hud.hidden = YES;
+                 if (hud2) {
+                     [hud2 hide:YES];
+                 }
                  [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                  [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
              };
@@ -249,7 +300,9 @@
                  NSString *count = [dic objectForKey:@"Column1"];
                  if([count intValue] > 0)
                  {
-                     hud.hidden = YES;
+                     if (hud2) {
+                         [hud2 hide:YES];
+                     }
                      [Tool showCustomHUD:@"已存在该保养记录,不能重复提交" andView:self.view andImage:nil andAfterDelay:1.2f];
                      self.navigationItem.rightBarButtonItem.enabled = YES;
                      return;
@@ -263,14 +316,25 @@
              [utils stringFromparserXML:operation.responseString target:@"string"];
          } failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
-             hud.hidden = YES;
+             if (hud2) {
+                 [hud2 hide:YES];
+             }
              self.navigationItem.rightBarButtonItem.enabled = YES;
              [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
          }];
     }
     else
     {
-        [self updateImg];
+        //异步请求启动文件上传及后续写库操作！SQL无意义，只为启动提示稍后
+        NSString *sql = @"select getdate() ";
+        
+        [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             [self updateImg];
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             [self updateImg];
+         }];
     }
     
 }
@@ -334,7 +398,9 @@
                 BOOL isOK = [self upload:imgbegin oldName:reName Index:[key intValue]];
                 if(!isOK)
                 {
-                    hud.hidden = YES;
+                    if (hud2) {
+                        [hud2 hide:YES];
+                    }
                     [Tool showCustomHUD:@"图片上传失败..." andView:self.view andImage:nil andAfterDelay:1.2f];
                     return;
                 }
@@ -354,6 +420,9 @@
             BOOL isOK = [self upload:img oldName:reName Index:-1];
             if(!isOK)
             {
+                if (hud2) {
+                    [hud2 hide:YES];
+                }
                 [Tool showCustomHUD:@"图片上传失败..." andView:self.view andImage:nil andAfterDelay:1.2f];
                 return;
             }
@@ -455,75 +524,6 @@
                     }
                 }
             }
-            //            NSString *response =  @"<?xml version=\"1.0\" encoding=\"utf-8\"?><string xmlns=\"http://61.187.123.138:150/\">/UploadFile/20151012/</string>";
-            //            NSLog(response);
-            //            XMLParserUtils *utils1 = [[XMLParserUtils alloc] init];
-            //            utils1.parserFail = ^()
-            //            {
-            //                isOK = NO;
-            //            };
-            //            utils1.parserOK = ^(NSString *string)
-            //            {
-            //                AppDelegate *app = [[UIApplication sharedApplication] delegate];
-            //                NSString *sql = [NSString stringWithFormat:@"insert into ERPSaveFileName(NowName,OldName,Uploader,UploadTime,FileUrl) values('%@','%@','%@',getdate(),'%@')",fileName,reName,app.userinfo.UserName,string];
-            //                ASIFormDataRequest *tworequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url]]];
-            //                [tworequest setUseCookiePersistence:NO];
-            //                [tworequest setTimeOutSeconds:30];
-            //                [tworequest setDelegate:self];
-            //                [tworequest setPostValue:sql forKey:@"sqlstr"];
-            //                [tworequest setDefaultResponseEncoding:NSUTF8StringEncoding];
-            //                [tworequest startSynchronous];
-            //
-            //                NSError *error = [request error];
-            //                if (!error)
-            //                {
-            //                    NSString *response = [tworequest responseString];
-            //                    if([response containsString:@"true"])
-            //                    {
-            //                        isOK = YES;
-            //                        if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
-            //                        {
-            //                            switch (index)
-            //                            {
-            //                                case 1:
-            //                                    matnRec.allfilename = [NSMutableString stringWithFormat:@"|%@",fileName];
-            //
-            //                                    break;
-            //                                case 2:
-            //                                    matnRec.allfilename02 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 3:
-            //                                    matnRec.allfilename03 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 4:
-            //                                    matnRec.allfilename04 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 5:
-            //                                    matnRec.allfilename05 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 6:
-            //                                    matnRec.allfilename06 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 7:
-            //                                    matnRec.allfilename07 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 8:
-            //                                    matnRec.allfilename08 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                                case 9:
-            //                                    matnRec.allfilename09 = [NSString stringWithFormat:@"|%@",fileName];
-            //                                    break;
-            //                            }
-            //                        }
-            //                        else
-            //                        {
-            //                            matnRec.allfilename = [NSString stringWithFormat:@"%@|%@",matnRec.allfilename,fileName];
-            //                        }
-            //                    }
-            //                }
-            //            };
-            //
-            //            [utils1 stringFromparserXML:response target:@"string"];
         }
     }
     
@@ -549,6 +549,9 @@
     {
         NSString *response = [request responseString];
         NSLog(response);
+        if (hud2) {
+            [hud2 hide:YES];
+        }
         if([response rangeOfString:@"true"].length > 0)
         {
             [Tool showCustomHUD:@"上传成功" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -560,25 +563,8 @@
             [Tool showCustomHUD:@"上传失败" andView:self.view andImage:nil andAfterDelay:1.2f];
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
-        
-        
-        //        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
-        //        utils.parserFail = ^()
-        //        {
-        //            [Tool showCustomHUD:@"上传失败" andView:self.view andImage:nil andAfterDelay:1.2f];
-        //            self.navigationItem.rightBarButtonItem.enabled = YES;
-        //        };
-        //        utils.parserOK = ^(NSString *string)
-        //        {
-        //            [Tool showCustomHUD:@"上传成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-        //            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
-        //            [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
-        //        };
-        //
-        //        [utils stringFromparserXML:response target:@"string"];
     }
 }
-
 
 //机组选择
 - (void)enginChoice
@@ -972,7 +958,9 @@
          XMLParserUtils *utils = [[XMLParserUtils alloc] init];
          utils.parserFail = ^()
          {
-             hud.hidden = YES;
+             if (hud) {
+                 [hud hide:YES];
+             }
              [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
              [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
          };
@@ -998,13 +986,17 @@
                       XMLParserUtils *utils = [[XMLParserUtils alloc] init];
                       utils.parserFail = ^()
                       {
-                          hud.hidden = YES;
+                          if (hud) {
+                              [hud hide:YES];
+                          }
                           [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                           [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
                       };
                       utils.parserOK = ^(NSString *string)
                       {
-                          hud.hidden = YES;
+                          if (hud) {
+                              [hud hide:YES];
+                          }
                           NSString *timeStr = [string substringToIndex:[string rangeOfString:@" "].location];
                           self.uploadtime_label.text = timeStr;
                       };
@@ -1012,7 +1004,9 @@
                       [utils stringFromparserXML:operation.responseString target:@"string"];
                   } failure:^(AFHTTPRequestOperation *operation, NSError *error)
                   {
-                      hud.hidden = YES;
+                      if (hud) {
+                          [hud hide:YES];
+                      }
                       [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                       [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
                       
@@ -1020,7 +1014,9 @@
              }
              else
              {
-                 hud.hidden = YES;
+                 if (hud) {
+                     [hud hide:YES];
+                 }
                  [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                  [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
              }
@@ -1029,7 +1025,9 @@
          [utils stringFromparserXML:operation.responseString target:@"string"];
      } failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
-         hud.hidden = YES;
+         if (hud) {
+             [hud hide:YES];
+         }
          [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
          [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
      }];
@@ -1123,20 +1121,20 @@
     else if (buttonIndex == 1)
     {
         // 从相册中选取
-//        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-//        if(actionSheet.tag == 0)
-//        {
-//            controller.allowsPickingMultipleItems = NO;
-//        }
-//        else if(actionSheet.tag == 1)
-//        {
-//            controller.allowsPickingMultipleItems = YES;
-//        }
-//        controller.pickCount = 9;
-//        controller.delegate = self;
-//        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-//        
-//        [self.navigationController pushViewController:controller animated:YES];
+        //        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
+        //        if(actionSheet.tag == 0)
+        //        {
+        //            controller.allowsPickingMultipleItems = NO;
+        //        }
+        //        else if(actionSheet.tag == 1)
+        //        {
+        //            controller.allowsPickingMultipleItems = YES;
+        //        }
+        //        controller.pickCount = 9;
+        //        controller.delegate = self;
+        //        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
+        //
+        //        [self.navigationController pushViewController:controller animated:YES];
         // 从相册中选取
         if ([self isPhotoLibraryAvailable]) {
             UIImagePickerController *controller = [[UIImagePickerController alloc] init];
@@ -1151,7 +1149,7 @@
                                  NSLog(@"Picker View Controller is presented");
                              }];
         }
-
+        
     }
     
 }
@@ -1187,49 +1185,49 @@
 }
 
 #pragma mark - IQAssetsPickerControllerDelegate
-- (void)assetsPickerController:(IQAssetsPickerController*)controller didFinishMediaWithInfo:(NSDictionary *)info
-{
-    NSMutableArray *views = [[NSMutableArray alloc] initWithArray:[controller.navigationController viewControllers]];
-    [views removeLastObject];
-    controller.navigationController.viewControllers = views;
-    [controller.navigationController popViewControllerAnimated:YES];
-    if(info)
-    {
-        NSArray *imgd = info[@"IQMediaTypeImage"];
-        for(int i = 0; i < imgd.count; ++i)
-        {
-            NSDictionary *imgdic = imgd[i];
-            UIImage *img = imgdic[@"IQMediaImage"];
-            if(img)
-            {
-                UIImage *smallImage = [self imageByScalingToMaxSize:img];
-                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
-                img = [UIImage imageWithData:imageData];
-                if(targetImgBtn)
-                {
-                    
-                    [targetImgBtn setImage:img forState:UIControlStateNormal];
-                    //                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
-                    [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
-                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
-                }
-                else
-                {
-                    [imgArray addObject:img];
-                    [self reSizeCollectionView];
-                    [self.imgCollectionView reloadData];
-                }
-            }
-        }
-    }
-    
-    targetImgBtn = nil;
-}
-
-- (void)assetsPickerControllerDidCancel:(IQAssetsPickerController *)controller
-{
-    
-}
+//- (void)assetsPickerController:(IQAssetsPickerController*)controller didFinishMediaWithInfo:(NSDictionary *)info
+//{
+//    NSMutableArray *views = [[NSMutableArray alloc] initWithArray:[controller.navigationController viewControllers]];
+//    [views removeLastObject];
+//    controller.navigationController.viewControllers = views;
+//    [controller.navigationController popViewControllerAnimated:YES];
+//    if(info)
+//    {
+//        NSArray *imgd = info[@"IQMediaTypeImage"];
+//        for(int i = 0; i < imgd.count; ++i)
+//        {
+//            NSDictionary *imgdic = imgd[i];
+//            UIImage *img = imgdic[@"IQMediaImage"];
+//            if(img)
+//            {
+//                UIImage *smallImage = [self imageByScalingToMaxSize:img];
+//                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
+//                img = [UIImage imageWithData:imageData];
+//                if(targetImgBtn)
+//                {
+//
+//                    [targetImgBtn setImage:img forState:UIControlStateNormal];
+//                    //                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+//                    [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+//                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+//                }
+//                else
+//                {
+//                    [imgArray addObject:img];
+//                    [self reSizeCollectionView];
+//                    [self.imgCollectionView reloadData];
+//                }
+//            }
+//        }
+//    }
+//
+//    targetImgBtn = nil;
+//}
+//
+//- (void)assetsPickerControllerDidCancel:(IQAssetsPickerController *)controller
+//{
+//
+//}
 
 #pragma mark camera utility
 - (BOOL) isCameraAvailable{

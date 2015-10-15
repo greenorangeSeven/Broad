@@ -133,8 +133,17 @@
     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    //异步请求启动文件上传及后续写库操作！SQL无意义，只为启动提示稍后
+//    [self updateImg];
+    NSString *sql = @"select getdate() ";
     
-    [self updateImg];
+    [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         [self updateImg];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [self updateImg];
+     }];
     
 }
 
