@@ -92,21 +92,25 @@
 
 - (void)add
 {
-    
+    hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     NSString *time = self.servicetime_field.text;
     NSString *no = self.engine_no_label.text;
     if (time.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择取样时间" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (no.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择机组" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if([imgArray count] == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
@@ -115,10 +119,6 @@
     
     solution = [[Solution alloc] init];
     solution.allfilename = @"";
-    
-    hud = [[MBProgressHUD alloc] initWithView:self.view];
-    
-    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     [self updateImg];
 }
@@ -560,20 +560,19 @@
         else if (buttonIndex == 1)
         {
             // 从相册中选取
-            IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-            if(actionSheet.tag == 0)
-            {
-                controller.allowsPickingMultipleItems = NO;
+            if ([self isPhotoLibraryAvailable]) {
+                UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+                controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+                [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+                controller.mediaTypes = mediaTypes;
+                controller.delegate = self;
+                [self presentViewController:controller
+                                   animated:YES
+                                 completion:^(void){
+                                     NSLog(@"Picker View Controller is presented");
+                                 }];
             }
-            else if(actionSheet.tag == 1)
-            {
-                controller.allowsPickingMultipleItems = YES;
-            }
-            controller.pickCount = 9;
-            controller.delegate = self;
-            controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-            
-            [self.navigationController pushViewController:controller animated:YES];
         }
     
 }
@@ -623,7 +622,8 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.00001);
+                UIImage *smallImage = [self imageByScalingToMaxSize:img];
+                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
                 img = [UIImage imageWithData:imageData];
                 if(targetImgBtn)
                 {

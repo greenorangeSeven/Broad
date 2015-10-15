@@ -603,28 +603,33 @@
 
 - (void)add
 {
-    
+    hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     NSString *type = self.servcetype_field.text;
     NSString *project = self.serviceproject_field.text;
     NSString *time = self.servicetime_field.text;
     NSString *no = self.engine_no_label.text;
     if (type.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务类型" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (project.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务项目" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (time.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务时间" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (no.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择机组" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
@@ -682,9 +687,6 @@
     //    NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
     //    NSInteger year = [datec year];
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    hud = [[MBProgressHUD alloc] initWithView:self.view];
-    
-    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     [self updateImg];
     
@@ -955,7 +957,10 @@
             newmatnRec.OutFact_Num = self.chucang_no_label.text;
             newmatnRec.Type = self.servcetype_field.text;
             newmatnRec.Project = self.serviceproject_field.text;
-            newmatnRec.allfilename = newsAllfilename;
+            if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
+            {
+                newmatnRec.allfilename = newsAllfilename;
+            }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notifire" object:nil userInfo:[NSDictionary dictionaryWithObject:newmatnRec forKey:@"matnRec"]];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
@@ -1445,7 +1450,8 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img1_ImgView.tag;
         [alert show];
     }
@@ -1473,7 +1479,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img2_ImgView.tag;
         [alert show];
     }
@@ -1502,7 +1508,8 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img3_ImgView.tag;
         [alert show];
     }
@@ -1530,7 +1537,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img4_ImgView.tag;
         [alert show];
     }
@@ -1558,7 +1565,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img5_ImgView.tag;
         [alert show];
     }
@@ -1586,7 +1593,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img6_ImgView.tag;
         [alert show];
     }
@@ -1614,7 +1621,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img7_ImgView.tag;
         [alert show];
     }
@@ -1642,7 +1649,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img8_ImgView.tag;
         [alert show];
     }
@@ -1670,7 +1677,7 @@
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
         alert.tag = self.img9_ImgView.tag;
         [alert show];
     }
@@ -1717,7 +1724,7 @@
             [self.imgCollectionView reloadData];
         }
     }
-    if(buttonIndex == 2)
+    if(buttonIndex == 1)
     {
         if(newmatnRec.isOld)
         {
@@ -1782,16 +1789,16 @@
             }
         }
     }
-    else if(buttonIndex == 1)
-    {
-        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"取消"
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
-        selectPicIndex = alertView.tag;
-        [cameraSheet showInView:self.view];
-    }
+//    else if(buttonIndex == 1)
+//    {
+//        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+//                                                                 delegate:self
+//                                                        cancelButtonTitle:@"取消"
+//                                                   destructiveButtonTitle:nil
+//                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+//        selectPicIndex = alertView.tag;
+//        [cameraSheet showInView:self.view];
+//    }
 }
 
 #pragma mark UIActionSheetDelegate
@@ -1819,28 +1826,43 @@
     else if (buttonIndex == 1)
     {
         // 从相册中选取
-        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-        if(actionSheet.tag == 0)
-        {
-            controller.allowsPickingMultipleItems = NO;
+//        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
+//        if(actionSheet.tag == 0)
+//        {
+//            controller.allowsPickingMultipleItems = NO;
+//        }
+//        else if(actionSheet.tag == 1)
+//        {
+//            controller.allowsPickingMultipleItems = YES;
+//        }
+//        if(selectPicIndex == -1)
+//        {
+//            controller.pickCount = 9;
+//        }
+//        else
+//        {
+//            controller.pickCount = 1;
+//        }
+//        
+//        controller.delegate = self;
+//        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
+//        
+//        [self.navigationController pushViewController:controller animated:YES];
+        // 从相册中选取
+        if ([self isPhotoLibraryAvailable]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
+            controller.delegate = self;
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
         }
-        else if(actionSheet.tag == 1)
-        {
-            controller.allowsPickingMultipleItems = YES;
-        }
-        if(selectPicIndex == -1)
-        {
-            controller.pickCount = 9;
-        }
-        else
-        {
-            controller.pickCount = 1;
-        }
-        
-        controller.delegate = self;
-        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-        
-        [self.navigationController pushViewController:controller animated:YES];
+
     }
     
 }
@@ -1920,7 +1942,8 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
+                UIImage *smallImage = [self imageByScalingToMaxSize:img];
+                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
                 img = [UIImage imageWithData:imageData];
                 if(selectPicIndex != -1)
                 {

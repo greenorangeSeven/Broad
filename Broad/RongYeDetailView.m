@@ -210,6 +210,7 @@
                 self.imgCollectionView.hidden = NO;
                 [self reSizeCollectionView];
              }
+             [self.photos removeAllObjects];
              [self.imgCollectionView reloadData];
              
          };

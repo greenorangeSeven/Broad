@@ -222,18 +222,21 @@
                      self.imgCollectionView.hidden = NO;
                      self.imgContain_view.hidden = YES;
                      [self reSizeCollectionView];
+                     [self.photos removeAllObjects];
                      [self.imgCollectionView reloadData];
                  }
                  else
                  {
                      self.imgContain_view.hidden = NO;
                      self.imgCollectionView.hidden = YES;
+                     [self.photos removeAllObjects];
 //                     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 200);
                      [self setImg];
                  }
              }
              else
              {
+                 [self.photos removeAllObjects];
                  [self.imgCollectionView reloadData];
              }
              

@@ -42,6 +42,7 @@
     selectedServiceNameIndex = -1;
     selectedEnginIndex = -1;
     
+    hud = [[MBProgressHUD alloc] initWithView:self.view];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -50,6 +51,7 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
+    
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
     [addBtn setTitle:@"上传记录" forState:UIControlStateNormal];
@@ -95,28 +97,33 @@
 
 - (void)add
 {
-    
+    hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     NSString *type = self.servcetype_field.text;
     NSString *project = self.serviceproject_field.text;
     NSString *time = self.servicetime_field.text;
     NSString *no = self.engine_no_label.text;
     if (type.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务类型" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (project.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务项目" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (time.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择服务时间" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
     if (no.length == 0)
     {
+        hud.hidden = YES;
         [Tool showCustomHUD:@"请选择机组" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
@@ -125,6 +132,7 @@
     {
         if([imgDic count] == 0)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -133,6 +141,7 @@
     {
         if([imgArray count] == 0)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -142,6 +151,7 @@
     {
         if([imgDic objectForKey:@"4"] == nil)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -150,6 +160,7 @@
     {
         if([imgDic objectForKey:@"8"] == nil)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -158,6 +169,7 @@
     {
         if([imgDic objectForKey:@"6"] == nil)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
@@ -166,12 +178,13 @@
     {
         if([imgDic objectForKey:@"9"] == nil)
         {
+            hud.hidden = YES;
             [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
     }
     
-    //    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     matnRec = [[MatnRec alloc] init];
     matnRec.allfilename = @"";
@@ -186,8 +199,6 @@
     
     NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
     NSInteger year = [datec year];
-    
-    hud = [[MBProgressHUD alloc] initWithView:self.view];
     
     if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
     {
@@ -238,13 +249,13 @@
                  NSString *count = [dic objectForKey:@"Column1"];
                  if([count intValue] > 0)
                  {
+                     hud.hidden = YES;
                      [Tool showCustomHUD:@"已存在该保养记录,不能重复提交" andView:self.view andImage:nil andAfterDelay:1.2f];
                      self.navigationItem.rightBarButtonItem.enabled = YES;
                      return;
                  }
                  else
                  {
-                     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
                      [self updateImg];
                  }
              };
@@ -259,7 +270,6 @@
     }
     else
     {
-        [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
         [self updateImg];
     }
     
@@ -1113,20 +1123,35 @@
     else if (buttonIndex == 1)
     {
         // 从相册中选取
-        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-        if(actionSheet.tag == 0)
-        {
-            controller.allowsPickingMultipleItems = NO;
+//        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
+//        if(actionSheet.tag == 0)
+//        {
+//            controller.allowsPickingMultipleItems = NO;
+//        }
+//        else if(actionSheet.tag == 1)
+//        {
+//            controller.allowsPickingMultipleItems = YES;
+//        }
+//        controller.pickCount = 9;
+//        controller.delegate = self;
+//        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
+//        
+//        [self.navigationController pushViewController:controller animated:YES];
+        // 从相册中选取
+        if ([self isPhotoLibraryAvailable]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
+            controller.delegate = self;
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
         }
-        else if(actionSheet.tag == 1)
-        {
-            controller.allowsPickingMultipleItems = YES;
-        }
-        controller.pickCount = 9;
-        controller.delegate = self;
-        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-        
-        [self.navigationController pushViewController:controller animated:YES];
+
     }
     
 }
@@ -1177,7 +1202,8 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
+                UIImage *smallImage = [self imageByScalingToMaxSize:img];
+                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
                 img = [UIImage imageWithData:imageData];
                 if(targetImgBtn)
                 {

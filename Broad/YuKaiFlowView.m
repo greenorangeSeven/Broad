@@ -236,7 +236,7 @@
         if ([app.userinfo.JiaoSe isEqualToString:@"SE"] || [app.userinfo.JiaoSe isEqualToString:@"FJ"])
         {
             
-                long int stepid = (long int) jsonDic[@"StepID"];
+                int stepid = [jsonDic[@"StepID"] intValue];
                 if (stepid == 2)
                 {
                     self.backFlowBtn.hidden = YES;
@@ -555,12 +555,12 @@
                                                 if([string isEqualToString:@"true"])
                                                 {
 //                                                    NSString *stepID = dic[@"StepID"];
-                                                    long int stepid = (long int) dic[@"StepID"];
+                                                    int stepid = [dic[@"StepID"] intValue];
                                                     if ([app.userinfo.JiaoSe isEqualToString:@"SE"] || [app.userinfo.JiaoSe isEqualToString:@"FJ"])
                                                     {
                                                         if (stepid == 2)
                                                         {
-                                                            [Tool showCustomHUD:@"重新提交流程成功" andView:self.view andImage:nil andAfterDelay:1.2f];
+                                                            [Tool showCustomHUD:@"重新提交成功" andView:self.view andImage:nil andAfterDelay:1.2f];
                                                         }
                                                         else if (!(stepid == 2))
                                                         {

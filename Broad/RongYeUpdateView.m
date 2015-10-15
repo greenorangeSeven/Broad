@@ -129,6 +129,7 @@
 
 - (void)add
 {
+    hud = [[MBProgressHUD alloc] initWithView:self.view];
     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -633,28 +634,43 @@
     else if (buttonIndex == 1)
     {
         // 从相册中选取
-        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-        if(actionSheet.tag == 0)
-        {
-            controller.allowsPickingMultipleItems = NO;
+//        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
+//        if(actionSheet.tag == 0)
+//        {
+//            controller.allowsPickingMultipleItems = NO;
+//        }
+//        else if(actionSheet.tag == 1)
+//        {
+//            controller.allowsPickingMultipleItems = YES;
+//        }
+//        if(selectPicIndex == -1)
+//        {
+//            controller.pickCount = 9;
+//        }
+//        else
+//        {
+//            controller.pickCount = 1;
+//        }
+//        
+//        controller.delegate = self;
+//        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
+//        
+//        [self.navigationController pushViewController:controller animated:YES];
+        // 从相册中选取
+        if ([self isPhotoLibraryAvailable]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
+            controller.delegate = self;
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
         }
-        else if(actionSheet.tag == 1)
-        {
-            controller.allowsPickingMultipleItems = YES;
-        }
-        if(selectPicIndex == -1)
-        {
-            controller.pickCount = 9;
-        }
-        else
-        {
-            controller.pickCount = 1;
-        }
-        
-        controller.delegate = self;
-        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-        
-        [self.navigationController pushViewController:controller animated:YES];
+
     }
     
 }
@@ -702,7 +718,9 @@
             UIImage *img = imgdic[@"IQMediaImage"];
             if(img)
             {
-                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
+                UIImage *smallImage = [self imageByScalingToMaxSize:img];
+                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
+//                NSData *imageData = UIImageJPEGRepresentation(img,0.8f);
                 img = [UIImage imageWithData:imageData];
                 Img *tem = [[Img alloc] init];
                 tem.img = img;
