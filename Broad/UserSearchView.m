@@ -123,11 +123,13 @@
         NSError *error;
         
         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        NSDictionary *jsonDic = [jsonArray objectAtIndex:0];
-        ser_Dept = jsonDic[@"jc01"];
-        if(!ser_Dept)
-        {
-            ser_Dept = @"";
+        if(jsonArray && jsonArray.count > 0){
+            NSDictionary *jsonDic = [jsonArray objectAtIndex:0];
+            ser_Dept = jsonDic[@"jc01"];
+            if(!ser_Dept)
+            {
+                ser_Dept = @"";
+            }
         }
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
         NSString *sqlStr = nil;
