@@ -13,6 +13,8 @@
 #import "MatnRec.h"
 #import "RepairImgCell.h"
 
+#define ORIGINAL_MAX_WIDTH 540.0f
+
 @interface WeiXiuAddView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     MatnRec *matnRec;
@@ -30,6 +32,8 @@
     UIButton *targetImgBtn;
     
     MBProgressHUD *hud2;
+    
+    BOOL fromCamera;
 }
 
 @end
@@ -45,6 +49,8 @@
     
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
+    fromCamera = NO;
+    
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
     titleLabel.text = @"新增";
@@ -55,7 +61,7 @@
     
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"上传记录" forState:UIControlStateNormal];
+    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
@@ -96,34 +102,8 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
-- (void)publishAction
-{
-    NSString *updateUrl = @"http://www.baidu.com";
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:updateUrl]];
-    [request setUseCookiePersistence:[[UserModel Instance] isLogin]];
-    
-    request.delegate = self;
-    [request setDidFailSelector:@selector(requestFailed:)];
-    [request setDidFinishSelector:@selector(requestSubmit:)];
-    [request startAsynchronous];
-    request.hud = [[MBProgressHUD alloc] initWithView:self.view];
-    [Tool showHUD:@"提交发帖" andView:self.view andHUD:request.hud];
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    if (request.hud) {
-        [request.hud hide:NO];
-    }
-}
-- (void)requestSubmit:(ASIHTTPRequest *)request
-{
-}
-
 - (void)add
 {
-    [self publishAction];
     hud2 = [[MBProgressHUD alloc] initWithView:self.view];
     
     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud2];
@@ -188,50 +168,50 @@
         }
     }
     
-    if([self.serviceproject_field.text isEqualToString:@"年1次保养"])
-    {
-        if([imgDic objectForKey:@"4"] == nil)
-        {
-            if (hud2) {
-                [hud2 hide:YES];
-            }
-            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-    }
-    if([self.serviceproject_field.text isEqualToString:@"年2次保养"])
-    {
-        if([imgDic objectForKey:@"8"] == nil)
-        {
-            if (hud2) {
-                [hud2 hide:YES];
-            }
-            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-    }
-    if([self.serviceproject_field.text isEqualToString:@"年3次保养"])
-    {
-        if([imgDic objectForKey:@"6"] == nil)
-        {
-            if (hud2) {
-                [hud2 hide:YES];
-            }
-            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-    }
-    if([self.serviceproject_field.text isEqualToString:@"年4次保养"])
-    {
-        if([imgDic objectForKey:@"9"] == nil)
-        {
-            if (hud2) {
-                [hud2 hide:YES];
-            }
-            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-    }
+//    if([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+//    {
+//        if([imgDic objectForKey:@"4"] == nil)
+//        {
+//            if (hud2) {
+//                [hud2 hide:YES];
+//            }
+//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//    }
+//    if([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+//    {
+//        if([imgDic objectForKey:@"8"] == nil)
+//        {
+//            if (hud2) {
+//                [hud2 hide:YES];
+//            }
+//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//    }
+//    if([self.serviceproject_field.text isEqualToString:@"年3次保养"])
+//    {
+//        if([imgDic objectForKey:@"6"] == nil)
+//        {
+//            if (hud2) {
+//                [hud2 hide:YES];
+//            }
+//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//    }
+//    if([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+//    {
+//        if([imgDic objectForKey:@"9"] == nil)
+//        {
+//            if (hud2) {
+//                [hud2 hide:YES];
+//            }
+//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//    }
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
@@ -489,7 +469,6 @@
                             {
                                 case 1:
                                     matnRec.allfilename = [NSString stringWithFormat:@"|%@",fileName];
-                                    
                                     break;
                                 case 2:
                                     matnRec.allfilename02 = [NSString stringWithFormat:@"|%@",fileName];
@@ -519,7 +498,12 @@
                         }
                         else
                         {
+                            if(matnRec.allfilename == nil || [matnRec.allfilename isEqualToString:@"null"])
+                            {
+                                matnRec.allfilename = @"";
+                            }
                             matnRec.allfilename = [NSString stringWithFormat:@"%@|%@",matnRec.allfilename,fileName];
+                            matnRec.allfilename = [matnRec.allfilename stringByReplacingOccurrencesOfString:@"null" withString:@""];
                         }
                     }
                 }
@@ -621,7 +605,10 @@
                                       self.img8_view.hidden = YES;
                                       self.img9_view.hidden = YES;
                                       
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img5_view.frame.origin.y + self.img5_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img4_view.frame.origin.y + self.img4_view.frame.size.height + 460);
+                                      CGRect viewFrame = self.imgContain_view.frame;
+                                      viewFrame.size.height = self.img4_view.frame.origin.y + self.img4_view.frame.size.height;
+                                      self.imgContain_view.frame = viewFrame;
                                   }
                                   //年2次保养
                                   else if (month >= 4 && month < 7)
@@ -636,7 +623,11 @@
                                       self.img7_label.text = @"靶片长度";
                                       self.img8_label.text = @"售后服务单";
                                       self.img9_view.hidden = YES;
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img8_view.frame.origin.y + self.img8_view.frame.size.height + 460);
+                                      
+                                      CGRect viewFrame = self.imgContain_view.frame;
+                                      viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
+                                      self.imgContain_view.frame = viewFrame;
                                   }
                                   //年3次保养
                                   else if (month >= 7 && month < 10)
@@ -653,6 +644,10 @@
                                       self.img8_view.hidden = YES;
                                       self.img9_view.hidden = YES;
                                       self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img6_view.frame.origin.y + self.img6_view.frame.size.height + 460);
+                                      
+                                      CGRect viewFrame = self.imgContain_view.frame;
+                                      viewFrame.size.height = self.img6_view.frame.origin.y + self.img6_view.frame.size.height;
+                                      self.imgContain_view.frame = viewFrame;
                                   }
                                   //年4次保养
                                   else if (month >= 10 && month < 13)
@@ -668,6 +663,11 @@
                                       self.img8_label.text = @"主机水侧排水";
                                       self.img9_label.text = @"售后服务单";
                                       self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 460);
+                                      
+                                      CGRect viewFrame = self.imgContain_view.frame;
+                                      viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
+                                      self.imgContain_view.frame = viewFrame;
+                                      
                                   }
                                   
                                   self.imgContain_view.userInteractionEnabled = YES;
@@ -1045,7 +1045,7 @@
     //如果存在图片
     if([imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"修改",@"取消", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = -11;
         [alert show];
     }
@@ -1063,16 +1063,16 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(alertView.tag == -10)
-    {
-        return;
-    }
+    //    if(alertView.tag == -10)
+    //    {
+    //        return;
+    //    }
     if(buttonIndex == 0)
     {
         if(alertView.tag == -11)
         {
-            [targetImgBtn setImage:[UIImage imageNamed:@"camera_tag"] forState:UIControlStateNormal];
             [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImgBtn.tag]];
+            [targetImgBtn setImage:[UIImage imageNamed:@"camera_tag"] forState:UIControlStateNormal];
         }
         else
         {
@@ -1080,23 +1080,23 @@
             [self.imgCollectionView reloadData];
         }
     }
-    else if(buttonIndex == 1)
-    {
-        
-        if(alertView.tag != -11)
-        {
-            return;
-        }
-        
-        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"取消"
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
-        cameraSheet.tag = 0;
-        [cameraSheet showInView:self.view];
-        
-    }
+    //    else if(buttonIndex == 1)
+    //    {
+    //
+    //        if(alertView.tag != -11)
+    //        {
+    //            return;
+    //        }
+    //
+    //        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+    //                                                                 delegate:self
+    //                                                        cancelButtonTitle:@"取消"
+    //                                                   destructiveButtonTitle:nil
+    //                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+    //        cameraSheet.tag = 0;
+    //        [cameraSheet showInView:self.view];
+    //
+    //    }
 }
 
 #pragma mark UIActionSheetDelegate
@@ -1111,6 +1111,7 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            fromCamera = YES;
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -1143,6 +1144,7 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            fromCamera = NO;
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -1159,9 +1161,26 @@
     [picker dismissViewControllerAnimated:YES completion:^()
      {
          UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-         UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
-         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
+         UIImage *smallImage = nil;
+         if (targetImgBtn) {
+             if (targetImgBtn.tag == 9) {
+                 smallImage = [self imageByScalingToMaxSize2:portraitImg];
+             }
+             else
+             {
+                 smallImage = [self imageByScalingToMaxSize:portraitImg];
+                 
+             }
+         }
+         else
+         {
+             smallImage = [self imageByScalingToMaxSize2:portraitImg];
+         }
          
+         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
+         if (fromCamera) {
+             [self saveImageToPhotos:portraitImg];
+         }
          UIImage *tImg = [UIImage imageWithData:imageData];
          if(targetImgBtn)
          {
@@ -1291,6 +1310,21 @@
     return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
 }
 
+- (UIImage *)imageByScalingToMaxSize2:(UIImage *)sourceImage {
+    if (sourceImage.size.width < 700) return sourceImage;
+    CGFloat btWidth = 0.0f;
+    CGFloat btHeight = 0.0f;
+    if (sourceImage.size.width > sourceImage.size.height) {
+        btHeight = 700;
+        btWidth = sourceImage.size.width * (700 / sourceImage.size.height);
+    } else {
+        btWidth = 700;
+        btHeight = sourceImage.size.height * (700 / sourceImage.size.width);
+    }
+    CGSize targetSize = CGSizeMake(btWidth, btHeight);
+    return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
+}
+
 - (UIImage *)imageByScalingAndCroppingForSourceImage:(UIImage *)sourceImage targetSize:(CGSize)targetSize {
     UIImage *newImage = nil;
     CGSize imageSize = sourceImage.size;
@@ -1340,6 +1374,28 @@
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+
+- (void)saveImageToPhotos:(UIImage*)savedImage
+{
+    UIImageWriteToSavedPhotosAlbum(savedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
+// 指定回调方法
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
+{
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
+    //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"保存图片结果提示"
+    //                                                    message:msg
+    //                                                   delegate:self
+    //                                          cancelButtonTitle:@"确定"
+    //                                          otherButtonTitles:nil];
+    //    [alert show];
 }
 
 @end

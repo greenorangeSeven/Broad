@@ -14,6 +14,8 @@
 #import "Solution.h"
 #import "RepairImgCell.h"
 
+#define ORIGINAL_MAX_WIDTH 700.0f
+
 @interface RongYeAddView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,IQAssetsPickerControllerDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     Solution *solution;
@@ -29,6 +31,8 @@
     MBProgressHUD *hud;
     NSDate *serviceDate;
     UIButton *targetImgBtn;
+    
+    BOOL fromCamera;
 }
 
 @end
@@ -42,6 +46,7 @@
     selectedServiceNameIndex = -1;
     selectedEnginIndex = -1;
     
+    fromCamera = NO;
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -52,7 +57,7 @@
     self.navigationItem.titleView = titleLabel;
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"上传记录" forState:UIControlStateNormal];
+    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
@@ -205,9 +210,12 @@
                     if ([response rangeOfString:@"true"].length > 0)
                     {
                         isOK = YES;
-                        
+                        if(solution.allfilename == nil || [solution.allfilename isEqualToString:@"null"])
+                        {
+                            solution.allfilename = @"";
+                        }
                         solution.allfilename = [NSString stringWithFormat:@"%@|%@",solution.allfilename,fileName];
-                        
+                        solution.allfilename = [solution.allfilename stringByReplacingOccurrencesOfString:@"null" withString:@""];
                     }
                 }
             };
@@ -497,7 +505,7 @@
     //如果存在图片
     if([imgDic objectForKey:[NSString stringWithFormat:@"%li",(long)targetImgBtn.tag]])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"修改",@"取消", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = -11;
         [alert show];
     }
@@ -536,13 +544,13 @@
             return;
         }
         
-        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"取消"
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
-        cameraSheet.tag = 0;
-        [cameraSheet showInView:self.view];
+//        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+//                                                                 delegate:self
+//                                                        cancelButtonTitle:@"取消"
+//                                                   destructiveButtonTitle:nil
+//                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+//        cameraSheet.tag = 0;
+//        [cameraSheet showInView:self.view];
         
     }
 }
@@ -559,6 +567,7 @@
                 [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
                 controller.mediaTypes = mediaTypes;
                 controller.delegate = self;
+                fromCamera = YES;
                 [self presentViewController:controller
                                    animated:YES
                                  completion:^(void){
@@ -576,6 +585,7 @@
                 [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
                 controller.mediaTypes = mediaTypes;
                 controller.delegate = self;
+                fromCamera = NO;
                 [self presentViewController:controller
                                    animated:YES
                                  completion:^(void){
@@ -593,7 +603,9 @@
         UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
         UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
         NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
-        
+        if (fromCamera) {
+            [self saveImageToPhotos:portraitImg];
+        }
         UIImage *tImg = [UIImage imageWithData:imageData];
         if(targetImgBtn)
         {
@@ -769,6 +781,21 @@
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+- (void)saveImageToPhotos:(UIImage*)savedImage
+{
+    UIImageWriteToSavedPhotosAlbum(savedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
+// 指定回调方法
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
+{
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
 }
 
 @end

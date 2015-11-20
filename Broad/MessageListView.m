@@ -223,8 +223,16 @@
             }
         }
         Flow *flow = flowList[indexPath.row];
-        cell.name_label.text = [NSString stringWithFormat:@"类型:%@",flow.FlowName];
-        cell.type_label.text = [NSString stringWithFormat:@"用户名:%@",flow.PROJ_Name];
+        if ([flow.FlowName isEqualToString:@"预开发票申请审批"])
+        {
+            cell.name_label.text = @"预开发票审批";
+        }
+        else
+        {
+            cell.name_label.text = flow.FlowName;
+        }
+//        cell.name_label.text = [NSString stringWithFormat:@"类型:%@",flow.FlowName];
+        cell.type_label.text = flow.PROJ_Name;
         
         if(flow.ApplyDateTime.length > 0)
         {
@@ -232,16 +240,16 @@
             
             if(timeStr)
             {
-                cell.no_label.text = [NSString stringWithFormat:@"上传时间:%@",timeStr];
+                cell.no_label.text = [NSString stringWithFormat:@"申请日期:%@",timeStr];
             }
             else
             {
-                cell.no_label.text = @"上传时间:未知";
+                cell.no_label.text = @"申请日期:未知";
             }
         }
         else
         {
-            cell.no_label.text = @"上传时间:未知";
+            cell.no_label.text = @"申请日期:未知";
         }
         if (![flow.FlowName isEqualToString:@"预开发票申请审批"])
         {

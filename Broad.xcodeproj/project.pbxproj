@@ -31,7 +31,6 @@
 		04E90AE21AAD3E80005409D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E90AE11AAD3E80005409D8 /* AppDelegate.m */; };
 		04E90AE51AAD3E80005409D8 /* Broad.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04E90AE31AAD3E80005409D8 /* Broad.xcdatamodeld */; };
 		04E90AED1AAD3E80005409D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E90AEC1AAD3E80005409D8 /* Images.xcassets */; };
-		04E90AF01AAD3E80005409D8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E90AEE1AAD3E80005409D8 /* LaunchScreen.xib */; };
 		04E90AFC1AAD3E80005409D8 /* BroadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E90AFB1AAD3E80005409D8 /* BroadTests.m */; };
 		04E90D7C1AAD4380005409D8 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E90D7B1AAD4380005409D8 /* libxml2.dylib */; };
 		04E90D7E1AAD48C6005409D8 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E90D7D1AAD48C6005409D8 /* libsqlite3.dylib */; };
@@ -306,7 +305,6 @@
 		04E90AE11AAD3E80005409D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		04E90AE41AAD3E80005409D8 /* Broad.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Broad.xcdatamodel; sourceTree = "<group>"; };
 		04E90AEC1AAD3E80005409D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		04E90AEF1AAD3E80005409D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		04E90AF51AAD3E80005409D8 /* BroadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BroadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E90AFA1AAD3E80005409D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04E90AFB1AAD3E80005409D8 /* BroadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BroadTests.m; sourceTree = "<group>"; };
@@ -915,7 +913,6 @@
 				04E90AE01AAD3E80005409D8 /* AppDelegate.h */,
 				04E90AE11AAD3E80005409D8 /* AppDelegate.m */,
 				04E90AEC1AAD3E80005409D8 /* Images.xcassets */,
-				04E90AEE1AAD3E80005409D8 /* LaunchScreen.xib */,
 				04E90AE31AAD3E80005409D8 /* Broad.xcdatamodeld */,
 				04C911881AAD8EC9004A5C63 /* MainPage */,
 				B7D415BA1B992C3900462F0C /* UserPage */,
@@ -1836,7 +1833,6 @@
 				B798ED761B930B8800AE40F2 /* MWPhotoBrowser.bundle in Resources */,
 				B719FC721B95358D00206227 /* WeiXiuAddView.xib in Resources */,
 				B7F337DB1BA2474E00708F75 /* YuKaiAddView.xib in Resources */,
-				04E90AF01AAD3E80005409D8 /* LaunchScreen.xib in Resources */,
 				B737E4671BAC5B5300912FAB /* RongYeAddView.xib in Resources */,
 				B7F337D31B9F304500708F75 /* RepairImgCell.xib in Resources */,
 				B719FC911B96E3B200206227 /* userdetails.html in Resources */,
@@ -2066,17 +2062,6 @@
 			targetProxy = 04E90AF61AAD3E80005409D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		04E90AEE1AAD3E80005409D8 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04E90AEF1AAD3E80005409D8 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		04E90AFD1AAD3E80005409D8 /* Debug */ = {

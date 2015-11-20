@@ -36,13 +36,6 @@
     //设置按钮带圆角
     [self.loginBtn.layer setCornerRadius:4.0f];
     [self.contactBtn.layer setCornerRadius:4.0f];
-    
-    NSUserDefaults *setting = [NSUserDefaults standardUserDefaults];
-    NSString *username = [setting objectForKey:@"username"];
-    if(username)
-    {
-        self.usernameField.text = username;
-    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -222,6 +215,7 @@
             userinfo.permissions = perArray;
             NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
             [preference setObject:self.usernameField.text forKey:@"username"];
+            [preference setObject:self.pwdField.text forKey:@"pwd"];
             AppDelegate *app = [[UIApplication sharedApplication] delegate];
             app.userinfo = userinfo;
             [Tool showCustomHUD:@"登录成功" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -240,7 +234,17 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.navigationController.navigationBarHidden = YES;
-    
+    NSUserDefaults *setting = [NSUserDefaults standardUserDefaults];
+    NSString *username = [setting objectForKey:@"username"];
+    NSString *pwd = [setting objectForKey:@"pwd"];
+    if(username)
+    {
+        self.usernameField.text = username;
+    }
+    if(pwd)
+    {
+        self.pwdField.text = pwd;
+    }
 }
 
 - (void)goNext

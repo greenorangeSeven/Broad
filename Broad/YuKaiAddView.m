@@ -138,7 +138,11 @@
         return;
     }
     NSString *type = self.tv_invoice_type.text;
-    type = [type substringToIndex:[type rangeOfString:@"("].location];
+//    if([type rangeOfString:@"("].length > 0){
+//        type = [type substringToIndex:[type rangeOfString:@"("].location];
+//    }
+    type = [type stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    type = [type stringByReplacingOccurrencesOfString:@")" withString:@""];
     NSString *invoice_type = type;
     if (cuase.length == 0)
     {

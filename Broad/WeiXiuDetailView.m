@@ -575,7 +575,7 @@
             self.img8_label.text = @"主机水侧排水";
             self.img9_label.text = @"售后服务单";
             
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.imgContain_view.frame.origin.y + self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
             
             NSString *imgurl = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",self.matnRec.allfilename,self.matnRec.allfilename02,self.matnRec.allfilename03,self.matnRec.allfilename04,self.matnRec.allfilename05,self.matnRec.allfilename06,self.matnRec.allfilename07,self.matnRec.allfilename08,self.matnRec.allfilename09];
             [self getImg:imgurl];

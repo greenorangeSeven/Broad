@@ -308,11 +308,12 @@
     }
     
     NSString *type = self.tv_invoice_type.text;
-    if([type rangeOfString:@"("].length > 0)
-    {
-        type = [type substringToIndex:[type rangeOfString:@"("].location];
-    }
-    
+//    if([type rangeOfString:@"("].length > 0)
+//    {
+//        type = [type substringToIndex:[type rangeOfString:@"("].location];
+//    }
+    type = [type stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    type = [type stringByReplacingOccurrencesOfString:@")" withString:@""];
     NSString *invoice_type = type;
     NSString *cuase = self.et_cuase.text;
     NSString *yifang = self.tv_yifang.text;

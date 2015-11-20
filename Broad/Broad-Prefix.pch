@@ -45,8 +45,6 @@
 #import "AppDelegate.h"
 #import "Depart.h"
 
-#define ORIGINAL_MAX_WIDTH 540.0f
-
 #define AppSecret @"U8di3Du5"
 
 //每页数量

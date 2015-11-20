@@ -15,6 +15,8 @@
 #import "RepairImgCell.h"
 #import "Img.h"
 
+#define ORIGINAL_MAX_WIDTH 700.0f
+
 @interface RongYeUpdateView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,IQAssetsPickerControllerDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     Solution *newsolution;
@@ -37,6 +39,8 @@
     
     NSString *deleteImgStr;
     NSString *newsAllfilename;
+    
+    BOOL fromCamera;
 }
 
 
@@ -47,6 +51,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    fromCamera = NO;
     
     newsolution = [[Solution alloc] init];
     [newsolution initWithSolution:self.solution];
@@ -64,7 +70,7 @@
     self.navigationItem.titleView = titleLabel;
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"保存记录" forState:UIControlStateNormal];
+    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
@@ -256,9 +262,13 @@
                     if ([response rangeOfString:@"true"].length > 0)
                     {
                         isOK = YES;
-                        
+                        if(newsAllfilename == nil || [newsAllfilename isEqualToString:@"null"])
+                        {
+                            newsAllfilename = @"";
+                        }
                         newsolution.allfilename = [NSString stringWithFormat:@"%@|%@",newsolution.allfilename,fileName];
                         newsAllfilename = [NSString stringWithFormat:@"%@|%@",newsAllfilename,fileName];
+                        newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:@"null" withString:@""];
                     }
                 }
             };
@@ -633,6 +643,7 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            fromCamera = YES;
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -673,6 +684,7 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            fromCamera = NO;
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -691,7 +703,9 @@
          UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
          UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
          NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
-         
+         if (fromCamera) {
+             [self saveImageToPhotos:portraitImg];
+         }
          UIImage *tImg = [UIImage imageWithData:imageData];
          
          Img *tem = [[Img alloc] init];
@@ -859,6 +873,21 @@
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+- (void)saveImageToPhotos:(UIImage*)savedImage
+{
+    UIImageWriteToSavedPhotosAlbum(savedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
+// 指定回调方法
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
+{
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
 }
 
 @end

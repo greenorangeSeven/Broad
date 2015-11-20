@@ -15,6 +15,8 @@
 #import "RepairImgCell.h"
 #import "Img.h"
 
+#define ORIGINAL_MAX_WIDTH 540.0f
+
 @interface WeiXiuUpdateView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,IQAssetsPickerControllerDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     MatnRec *newmatnRec;
@@ -38,6 +40,8 @@
     NSString *newsAllfilename;
     
     double timeCha;
+    
+    BOOL fromCamera;
 }
 
 
@@ -51,6 +55,8 @@
     
     newmatnRec = [[MatnRec alloc] init];
     [newmatnRec initWithMatnRec:self.matnRec];
+    
+    fromCamera = NO;
     
     deleteImgStr = @"";
     selectedServiceTypeIndex = -1;
@@ -66,7 +72,7 @@
     self.navigationItem.titleView = titleLabel;
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"保存记录" forState:UIControlStateNormal];
+    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
@@ -234,6 +240,10 @@
             
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img4_view.frame.origin.y + self.img4_view.frame.size.height);
             
+            CGRect viewFrame = self.imgContain_view.frame;
+            viewFrame.size.height = self.img4_view.frame.origin.y + self.img4_view.frame.size.height;
+            self.imgContain_view.frame = viewFrame;
+            
             self.img5_view.hidden = YES;
             self.img6_view.hidden = YES;
             self.img7_view.hidden = YES;
@@ -269,6 +279,10 @@
             
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img8_view.frame.origin.y + self.img8_view.frame.size.height);
             
+            CGRect viewFrame = self.imgContain_view.frame;
+            viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
+            self.imgContain_view.frame = viewFrame;
+            
             self.img9_view.hidden = YES;
             
             
@@ -296,6 +310,10 @@
             self.img6_label.text = @"售后服务单";
             
             self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img6_view.frame.origin.y + self.img6_view.frame.size.height);
+            
+            CGRect viewFrame = self.imgContain_view.frame;
+            viewFrame.size.height = self.img6_view.frame.origin.y + self.img6_view.frame.size.height;
+            self.imgContain_view.frame = viewFrame;
             
             self.img7_view.hidden = YES;
             self.img8_view.hidden = YES;
@@ -331,7 +349,17 @@
             self.img8_label.text = @"主机水侧排水";
             self.img9_label.text = @"售后服务单";
             
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img9_view.frame.origin.y + self.img9_view.frame.size.height);  
+            self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.imgContain_view.frame.origin.y + self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
+            
+            CGRect viewFrame = self.imgContain_view.frame;
+            viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
+            self.imgContain_view.frame = viewFrame;
+            NSLog(@"%f", self.imgContain_view.frame.size.height);
+            
+            CGRect viewFrame2 = self.view.frame;
+            viewFrame2.size.height = self.imgContain_view.frame.origin.y + self.imgContain_view.frame.size.height;
+            self.view.frame = viewFrame2;
+            NSLog(@"%f", self.view.frame.size.height);
             
         }
     }
@@ -904,8 +932,13 @@
                         }
                         else
                         {
+                            if(newsAllfilename == nil || [newsAllfilename isEqualToString:@"null"])
+                            {
+                                newsAllfilename = @"";
+                            }
                             newmatnRec.allfilename = [NSString stringWithFormat:@"%@|%@",newmatnRec.allfilename,fileName];
                             newsAllfilename = [NSString stringWithFormat:@"%@|%@",newsAllfilename,fileName];
+                            newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:@"null" withString:@""];
                         }
                     }
                 }
@@ -1454,16 +1487,18 @@
     targetImg = self.img1_ImgView;
     targetImg.tag = 1;
     //如果存在图片
-    if(newmatnRec.allfilename && newmatnRec.allfilename.length > 0)
+    if((newmatnRec.allfilename && newmatnRec.allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
-        alert.tag = self.img1_ImgView.tag;
-        [alert show];
+
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+            alert.tag = self.img1_ImgView.tag;
+            [alert show];
+        
     }
     else
     {
@@ -1483,13 +1518,13 @@
     targetImg = self.img2_ImgView;
     targetImg.tag = 2;
     //如果存在图片
-    if(newmatnRec.allfilename02 && newmatnRec.allfilename02.length > 0)
+    if((newmatnRec.allfilename02 && newmatnRec.allfilename02.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img2_ImgView.tag;
         [alert show];
     }
@@ -1512,14 +1547,14 @@
     targetImg = self.img3_ImgView;
     targetImg.tag = 3;
     //如果存在图片
-    if(newmatnRec.allfilename03 && newmatnRec.allfilename03.length > 0)
+    if((newmatnRec.allfilename03 && newmatnRec.allfilename03.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img3_ImgView.tag;
         [alert show];
     }
@@ -1541,13 +1576,13 @@
     targetImg = self.img4_ImgView;
     targetImg.tag = 4;
     //如果存在图片
-    if(newmatnRec.allfilename04 && newmatnRec.allfilename04.length > 0)
+    if((newmatnRec.allfilename04 && newmatnRec.allfilename04.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img4_ImgView.tag;
         [alert show];
     }
@@ -1569,13 +1604,13 @@
     targetImg = self.img5_ImgView;
     targetImg.tag = 5;
     //如果存在图片
-    if(newmatnRec.allfilename05 && newmatnRec.allfilename05.length > 0)
+    if((newmatnRec.allfilename05 && newmatnRec.allfilename05.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img5_ImgView.tag;
         [alert show];
     }
@@ -1597,13 +1632,13 @@
     targetImg = self.img6_ImgView;
     targetImg.tag = 6;
     //如果存在图片
-    if(newmatnRec.allfilename06 && newmatnRec.allfilename06.length > 0)
+    if((newmatnRec.allfilename06 && newmatnRec.allfilename06.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img6_ImgView.tag;
         [alert show];
     }
@@ -1625,13 +1660,13 @@
     targetImg = self.img7_ImgView;
     targetImg.tag = 7;
     //如果存在图片
-    if(newmatnRec.allfilename07 && newmatnRec.allfilename07.length > 0)
+    if((newmatnRec.allfilename07 && newmatnRec.allfilename07.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img7_ImgView.tag;
         [alert show];
     }
@@ -1653,13 +1688,13 @@
     targetImg = self.img8_ImgView;
     targetImg.tag = 8;
     //如果存在图片
-    if(newmatnRec.allfilename08 && newmatnRec.allfilename08.length > 0)
+    if((newmatnRec.allfilename08 && newmatnRec.allfilename08.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img8_ImgView.tag;
         [alert show];
     }
@@ -1681,13 +1716,13 @@
     targetImg = self.img9_ImgView;
     targetImg.tag = 9;
     //如果存在图片
-    if(newmatnRec.allfilename09 && newmatnRec.allfilename09.length > 0)
+    if((newmatnRec.allfilename09 && newmatnRec.allfilename09.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
             return;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除图片", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
         alert.tag = self.img9_ImgView.tag;
         [alert show];
     }
@@ -1733,72 +1768,138 @@
             [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
             [self.imgCollectionView reloadData];
         }
-    }
-    if(buttonIndex == 1)
-    {
-        if(newmatnRec.isOld)
+        else
         {
-            Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
-            NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
-            
-            if(newsAllfilename.length > 30)
+            if(newmatnRec.isOld)
             {
-                newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+                Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
+                NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+                
+                if(newsAllfilename.length > 30)
+                {
+                    newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+                }
+                else
+                {
+                    newsAllfilename = @"null";
+                }
+                
+                deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
+                [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
+                [self.imgCollectionView reloadData];
             }
             else
             {
-                newsAllfilename = @"null";
-            }
-            
-            deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
-            [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
-            [self.imgCollectionView reloadData];
-        }
-        else
-        {
-            [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
-            switch(targetImg.tag)
-            {
-                case 1:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
-                    newmatnRec.allfilename = @"";
-                    break;
-                case 2:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
-                    newmatnRec.allfilename02 = @"";
-                    break;
-                case 3:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
-                    newmatnRec.allfilename03 = @"";
-                    break;
-                case 4:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
-                    newmatnRec.allfilename04 = @"";
-                    break;
-                case 5:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
-                    newmatnRec.allfilename05 = @"";
-                    break;
-                case 6:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
-                    newmatnRec.allfilename06 = @"";
-                    break;
-                case 7:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
-                    newmatnRec.allfilename07 = @"";
-                    break;
-                case 8:
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
-                    newmatnRec.allfilename08 = @"";
-                    break;
-                case 9:
-                    
-                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
-                    newmatnRec.allfilename09 = @"";
-                    break;
+                [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
+                [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]];
+                switch(targetImg.tag)
+                {
+                    case 1:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
+                        newmatnRec.allfilename = @"";
+                        break;
+                    case 2:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
+                        newmatnRec.allfilename02 = @"";
+                        break;
+                    case 3:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
+                        newmatnRec.allfilename03 = @"";
+                        break;
+                    case 4:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
+                        newmatnRec.allfilename04 = @"";
+                        break;
+                    case 5:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
+                        newmatnRec.allfilename05 = @"";
+                        break;
+                    case 6:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
+                        newmatnRec.allfilename06 = @"";
+                        break;
+                    case 7:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
+                        newmatnRec.allfilename07 = @"";
+                        break;
+                    case 8:
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
+                        newmatnRec.allfilename08 = @"";
+                        break;
+                    case 9:
+                        
+                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
+                        newmatnRec.allfilename09 = @"";
+                        break;
+                }
             }
         }
     }
+//    if(buttonIndex == 1)
+//    {
+//        if(newmatnRec.isOld)
+//        {
+//            Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
+//            NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
+//            
+//            if(newsAllfilename.length > 30)
+//            {
+//                newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
+//            }
+//            else
+//            {
+//                newsAllfilename = @"null";
+//            }
+//            
+//            deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
+//            [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
+//            [self.imgCollectionView reloadData];
+//        }
+//        else
+//        {
+//            [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
+//            switch(targetImg.tag)
+//            {
+//                case 1:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
+//                    newmatnRec.allfilename = @"";
+//                    break;
+//                case 2:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
+//                    newmatnRec.allfilename02 = @"";
+//                    break;
+//                case 3:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
+//                    newmatnRec.allfilename03 = @"";
+//                    break;
+//                case 4:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
+//                    newmatnRec.allfilename04 = @"";
+//                    break;
+//                case 5:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
+//                    newmatnRec.allfilename05 = @"";
+//                    break;
+//                case 6:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
+//                    newmatnRec.allfilename06 = @"";
+//                    break;
+//                case 7:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
+//                    newmatnRec.allfilename07 = @"";
+//                    break;
+//                case 8:
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
+//                    newmatnRec.allfilename08 = @"";
+//                    break;
+//                case 9:
+//                    
+//                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
+//                    newmatnRec.allfilename09 = @"";
+//                    break;
+//            }
+//        }
+//    }
 //    else if(buttonIndex == 1)
 //    {
 //        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
@@ -1826,6 +1927,9 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            
+            fromCamera = YES;
+            
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -1866,6 +1970,9 @@
             [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
             controller.mediaTypes = mediaTypes;
             controller.delegate = self;
+            
+            fromCamera = NO;
+            
             [self presentViewController:controller
                                animated:YES
                              completion:^(void){
@@ -1882,9 +1989,24 @@
     [picker dismissViewControllerAnimated:YES completion:^()
      {
          UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-         UIImage *smallImage = [self imageByScalingToMaxSize:portraitImg];
+         UIImage *smallImage = nil;
+         if (selectPicIndex != -1) {
+             if (selectPicIndex == 9) {
+                 smallImage = [self imageByScalingToMaxSize2:portraitImg];
+             }
+             else
+             {
+                 smallImage = [self imageByScalingToMaxSize:portraitImg];
+             }
+         }
+         else
+         {
+             smallImage = [self imageByScalingToMaxSize2:portraitImg];
+         }
          NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
-         
+         if (fromCamera) {
+             [self saveImageToPhotos:portraitImg];
+         }
          UIImage *tImg = [UIImage imageWithData:imageData];
          if(selectPicIndex != -1)
          {
@@ -2069,6 +2191,21 @@
     return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
 }
 
+- (UIImage *)imageByScalingToMaxSize2:(UIImage *)sourceImage {
+    if (sourceImage.size.width < 700) return sourceImage;
+    CGFloat btWidth = 0.0f;
+    CGFloat btHeight = 0.0f;
+    if (sourceImage.size.width > sourceImage.size.height) {
+        btHeight = 700;
+        btWidth = sourceImage.size.width * (700 / sourceImage.size.height);
+    } else {
+        btWidth = 700;
+        btHeight = sourceImage.size.height * (700 / sourceImage.size.width);
+    }
+    CGSize targetSize = CGSizeMake(btWidth, btHeight);
+    return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
+}
+
 - (UIImage *)imageByScalingAndCroppingForSourceImage:(UIImage *)sourceImage targetSize:(CGSize)targetSize {
     UIImage *newImage = nil;
     CGSize imageSize = sourceImage.size;
@@ -2118,6 +2255,21 @@
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+- (void)saveImageToPhotos:(UIImage*)savedImage
+{
+    UIImageWriteToSavedPhotosAlbum(savedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
+// 指定回调方法
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
+{
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
 }
 
 @end
