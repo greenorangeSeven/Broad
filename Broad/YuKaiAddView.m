@@ -51,7 +51,7 @@
     self.navigationItem.titleView = titleLabel;
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"提交申请" forState:UIControlStateNormal];
+    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
@@ -309,7 +309,7 @@
 //                              NSArray *table = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
 //                              NSDictionary *dic = table[0];
                               [Tool showCustomHUD:@"新增成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-                              [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_YuKaiListReLoad" object:nil];
+//                              [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_YuKaiListReLoad" object:nil];
                               [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
                               
                           };

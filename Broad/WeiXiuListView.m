@@ -127,6 +127,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
+    if(weixiuArray && [weixiuArray count] > 0)
+    {
+        [self tableReload];
+    }
+    
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
@@ -164,26 +169,26 @@
         
         MatnRec *matnRec = weixiuArray[indexPath.row];
         
-        cell.name_label.text = [NSString stringWithFormat:@"服务项目:%@",matnRec.Project];
-        cell.type_label.text = [NSString stringWithFormat:@"出厂编号:%@",matnRec.OutFact_Num];
-        cell.no_label.text = [NSString stringWithFormat:@"机组型号:%@",matnRec.AirCondUnit_Mode];
+        cell.name_label.text = [NSString stringWithFormat:@"服务项目：%@",matnRec.Project];
+        cell.type_label.text = [NSString stringWithFormat:@"出厂编号：%@",matnRec.OutFact_Num];
+        cell.no_label.text = [NSString stringWithFormat:@"机组型号：%@",matnRec.AirCondUnit_Mode];
         
         if(matnRec.UploadTime.length > 0)
         {
-            NSString *timeStr = [matnRec.UploadTime substringToIndex:[matnRec.UploadTime rangeOfString:@" "].location];
-            
-            if(timeStr)
-            {
-                cell.time_label.text = [NSString stringWithFormat:@"上传时间:%@",timeStr];
-            }
-            else
-            {
-                cell.time_label.text = @"上传时间:未知";
-            }
+//            NSString *timeStr = [matnRec.UploadTime substringToIndex:[matnRec.UploadTime rangeOfString:@" "].location];
+//
+//            if(timeStr)
+//            {
+                cell.time_label.text = [NSString stringWithFormat:@"上传时间：%@",matnRec.UploadTime];
+//            }
+//            else
+//            {
+//                cell.time_label.text = @"上传时间:未知";
+//            }
         }
         else
         {
-            cell.time_label.text = @"上传时间:未知";
+            cell.time_label.text = @"上传时间：未知";
         }
         return cell;
     }

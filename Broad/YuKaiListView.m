@@ -125,6 +125,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
+    if(weixiuArray && [weixiuArray count] > 0)
+    {
+        [self tableReload];
+    }
+    
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
@@ -162,9 +167,9 @@
         
         Invoice *invoice = weixiuArray[indexPath.row];
         
-        cell.name_label.text = [NSString stringWithFormat:@"申请人:%@",invoice.App_Name];
-        cell.type_label.text = [NSString stringWithFormat:@"协议编号:%@",invoice.CONTR_No];
-        cell.no_label.text = [NSString stringWithFormat:@"开票金额:%f",invoice.App_InvoiceAMT];
+        cell.name_label.text = [NSString stringWithFormat:@"申请人：%@",invoice.App_Name];
+        cell.type_label.text = [NSString stringWithFormat:@"协议编号：%@",invoice.CONTR_No];
+        cell.no_label.text = [NSString stringWithFormat:@"开票金额：%.2f万",invoice.App_InvoiceAMT];
         
         if(invoice.App_Date.length > 0)
         {
@@ -172,16 +177,16 @@
             
             if(timeStr)
             {
-                cell.time_label.text = [NSString stringWithFormat:@"申请日期:%@",timeStr];
+                cell.time_label.text = [NSString stringWithFormat:@"申请日期：%@",timeStr];
             }
             else
             {
-                cell.time_label.text = @"申请日期:未知";
+                cell.time_label.text = @"申请日期：未知";
             }
         }
         else
         {
-            cell.time_label.text = @"申请日期:未知";
+            cell.time_label.text = @"申请日期：未知";
         }
         return cell;
     }

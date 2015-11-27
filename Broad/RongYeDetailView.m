@@ -46,7 +46,7 @@
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
     
-    self.servicetime_field.enabled = NO;
+//    self.servicetime_field.enabled = NO;
     
     imgArray = [[NSMutableArray alloc] init];
     [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
@@ -233,7 +233,7 @@
     self.enginer_field.text = self.solution.ExecMan;
     self.user_field.text = app.depart.CustShortName_CN;
     self.uploador_field.text = self.solution.Uploader;
-    self.uploadtime_field.text = self.solution.UploadTime;
+//    self.uploadtime_field.text = self.solution.UploadTime;
     self.chucang_no_label.text = self.solution.OutFactNum;
     self.engine_no_label.text = self.solution.AirCondUnitMode;
     self.create_no_label.text = self.solution.ProdNum;
@@ -248,6 +248,19 @@
         else
         {
             self.servicetime_field.text = @"未知";
+        }
+    }
+    if (self.solution.UploadTime.length > 0)
+    {
+        NSString *timeStr = [self.solution.UploadTime substringToIndex:[self.solution.UploadTime rangeOfString:@" "].location];
+        
+        if(timeStr)
+        {
+            self.uploadtime_field.text = timeStr;
+        }
+        else
+        {
+            self.uploadtime_field.text = @"未知";
         }
     }
 }

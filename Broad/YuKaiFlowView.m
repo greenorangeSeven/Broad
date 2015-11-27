@@ -175,8 +175,8 @@
             self.et_cuase.text = invoice.App_reason;
             self.tv_invoice_type.text = invoice.Invoice_Type;
             self.tv_invoice_proj.text = invoice.Invoice_Item;
-            self.tv_paynum_p.text = [NSString stringWithFormat:@"%f",invoice.App_InvoiceAMT];
-            self.tv_paynum.text = [NSString stringWithFormat:@"%f",invoice.BefPay_AMT];
+            self.tv_paynum_p.text = [NSString stringWithFormat:@"%.2f",invoice.App_InvoiceAMT];
+            self.tv_paynum.text = [NSString stringWithFormat:@"%.2f",invoice.BefPay_AMT];
             self.tv_prepaytime.text = invoice.BefPay_Date;
             self.tv_protocol.text = invoice.CONTR_No;
             self.tv_departname.text = invoice.CUST_Name;

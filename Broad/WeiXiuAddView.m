@@ -34,6 +34,8 @@
     MBProgressHUD *hud2;
     
     BOOL fromCamera;
+    
+    NSInteger selectTimeIndex;
 }
 
 @end
@@ -77,6 +79,12 @@
     
     self.servicetime_field.delegate = self;
     self.servicetime_field.tag = 3;
+    
+    self.servicetime2_field.delegate = self;
+    self.servicetime2_field.tag = 4;
+    
+    self.servicetime3_field.delegate = self;
+    self.servicetime3_field.tag = 5;
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
     
@@ -168,50 +176,50 @@
         }
     }
     
-//    if([self.serviceproject_field.text isEqualToString:@"年1次保养"])
-//    {
-//        if([imgDic objectForKey:@"4"] == nil)
-//        {
-//            if (hud2) {
-//                [hud2 hide:YES];
-//            }
-//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            return;
-//        }
-//    }
-//    if([self.serviceproject_field.text isEqualToString:@"年2次保养"])
-//    {
-//        if([imgDic objectForKey:@"8"] == nil)
-//        {
-//            if (hud2) {
-//                [hud2 hide:YES];
-//            }
-//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            return;
-//        }
-//    }
-//    if([self.serviceproject_field.text isEqualToString:@"年3次保养"])
-//    {
-//        if([imgDic objectForKey:@"6"] == nil)
-//        {
-//            if (hud2) {
-//                [hud2 hide:YES];
-//            }
-//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            return;
-//        }
-//    }
-//    if([self.serviceproject_field.text isEqualToString:@"年4次保养"])
-//    {
-//        if([imgDic objectForKey:@"9"] == nil)
-//        {
-//            if (hud2) {
-//                [hud2 hide:YES];
-//            }
-//            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            return;
-//        }
-//    }
+    //    if([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+    //    {
+    //        if([imgDic objectForKey:@"4"] == nil)
+    //        {
+    //            if (hud2) {
+    //                [hud2 hide:YES];
+    //            }
+    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+    //            return;
+    //        }
+    //    }
+    //    if([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+    //    {
+    //        if([imgDic objectForKey:@"8"] == nil)
+    //        {
+    //            if (hud2) {
+    //                [hud2 hide:YES];
+    //            }
+    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+    //            return;
+    //        }
+    //    }
+    //    if([self.serviceproject_field.text isEqualToString:@"年3次保养"])
+    //    {
+    //        if([imgDic objectForKey:@"6"] == nil)
+    //        {
+    //            if (hud2) {
+    //                [hud2 hide:YES];
+    //            }
+    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+    //            return;
+    //        }
+    //    }
+    //    if([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+    //    {
+    //        if([imgDic objectForKey:@"9"] == nil)
+    //        {
+    //            if (hud2) {
+    //                [hud2 hide:YES];
+    //            }
+    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
+    //            return;
+    //        }
+    //    }
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
@@ -521,8 +529,27 @@
     [request setUseCookiePersistence:NO];
     [request setTimeOutSeconds:30];
     
+    NSString *servicetime2Str = @"";
+    if(self.servicetime2_field.text && self.servicetime2_field.text.length > 0)
+    {
+        servicetime2Str = [NSString stringWithFormat:@"'%@'", self.servicetime2_field.text];
+    }
+    else
+    {
+        servicetime2Str = @"null";
+    }
+    NSString *servicetime3Str = @"";
+    if(self.servicetime3_field.text && self.servicetime3_field.text.length > 0)
+    {
+        servicetime3Str = [NSString stringWithFormat:@"'%@'", self.servicetime3_field.text];
+    }
+    else
+    {
+        servicetime3Str = @"null";
+    }
+    
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_MatnRec(Proj_ID,Exec_Man,Exec_Date,AirCondUnit_Mode,OutFact_Num,Type,Project,Uploader,UploadTime,allfilename,allfilename02,allfilename03,allfilename04,allfilename05,allfilename06,allfilename07,allfilename08,allfilename09) values('%@','%@','%@','%@','%@','%@','%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@')",app.depart.PROJ_ID,self.enginer_label.text,self.servicetime_field.text,self.engine_no_label.text,self.chucang_no_label.text,self.servcetype_field.text,self.serviceproject_field.text,self.uploador_label.text,matnRec.allfilename,matnRec.allfilename02,matnRec.allfilename03,matnRec.allfilename04,matnRec.allfilename05,matnRec.allfilename06,matnRec.allfilename07,matnRec.allfilename08,matnRec.allfilename09];
+    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_MatnRec(Proj_ID,Exec_Man,Exec_Date,Exec_Date01,Exec_Date02,AirCondUnit_Mode,OutFact_Num,Type,Project,Uploader,UploadTime,allfilename,allfilename02,allfilename03,allfilename04,allfilename05,allfilename06,allfilename07,allfilename08,allfilename09) values('%@','%@','%@',%@,%@,'%@','%@','%@','%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@')",app.depart.PROJ_ID,self.enginer_label.text,self.servicetime_field.text,servicetime2Str,servicetime3Str,self.engine_no_label.text,self.chucang_no_label.text,self.servcetype_field.text,self.serviceproject_field.text,self.uploador_label.text,matnRec.allfilename,matnRec.allfilename02,matnRec.allfilename03,matnRec.allfilename04,matnRec.allfilename05,matnRec.allfilename06,matnRec.allfilename07,matnRec.allfilename08,matnRec.allfilename09];
     
     [request setPostValue:sql forKey:@"sqlstr"];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
@@ -539,7 +566,7 @@
         if([response rangeOfString:@"true"].length > 0)
         {
             [Tool showCustomHUD:@"上传成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_WeiXiuListReLoad" object:nil];
             [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
         }
         else
@@ -605,7 +632,7 @@
                                       self.img8_view.hidden = YES;
                                       self.img9_view.hidden = YES;
                                       
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img4_view.frame.origin.y + self.img4_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img4_view.frame.origin.y + self.img4_view.frame.size.height + 554 );
                                       CGRect viewFrame = self.imgContain_view.frame;
                                       viewFrame.size.height = self.img4_view.frame.origin.y + self.img4_view.frame.size.height;
                                       self.imgContain_view.frame = viewFrame;
@@ -623,7 +650,7 @@
                                       self.img7_label.text = @"靶片长度";
                                       self.img8_label.text = @"售后服务单";
                                       self.img9_view.hidden = YES;
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img8_view.frame.origin.y + self.img8_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img8_view.frame.origin.y + self.img8_view.frame.size.height + 554);
                                       
                                       CGRect viewFrame = self.imgContain_view.frame;
                                       viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
@@ -643,7 +670,7 @@
                                       self.img7_view.hidden = YES;
                                       self.img8_view.hidden = YES;
                                       self.img9_view.hidden = YES;
-                                      self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img6_view.frame.origin.y + self.img6_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img6_view.frame.origin.y + self.img6_view.frame.size.height + 554);
                                       
                                       CGRect viewFrame = self.imgContain_view.frame;
                                       viewFrame.size.height = self.img6_view.frame.origin.y + self.img6_view.frame.size.height;
@@ -662,7 +689,7 @@
                                       self.img7_label.text = @"风轮清理";
                                       self.img8_label.text = @"主机水侧排水";
                                       self.img9_label.text = @"售后服务单";
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 460);
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 554);
                                       
                                       CGRect viewFrame = self.imgContain_view.frame;
                                       viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
@@ -753,12 +780,48 @@
             return NO;
         }
         HSDatePickerViewController *hsdpvc = [HSDatePickerViewController new];
+        selectTimeIndex = textField.tag;
         hsdpvc.delegate = self;
         if (serviceDate) {
             hsdpvc.date = serviceDate;
         }
         [self presentViewController:hsdpvc animated:YES completion:nil];
     }
+    else if(textField.tag == 4 || textField.tag == 5)
+    {
+//        if(self.servicetime_field.text.length == 0)
+//        {
+//            [Tool showCustomHUD:@"请先选择服务时间" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return NO;
+//        }
+        HSDatePickerViewController *hsdpvc = [HSDatePickerViewController new];
+        selectTimeIndex = textField.tag;
+        hsdpvc.delegate = self;
+        if (serviceDate) {
+            hsdpvc.date = serviceDate;
+        }
+        [self presentViewController:hsdpvc animated:YES completion:nil];
+    }
+//    else if(textField.tag == 5)
+//    {
+//        if(self.servicetime_field.text.length == 0)
+//        {
+//            [Tool showCustomHUD:@"请先选择服务时间" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return NO;
+//        }
+//        if(self.servicetime2_field.text.length == 0)
+//        {
+//            [Tool showCustomHUD:@"请先选择服务时间2" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return NO;
+//        }
+//        HSDatePickerViewController *hsdpvc = [HSDatePickerViewController new];
+//        selectTimeIndex = textField.tag;
+//        hsdpvc.delegate = self;
+//        if (serviceDate) {
+//            hsdpvc.date = serviceDate;
+//        }
+//        [self presentViewController:hsdpvc animated:YES completion:nil];
+//    }
     return NO;
 }
 
@@ -777,7 +840,7 @@
     //调整网格布局高度
     self.imgCollectionView.frame = CGRectMake(x, y, width, height);
     
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.imgCollectionView.frame.origin.y + self.imgCollectionView.frame.size.height + 150);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.imgCollectionView.frame.origin.y + self.imgCollectionView.frame.size.height + 150 + 94);
 }
 
 #pragma mark - 图片集合
@@ -896,7 +959,18 @@
                 //如果为0则两个日期相等,如果为-1则服务时间小于起始时间
                 if(tag == 0 || tag == -1)
                 {
-                    self.servicetime_field.text = targetDate;
+                    if (selectTimeIndex == 3)
+                    {
+                        self.servicetime_field.text = targetDate;
+                    }
+                    else if (selectTimeIndex == 4)
+                    {
+                        self.servicetime2_field.text = targetDate;
+                    }
+                    else if (selectTimeIndex == 5)
+                    {
+                        self.servicetime3_field.text = targetDate;
+                    }
                 }
                 else
                 {
@@ -918,7 +992,7 @@
         }
         else
         {
-            [Tool showCustomHUD:@"服务时间必须小于上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
+            [Tool showCustomHUD:@"服务时间 <= 上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
             return;
         }
     }
@@ -928,11 +1002,22 @@
         //如果为0则两个日期相等,如果为-1则服务时间小于于起始时间
         if(tag == 0 || tag == -1)
         {
-            self.servicetime_field.text = targetDate;
+            if (selectTimeIndex == 3)
+            {
+                self.servicetime_field.text = targetDate;
+            }
+            else if (selectTimeIndex == 4)
+            {
+                self.servicetime2_field.text = targetDate;
+            }
+            else if (selectTimeIndex == 5)
+            {
+                self.servicetime3_field.text = targetDate;
+            }
         }
         else
         {
-            [Tool showCustomHUD:@"服务时间必须小于上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
+            [Tool showCustomHUD:@"服务时间 <= 上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
             return;
         }
     }
@@ -941,6 +1026,21 @@
 //optional
 - (void)hsDatePickerDidDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
     NSLog(@"Picker did dismiss with %lu", method);
+    if(method == 1)
+    {
+        if (selectTimeIndex == 3)
+        {
+            self.servicetime_field.text = @"";
+        }
+        else if (selectTimeIndex == 4)
+        {
+            self.servicetime2_field.text = @"";;
+        }
+        else if (selectTimeIndex == 5)
+        {
+            self.servicetime3_field.text = @"";;
+        }
+    }
 }
 
 //optional
@@ -1063,10 +1163,10 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    //    if(alertView.tag == -10)
-    //    {
-    //        return;
-    //    }
+    if(alertView.tag == -10)
+    {
+        return;
+    }
     if(buttonIndex == 0)
     {
         if(alertView.tag == -11)

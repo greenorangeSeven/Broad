@@ -230,7 +230,7 @@
                      self.imgContain_view.hidden = NO;
                      self.imgCollectionView.hidden = YES;
                      [self.photos removeAllObjects];
-//                     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 200);
+                     //                     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 200);
                      [self setImg];
                  }
              }
@@ -253,17 +253,17 @@
 
 -(void) setImg
 {
-//    for(UIView *v in [self.imgContain_view subviews])
-//    {
-//        for(UIView *subview in [v subviews])
-//        {
-//            if([subview isKindOfClass:[UIImageView class]])
-//            {
-//                UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
-//                [v addGestureRecognizer:imgTap];
-//            }
-//        }
-//    }
+    //    for(UIView *v in [self.imgContain_view subviews])
+    //    {
+    //        for(UIView *subview in [v subviews])
+    //        {
+    //            if([subview isKindOfClass:[UIImageView class]])
+    //            {
+    //                UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
+    //                [v addGestureRecognizer:imgTap];
+    //            }
+    //        }
+    //    }
     int index = 0;
     if (self.matnRec.allfilename.length > 0)
     {
@@ -410,12 +410,12 @@
         }
     }
     
-
+    
 }
 
 - (void)imgTapClick:(UITapGestureRecognizer *)sender
 {
-//    UIImageView *img = (UIImageView *)sender;
+    //    UIImageView *img = (UIImageView *)sender;
     if ([self.photos count] == 0) {
         NSMutableArray *photos = [[NSMutableArray alloc] init];
         for (Img *image in imgArray) {
@@ -444,9 +444,7 @@
         //判断是否为老版本数据
         
         if (self.matnRec.allfilename
-            && !self.matnRec.allfilename02
-            && !self.matnRec.allfilename03
-            && !self.matnRec.allfilename04)
+            && self.matnRec.allfilename.length > 40)
         {
             self.imgContain_view.hidden = YES;
             //            ll_img_contain.setVisibility(View.GONE);
@@ -477,13 +475,7 @@
     {
         
         if (self.matnRec.allfilename
-            && !self.matnRec.allfilename02
-            && !self.matnRec.allfilename03
-            && !self.matnRec.allfilename04
-            && !self.matnRec.allfilename05
-            && !self.matnRec.allfilename06
-            && !self.matnRec.allfilename07
-            && !self.matnRec.allfilename08)
+            && self.matnRec.allfilename.length > 40)
         {
             
             self.imgContain_view.hidden = YES;
@@ -514,17 +506,13 @@
     else if ([self.matnRec.Project isEqualToString:@"年3次保养"])
     {
         if (self.matnRec.allfilename
-            && !self.matnRec.allfilename02
-            && !self.matnRec.allfilename03
-            && !self.matnRec.allfilename04
-            && !self.matnRec.allfilename05
-            && !self.matnRec.allfilename06)
+            && self.matnRec.allfilename.length > 40)
         {
             self.imgContain_view.hidden = YES;
             //            ll_img_contain.setVisibility(View.GONE);
             isOld = true;
             [self getImg:self.matnRec.allfilename];
-
+            
         }
         else
         {
@@ -548,14 +536,7 @@
     else if ([self.matnRec.Project isEqualToString:@"年4次保养"])
     {
         if (self.matnRec.allfilename
-            && !self.matnRec.allfilename02
-            && !self.matnRec.allfilename03
-            && !self.matnRec.allfilename04
-            && !self.matnRec.allfilename05
-            && !self.matnRec.allfilename06
-            && !self.matnRec.allfilename07
-            && !self.matnRec.allfilename08
-            && !self.matnRec.allfilename09)
+            && self.matnRec.allfilename.length > 40)
         {
             self.imgContain_view.hidden = YES;
             //            ll_img_contain.setVisibility(View.GONE);
@@ -583,7 +564,7 @@
     }
     else
     {
-//        [imgArray removeAllObjects];
+        //        [imgArray removeAllObjects];
         self.imgContain_view.hidden = YES;
         //            ll_img_contain.setVisibility(View.GONE);
         isOld = true;
@@ -600,7 +581,7 @@
     
     if (self.matnRec.Exec_Date.length > 0)
     {
-//        NSString *timeStr = [self.matnRec.Exec_Date substringToIndex:[self.matnRec.Exec_Date rangeOfString:@" "].location];
+        //        NSString *timeStr = [self.matnRec.Exec_Date substringToIndex:[self.matnRec.Exec_Date rangeOfString:@" "].location];
         NSString *timeStr = @"";
         if([self.matnRec.Exec_Date rangeOfString:@" "].length > 0)
         {
@@ -611,18 +592,18 @@
             timeStr = self.matnRec.Exec_Date;
         }
         
-        if(timeStr)
-        {
-            self.servicetime_field.text = timeStr;
-        }
-        else
-        {
-            self.servicetime_field.text = @"未知";
-        }
+//        if(timeStr)
+//        {
+        self.servicetime_field.text = timeStr;
+//        }
+//        else
+//        {
+//            self.servicetime_field.text = @"未知";
+//        }
     }
     if (![self.matnRec.Exec_Date01 isEqualToString:@"null"] && self.matnRec.Exec_Date01.length > 0)
     {
-        NSString *timeStr = @"";
+        NSString *timeStr = self.matnRec.Exec_Date01;
         if([self.matnRec.Exec_Date01 rangeOfString:@" "].length > 0)
         {
             timeStr = [self.matnRec.Exec_Date01 substringToIndex:[self.matnRec.Exec_Date01 rangeOfString:@" "].location];
@@ -631,21 +612,21 @@
         {
             timeStr = self.matnRec.Exec_Date01;
         }
-//        NSString *timeStr = [self.matnRec.Exec_Date01 substringToIndex:[self.matnRec.Exec_Date01 rangeOfString:@" "].location];
+        //        NSString *timeStr = [self.matnRec.Exec_Date01 substringToIndex:[self.matnRec.Exec_Date01 rangeOfString:@" "].location];
         
-        if(timeStr)
-        {
-            self.servicetime2_field.text = timeStr;
-        }
-        else
-        {
-            self.servicetime2_field.text = @"未知";
-        }
+        //        if(timeStr)
+        //        {
+        self.servicetime2_field.text = timeStr;
+        //        }
+        //        else
+        //        {
+        //            self.servicetime2_field.text = @"未知";
+        //        }
     }
     if (![self.matnRec.Exec_Date02 isEqualToString:@"null"] && self.matnRec.Exec_Date02.length > 0)
     {
-//        NSString *timeStr = [self.matnRec.Exec_Date02 substringToIndex:[self.matnRec.Exec_Date02 rangeOfString:@" "].location];
-        NSString *timeStr = @"";
+        //        NSString *timeStr = [self.matnRec.Exec_Date02 substringToIndex:[self.matnRec.Exec_Date02 rangeOfString:@" "].location];
+        NSString *timeStr = self.matnRec.Exec_Date02;
         if([self.matnRec.Exec_Date02 rangeOfString:@" "].length > 0)
         {
             timeStr = [self.matnRec.Exec_Date02 substringToIndex:[self.matnRec.Exec_Date02 rangeOfString:@" "].location];
@@ -655,14 +636,14 @@
             timeStr = self.matnRec.Exec_Date02;
         }
         
-        if(timeStr)
-        {
-            self.servicetime3_field.text = timeStr;
-        }
-        else
-        {
-            self.servicetime3_field.text = @"未知";
-        }
+        //        if(timeStr)
+        //        {
+        self.servicetime3_field.text = timeStr;
+        //        }
+        //        else
+        //        {
+        //            self.servicetime3_field.text = @"未知";
+        //        }
     }
 }
 

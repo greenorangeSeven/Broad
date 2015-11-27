@@ -127,6 +127,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
+    if(solutionArray && [solutionArray count] > 0)
+    {
+        [self tableReload];
+    }
+    
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
@@ -164,24 +169,24 @@
         
         Solution *solution = solutionArray[indexPath.row];
         
-        cell.name_label.text = [NSString stringWithFormat:@"上传人:%@",solution.Uploader];
-        cell.type_label.text = [NSString stringWithFormat:@"出厂编号:%@",solution.OutFactNum];
+        cell.name_label.text = [NSString stringWithFormat:@"上传人：%@",solution.Uploader];
+        cell.type_label.text = [NSString stringWithFormat:@"出厂编号：%@",solution.OutFactNum];
         if(solution.ExecDate.length > 0)
         {
             NSString *timeStr = [solution.ExecDate substringToIndex:[solution.ExecDate rangeOfString:@" "].location];
             
             if(timeStr)
             {
-                cell.no_label.text = [NSString stringWithFormat:@"取样时间:%@",timeStr];
+                cell.no_label.text = [NSString stringWithFormat:@"取样时间：%@",timeStr];
             }
             else
             {
-                cell.no_label.text = @"取样时间:未知";
+                cell.no_label.text = @"取样时间：未知";
             }
         }
         else
         {
-            cell.no_label.text = @"取样时间:未知";
+            cell.no_label.text = @"取样时间：未知";
         }
         if(solution.UploadTime.length > 0)
         {
@@ -189,16 +194,16 @@
             
             if(timeStr)
             {
-                cell.time_label.text = [NSString stringWithFormat:@"上传时间:%@",timeStr];
+                cell.time_label.text = [NSString stringWithFormat:@"上传时间：%@",timeStr];
             }
             else
             {
-                cell.time_label.text = @"上传时间:未知";
+                cell.time_label.text = @"上传时间：未知";
             }
         }
         else
         {
-            cell.time_label.text = @"上传时间:未知";
+            cell.time_label.text = @"上传时间：未知";
         }
         return cell;
     }

@@ -322,7 +322,7 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notifireSolution" object:nil userInfo:[NSDictionary dictionaryWithObject:newsolution forKey:@"solution"]];
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_RongYeListReLoad" object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_RongYeListReLoad" object:nil];
             
             [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
         };
@@ -486,7 +486,7 @@
     }
     else
     {
-        [Tool showCustomHUD:@"取样时间必须小于上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
+        [Tool showCustomHUD:@"取样时间 <= 上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
         return;
     }
 }

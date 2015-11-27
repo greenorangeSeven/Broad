@@ -18,6 +18,9 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *serviceproject_field;
 @property (weak, nonatomic) IBOutlet UITextField *servicetime_field;
+@property (weak, nonatomic) IBOutlet UITextField *servicetime2_field;
+@property (weak, nonatomic) IBOutlet UITextField *servicetime3_field;
+
 @property (weak, nonatomic) IBOutlet UILabel *engine_no_label;
 @property (weak, nonatomic) IBOutlet UILabel *chucang_no_label;
 @property (weak, nonatomic) IBOutlet UIView *engine_choice_view;

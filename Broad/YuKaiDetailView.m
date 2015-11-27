@@ -34,11 +34,21 @@
     self.tv_invoice_proj.text = self.invoice.Invoice_Item;
     
     
-    self.tv_paynum_p.text = [NSString stringWithFormat:@"%f",self.invoice.App_InvoiceAMT];
+    self.tv_paynum_p.text = [NSString stringWithFormat:@"%.2f",self.invoice.App_InvoiceAMT];
     
-    self.tv_paynum.text = [NSString stringWithFormat:@"%f",self.invoice.BefPay_AMT];
+    self.tv_paynum.text = [NSString stringWithFormat:@"%.2f",self.invoice.BefPay_AMT];
     
-    self.tv_prepaytime.text = self.invoice.BefPay_Date;
+    if(self.invoice.BefPay_Date.length > 0)
+    {
+                    NSString *timeStr = [self.invoice.BefPay_Date substringToIndex:[self.invoice.BefPay_Date rangeOfString:@" "].location];
+        
+                    if(timeStr)
+                    {
+        self.tv_prepaytime.text = timeStr;
+                    }
+    }
+    
+//    self.tv_prepaytime.text = self.invoice.BefPay_Date;
     self.tv_protocol.text = self.invoice.CONTR_No;
     self.tv_departname.text = self.invoice.CUST_Name;
     
