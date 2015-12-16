@@ -36,6 +36,7 @@
     BOOL fromCamera;
     
     NSInteger selectTimeIndex;
+    NSString *FileType;
 }
 
 @end
@@ -52,6 +53,7 @@
     hud = [[MBProgressHUD alloc] initWithView:self.view];
     
     fromCamera = NO;
+    FileType = @"维护保养(IOSapp)";
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -381,7 +383,7 @@
                 }
                 NSString *reName = [[NSString alloc] init];
                 reName = nil;
-                reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+                reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmmss"],y];
                 
                 BOOL isOK = [self upload:imgbegin oldName:reName Index:[key intValue]];
                 if(!isOK)
@@ -404,7 +406,7 @@
             img = imgArray[i];
             int y = (arc4random() % 501) + 500;
             
-            NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",self.serviceproject_field.text,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+            NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",self.serviceproject_field.text,[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmmss"],y];
             BOOL isOK = [self upload:img oldName:reName Index:-1];
             if(!isOK)
             {
@@ -427,7 +429,7 @@
     {
         //        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
         int y = (arc4random() % 501) + 500;
-        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddHHmmss"],y];
         
         NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         

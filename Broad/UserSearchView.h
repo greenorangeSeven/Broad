@@ -11,9 +11,11 @@
 @interface UserSearchView : UIViewController
 
 
-@property (weak, nonatomic) IBOutlet UITextField *searchField;
-- (IBAction)searchAction:(id)sender;
+//@property (weak, nonatomic) IBOutlet UITextField *searchField;
+//- (IBAction)searchAction:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+- (IBAction)refineSearchAction:(id)sender;
 
 @end

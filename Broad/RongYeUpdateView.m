@@ -164,7 +164,7 @@
         {
             int y = (arc4random() % 501) + 500;
                 
-            NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",@"溶液取样",[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+            NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",@"溶液取样",[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmm"],y];
             BOOL isOK = [self upload:img.img oldName:reName Index:-1];
             if(!isOK)
             {
@@ -218,7 +218,7 @@
     {
 //        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
         int y = (arc4random() % 501) + 500;
-        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddHHmmss"],y];
         
         NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         

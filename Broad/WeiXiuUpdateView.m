@@ -761,7 +761,7 @@
                 {
                     project = self.img9_label.text;
                 }
-                NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+                NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmmss"],y];
                 
                 BOOL isOK = [self upload:img oldName:reName Index:[key intValue]];
                 if(!isOK)
@@ -782,7 +782,7 @@
             {
                 int y = (arc4random() % 501) + 500;
                 
-                NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",self.serviceproject_field.text,[Tool getCurrentTimeStr:@"yyyy-MM-dd-hh:mm"],y];
+                NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",self.serviceproject_field.text,[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmmss"],y];
                 BOOL isOK = [self upload:img.img oldName:reName Index:-1];
                 if(!isOK)
                 {
@@ -834,7 +834,7 @@
     {
         //        NSString *fileName = [NSString stringWithFormat:@"%@.jpg",[Tool generateTradeNO]];
         int y = (arc4random() % 501) + 500;
-        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddhhmm"],y];
+        NSString *fileName = [NSString stringWithFormat:@"%@%i.jpg",[Tool getCurrentTimeStr:@"yyyyMMddHHmmss"],y];
         
         NSString *base64Encoded = [UIImageJPEGRepresentation(img,0.8f) base64EncodedStringWithOptions:0];
         
