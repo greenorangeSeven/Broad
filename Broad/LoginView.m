@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "MainPageView.h"
 #import "DES.h"
+#import "XGPush.h"
 
 @interface LoginView ()<NSXMLParserDelegate>
 {
@@ -218,6 +219,7 @@
             [preference setObject:self.pwdField.text forKey:@"pwd"];
             AppDelegate *app = [[UIApplication sharedApplication] delegate];
             app.userinfo = userinfo;
+            [XGPush setTag:self.usernameField.text];
             [Tool showCustomHUD:@"登录成功" andView:self.view andImage:nil andAfterDelay:1.2f];
             [self performSelector:@selector(goNext) withObject:nil afterDelay:1.3f];
         }
@@ -240,6 +242,7 @@
     if(username)
     {
         self.usernameField.text = username;
+        [XGPush delTag:username];
     }
     if(pwd)
     {

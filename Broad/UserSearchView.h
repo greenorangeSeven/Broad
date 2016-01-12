@@ -16,6 +16,14 @@
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
 - (IBAction)refineSearchAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *selectView;
+- (IBAction)selectFwbAction:(id)sender;
+- (IBAction)selectGcsAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *fwbTf;
+@property (weak, nonatomic) IBOutlet UITextField *gcsTf;
+@property (weak, nonatomic) IBOutlet UIButton *typeBtn;
+@property (weak, nonatomic) IBOutlet UIButton *gscBtn;
 
 @end

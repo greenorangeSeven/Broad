@@ -28,9 +28,14 @@
     NSString *searchString;
     
     NSString *selectServiceBranch;
+    NSString *selectServiceBranchMC;
     NSString *selectEngineer;
     
     NSArray *refineArray;
+    
+    NSMutableArray *BranchDEs;
+    NSMutableArray *BranchMCs;
+    NSMutableArray *EngineerCNs;
 }
 
 @end
@@ -57,15 +62,72 @@
     userList = [[NSMutableArray alloc] init];
     isOver = NO;
     
-    SearchField = @"全部";
+    SearchField = @"CustShortName_CN";
     searchString = @"";
     selectServiceBranch = @"全部";
     selectEngineer = @"全部";
     
-    refineArray = [[NSArray alloc] initWithObjects:@"   服务部   ", @"   工程师   ", nil];
+    refineArray = [[NSArray alloc] initWithObjects:@"  用户名称  ",@"  客户代码  ",@"  出厂编号  ",@"   服务部   ", nil];
     
     self.searchBar.delegate = self;
-//    [self footerRefresh];
+    
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    if(app.userinfo.xzjb == 0 || app.userinfo.xzjb == 1)
+    {
+        self.gcsTf.hidden = YES;
+        self.gscBtn.hidden = YES;
+    }
+    
+    [self getServiceBranch];
+}
+
+- (void)getServiceBranch
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sql = [NSString stringWithFormat:@"exec sp_eFiles_Init_Parameter_Get_Serv_Dept '%@','查询条件服务部'", app.userinfo.UserName];
+    NSString *urlStr = [NSString stringWithFormat:@"%@JsonDataInDZDA", api_base_url];
+    NSURL *url = [NSURL URLWithString: urlStr];
+    
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setUseCookiePersistence:NO];
+    [request setTimeOutSeconds:30];
+    [request setPostValue:sql forKey:@"sqlstr"];
+    [request setDelegate:self];
+    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    [request setDidFailSelector:@selector(requestFailed:)];
+    [request setDidFinishSelector:@selector(requestServiceBranch:)];
+    [request startAsynchronous];
+}
+
+- (void)requestServiceBranch:(ASIHTTPRequest *)request
+{
+    if (request.hud)
+    {
+        [request.hud hide:YES];
+    }
+    [request setUseCookiePersistence:YES];
+    
+    XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+    utils.parserFail = ^()
+    {
+        [Tool showCustomHUD:@"连接失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+    };
+    utils.parserOK = ^(NSString *string)
+    {
+        NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error;
+        NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (jsonArray.count > 0) {
+            BranchDEs = [[NSMutableArray alloc] init];
+            BranchMCs = [[NSMutableArray alloc] init];
+            for(NSDictionary *jsonDic in jsonArray)
+            {
+                [BranchDEs addObject:jsonDic[@"ThirdDepartment"]];
+                [BranchMCs addObject:jsonDic[@"mc"]];
+            }
+        }
+    };
+    [utils stringFromparserXML:request.responseString target:@"string"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -139,6 +201,13 @@
                 ser_Dept = @"";
             }
         }
+        
+        if(isInit)
+        {
+            allCount = 0;
+            [userList removeAllObjects];
+        }
+        
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
         NSString *sqlStr = nil;
         
@@ -203,6 +272,8 @@
         NSDictionary *jsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
         NSArray *table = [jsonDic objectForKey:@"Table"];
         NSArray *table1 = [jsonDic objectForKey:@"Table1"];
+        
+        
         
         NSArray *userNewsList = [Tool readJsonToObjArray:table andObjClass:[Depart class]];
         if (userNewsList.count < 20) {
@@ -308,13 +379,13 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    SearchField = @"全部";
-    searchString = @"";
-    selectServiceBranch = @"全部";
-    selectEngineer = @"全部";
+//    SearchField = @"全部";
+//    searchString = @"";
+//    selectServiceBranch = @"全部";
+//    selectEngineer = @"全部";
     
     NSLog(@"SearchButtonClicked");
-    SearchField = @"CustShortName_CN";
+    
     searchString = searchBar.text;
     if(!searchString || searchString.length == 0)
     {
@@ -322,6 +393,8 @@
         return;
     }
     [self.view endEditing:YES];
+    isInit = true;
+    isOver = NO;
     [self footerRefresh];
 }
 
@@ -343,7 +416,7 @@
     
     self.searchBar.text = @"";
     NSMutableArray *menuItems = [[NSMutableArray alloc] init];
-    KxMenuItem *first = [KxMenuItem menuItem:@"筛选条件:"
+    KxMenuItem *first = [KxMenuItem menuItem:@"查询条件"
                                        image:nil
                                       target:nil
                                          tag:nil
@@ -373,126 +446,108 @@
     int tag = [item.tag intValue];
     NSString *menuValueStr = [refineArray objectAtIndex:tag];
     if ([menuValueStr isEqualToString:@"   服务部   "]) {
-        [self selectServiceBranch];
+//        [self selectServiceBranch];
+        [self.typeBtn setTitle:@"服务部" forState:UIControlStateNormal];
+        self.searchBar.text = @"";
+        self.searchBar.hidden = YES;
+        self.selectView.hidden = NO;
     }
-    else if([menuValueStr isEqualToString:@"   工程师   "])
+    else if([menuValueStr isEqualToString:@"  用户名称  "])
     {
-        [self selectEngineer];
+//        [self selectEngineer];
+        self.searchBar.placeholder = @"请输入用户名称";
+        SearchField = @"CustShortName_CN";
+        [self.typeBtn setTitle:@"用户名称" forState:UIControlStateNormal];
+        self.fwbTf.text = @"";
+        self.gcsTf.text = @"";
+        self.searchBar.hidden = NO;
+        self.selectView.hidden = YES;
+    }
+    else if([menuValueStr isEqualToString:@"  客户代码  "])
+    {
+        //        [self selectEngineer];
+        self.searchBar.placeholder = @"请输入客户代码";
+        SearchField = @"CUST_Code";
+        [self.typeBtn setTitle:@"客户代码" forState:UIControlStateNormal];
+        self.fwbTf.text = @"";
+        self.gcsTf.text = @"";
+        self.searchBar.hidden = NO;
+        self.selectView.hidden = YES;
+    }
+    else if([menuValueStr isEqualToString:@"  出厂编号  "])
+    {
+        //        [self selectEngineer];
+        self.searchBar.placeholder = @"请输入出厂编号";
+        SearchField = @"OutFact_Num";
+        [self.typeBtn setTitle:@"出厂编号" forState:UIControlStateNormal];
+        self.fwbTf.text = @"";
+        self.gcsTf.text = @"";
+        self.searchBar.hidden = NO;
+        self.selectView.hidden = YES;
     }
 }
 
-
-//管理员登录，筛选 长沙 服务部的所有用户
-//exec sp_eFiles_Init_Parameter_Get_Serv_Dept '登录用户中文名','查询条件服务部'
-//        sqlStr = @"declare @p10 int set @p10=5067 exec SP_GetProjInfoByPage @PageIndex=1,@PageSize=50,@SearchField='全部',@searchString='',@OrderBy=N'Send_Date',@Sort='desc',@UserName='admin',@Ser_Dept='长沙',@Engineer='全部',@IsEMC='',@Total=@p10 output select @p10";
-- (void)selectServiceBranch
-{
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sql = [NSString stringWithFormat:@"exec sp_eFiles_Init_Parameter_Get_Serv_Dept '%@','查询条件服务部'", app.userinfo.UserName];
-    NSString *urlStr = [NSString stringWithFormat:@"%@JsonDataInDZDA", api_base_url];
-    NSURL *url = [NSURL URLWithString: urlStr];
+- (IBAction)selectFwbAction:(id)sender {
+    SearchField = @"全部";
+    searchString = @"";
+    selectServiceBranch = @"全部";
+    selectEngineer = @"全部";
     
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setUseCookiePersistence:NO];
-    [request setTimeOutSeconds:30];
-    [request setPostValue:sql forKey:@"sqlstr"];
-    [request setDelegate:self];
-    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
-    [request setDidFailSelector:@selector(requestFailed:)];
-    [request setDidFinishSelector:@selector(requestServiceBranch:)];
-    [request startAsynchronous];
-}
-
-- (void)requestServiceBranch:(ASIHTTPRequest *)request
-{
-    if (request.hud)
-    {
-        [request.hud hide:YES];
-    }
-    [request setUseCookiePersistence:YES];
-    
-    XMLParserUtils *utils = [[XMLParserUtils alloc] init];
-    utils.parserFail = ^()
-    {
-        [Tool showCustomHUD:@"连接失败" andView:self.view andImage:nil andAfterDelay:1.2f];
-    };
-    utils.parserOK = ^(NSString *string)
-    {
-        NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-        NSError *error;
-        NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        NSMutableArray *BranchMCs = [[NSMutableArray alloc] init];
-        NSMutableArray *BranchDEs = [[NSMutableArray alloc] init];
-        for(NSDictionary *jsonDic in jsonArray)
-        {
-            [BranchMCs addObject:jsonDic[@"mc"]];
-            [BranchDEs addObject:jsonDic[@"ThirdDepartment"]];
-        }
-        [SGActionView showSheetWithTitle:@"请选择：" itemTitles:BranchDEs itemSubTitles:BranchMCs selectedIndex:-1 selectedHandle:^(NSInteger index){
-            NSDictionary *dic = jsonArray[index];
-            selectServiceBranch = dic[@"ThirdDepartment"];
-//            [self.view endEditing:YES];
+    [SGActionView showSheetWithTitle:@"请选择：" itemTitles:BranchMCs itemSubTitles:nil selectedIndex:-1 selectedHandle:^(NSInteger index){
+        selectServiceBranch = BranchMCs[index];
+        selectServiceBranchMC = BranchDEs[index];
+        self.fwbTf.text = selectServiceBranchMC;
+        [self.view endEditing:YES];
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+//        if(app.userinfo.xzjb == 0 || app.userinfo.xzjb == 1)
+//        {
+            isInit = true;
+            isOver = NO;
             [self footerRefresh];
-        }];
-    };
-    [utils stringFromparserXML:request.responseString target:@"string"];
-}
-
-//        你看，这个是 只筛选工程师 的
-//         exec sp_eFiles_Init_Parameter_Get_Duty_Engineer 'admin','查询条件工程师'
-
-//        declare @p11 int
-//        set @p11=0
-//        exec SP_GetProjInfoByPage @PageIndex=1,@PageSize=50,@SearchField='全部',@searchString='',@OrderBy=N'Send_Date',@Sort='desc',@UserName='admin',@Ser_Dept='全部',@Engineer='胡海东',@IsEMC='',@Total=@p11 output
-//        select @p11
-- (void)selectEngineer
-{
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sql = [NSString stringWithFormat:@"exec sp_eFiles_Init_Parameter_Get_Duty_Engineer '%@','查询条件工程师'", app.userinfo.UserName];
-    NSString *urlStr = [NSString stringWithFormat:@"%@JsonDataInDZDA", api_base_url];
-    NSURL *url = [NSURL URLWithString: urlStr];
-    
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-    [request setUseCookiePersistence:NO];
-    [request setTimeOutSeconds:30];
-    [request setPostValue:sql forKey:@"sqlstr"];
-    [request setDelegate:self];
-    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
-    [request setDidFailSelector:@selector(requestFailed:)];
-    [request setDidFinishSelector:@selector(requestEngineer:)];
-    [request startAsynchronous];
-}
-
-- (void)requestEngineer:(ASIHTTPRequest *)request
-{
-    if (request.hud)
-    {
-        [request.hud hide:YES];
-    }
-    [request setUseCookiePersistence:YES];
-    
-    XMLParserUtils *utils = [[XMLParserUtils alloc] init];
-    utils.parserFail = ^()
-    {
-        [Tool showCustomHUD:@"连接失败" andView:self.view andImage:nil andAfterDelay:1.2f];
-    };
-    utils.parserOK = ^(NSString *string)
-    {
-        NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-        NSError *error;
-        NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        NSMutableArray *EngineerCNs = [[NSMutableArray alloc] init];
-        for(NSDictionary *jsonDic in jsonArray)
+//            return ;
+//        }
+        NSString *sql = [NSString stringWithFormat:@"EXEC sp_Get_ServDept_To_Engineer '%@','%@'",selectServiceBranchMC, app.userinfo.UserName];
+        ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url]]];
+        
+        [request setUseCookiePersistence:NO];
+        [request setTimeOutSeconds:30];
+        
+        [request setPostValue:sql forKey:@"sqlstr"];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request startSynchronous];
+        NSError *error = [request error];
+        if (!error)
         {
-            [EngineerCNs addObject:jsonDic[@"mc"]];
+            NSString *response = [request responseString];
+            XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+            utils.parserFail = ^()
+            {
+                [Tool showCustomHUD:@"连接失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+            };
+            utils.parserOK = ^(NSString *string)
+            {
+                NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *error;
+                NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                EngineerCNs = [[NSMutableArray alloc] init];
+                for(NSDictionary *jsonDic in jsonArray)
+                {
+                    [EngineerCNs addObject:jsonDic[@"TrueName"]];
+                }
+            };
+            [utils stringFromparserXML:response target:@"string"];
         }
-        [SGActionView showSheetWithTitle:@"Please Select" itemTitles:EngineerCNs itemSubTitles:nil selectedIndex:-1 selectedHandle:^(NSInteger index){
-            NSDictionary *dic = jsonArray[index];
-            selectEngineer = dic[@"mc"];
-            [self footerRefresh];
-        }];
-    };
-    [utils stringFromparserXML:request.responseString target:@"string"];
+    }];
 }
 
+- (IBAction)selectGcsAction:(id)sender {
+    selectServiceBranch = @"全部";
+    [SGActionView showSheetWithTitle:@"请选择" itemTitles:EngineerCNs itemSubTitles:nil selectedIndex:-1 selectedHandle:^(NSInteger index){
+        selectEngineer = EngineerCNs[index];
+        self.gcsTf.text = selectEngineer;
+        isInit = true;
+        isOver = NO;
+        [self footerRefresh];
+    }];
+}
 @end

@@ -50,8 +50,8 @@
 //每页数量
 #define page_count 5
 
-#define api_base_url @"http://61.187.123.138:150/JkzxService.asmx/"
-//#define api_base_url @"http://61.187.123.138:6888/JkzxService.asmx/"
+//#define api_base_url @"http://61.187.123.138:150/JkzxService.asmx/"
+#define api_base_url @"http://61.187.123.138:6888/JkzxService.asmx/"
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 
@@ -77,8 +77,8 @@
 
 #define HTML_Bottom @"<div style='margin-bottom:60px'/>"
 
-#define AppVersion @"1.0"
-#define AppVersionCode @"1"
+#define AppVersion @"1.2"
+#define AppVersionCode @"2"
 
 #define noConnect @"noConnect"
 #define wifi @"wifi"
