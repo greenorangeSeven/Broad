@@ -11,6 +11,8 @@
 #import "WeiXiuCell.h"
 #import "WeiXiuAddView.h"
 #import "WeiXiuDetailView.h"
+#import "WeiXiuAdd2016View.h"
+#import "WeiXiuDetail2016View.h"
 
 @interface WeiXiuListView ()
 {
@@ -51,7 +53,8 @@
 
 - (void)add
 {
-    WeiXiuAddView *addView = [[WeiXiuAddView alloc] init];
+//    WeiXiuAddView *addView = [[WeiXiuAddView alloc] init];
+    WeiXiuAdd2016View *addView = [[WeiXiuAdd2016View alloc] init];
     [self.navigationController pushViewController:addView animated:YES];
 }
 
@@ -101,8 +104,10 @@
     };
     utils.parserOK = ^(NSString *string)
     {
-        NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;
+        NSLog(@"%@",string);
+        NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+        
         
         NSArray *table = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
         
@@ -208,9 +213,22 @@
     }
     else
     {
-        WeiXiuDetailView *detailView = [[WeiXiuDetailView alloc] init];
-        detailView.matnRec = weixiuArray[row];
-        [self.navigationController pushViewController:detailView animated:YES];
+        MatnRec *matnRec = weixiuArray[row];
+        
+        NSString *uploadTime =[Tool DateTimeRemoveTime:matnRec.UploadTime andSeparated:@" "];
+        uploadTime = [uploadTime stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        int uploadInt =[uploadTime intValue];
+        if (uploadInt >= 20160119) {
+            WeiXiuDetail2016View *detailView = [[WeiXiuDetail2016View alloc] init];
+            detailView.matnRec = matnRec;
+            [self.navigationController pushViewController:detailView animated:YES];
+        }
+        else
+        {
+            WeiXiuDetailView *detailView = [[WeiXiuDetailView alloc] init];
+            detailView.matnRec = matnRec;
+            [self.navigationController pushViewController:detailView animated:YES];
+        }
     }
 }
 

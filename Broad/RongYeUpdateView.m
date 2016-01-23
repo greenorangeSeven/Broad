@@ -423,7 +423,7 @@
     
     cell.repairImg.frame = CGRectMake(0, 0, 85, 85);
     
-    cell.deleteBtn.hidden = YES;
+//    cell.deleteBtn.hidden = YES;
     
     return cell;
 }

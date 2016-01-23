@@ -107,6 +107,9 @@
 
 + (BOOL) imageHasAlpha: (UIImage *) image;
 
+//根据分隔符分隔日期，只得到日期
++ (NSString *)DateTimeRemoveTime:(NSString *)dateTime andSeparated:(NSString *)separated;
+
 //UIImage转Base64
 + (NSString *) image2DataURL: (UIImage *) image;
 

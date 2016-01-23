@@ -123,6 +123,9 @@
 @property (copy, nonatomic) NSString *allfilename07;//	varchar(8000)	年4次保养附件
 @property (copy, nonatomic) NSString *allfilename08;//	varchar(8000)	年4次保养附件
 @property (copy, nonatomic) NSString *allfilename09;//	varchar(8000)	年4次保养附件
+@property (copy, nonatomic) NSString *allfilename10;
+@property (copy, nonatomic) NSString *allfilename11;
+@property (copy, nonatomic) NSString *allfilename12;
 @property (copy, nonatomic) NSString *EngineerNote;//	varchar(5000)	英文版工程师描述
 @property (copy, nonatomic) NSString *EngineerSign;//	varchar(50)	英文版工程师签名
 @property (copy, nonatomic) NSString *EngineerSignDate;//	datetime	英文版工程师签名时间

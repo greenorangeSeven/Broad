@@ -1,14 +1,14 @@
 //
-//  WeiXiuAddView.h
+//  WeiXiuAdd2016View.h
 //  Broad
 //
-//  Created by 赵腾欢 on 15/9/1.
-//  Copyright (c) 2015年 greenorange. All rights reserved.
+//  Created by Seven on 16/1/19.
+//  Copyright © 2016年 greenorange. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface WeiXiuAddView : UIViewController
+@interface WeiXiuAdd2016View : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *enginer_label;
@@ -52,8 +52,17 @@
 @property (weak, nonatomic) IBOutlet UIView *img9_view;
 @property (weak, nonatomic) IBOutlet UILabel *img9_label;
 @property (weak, nonatomic) IBOutlet UIButton *img9_button;
-
+@property (weak, nonatomic) IBOutlet UIView *img10_view;
+@property (weak, nonatomic) IBOutlet UILabel *img10_label;
+@property (weak, nonatomic) IBOutlet UIButton *img10_button;
+@property (weak, nonatomic) IBOutlet UIView *img11_view;
+@property (weak, nonatomic) IBOutlet UILabel *img11_label;
+@property (weak, nonatomic) IBOutlet UIButton *img11_button;
+@property (weak, nonatomic) IBOutlet UIView *img12_view;
+@property (weak, nonatomic) IBOutlet UILabel *img12_label;
+@property (weak, nonatomic) IBOutlet UIButton *img12_button;
 @property (weak, nonatomic) IBOutlet UICollectionView *imgCollectionView;
 
 - (IBAction)imgChoiceAction:(id)sender;
+
 @end

@@ -1,14 +1,13 @@
 //
-//  WeiXiuAddView.m
+//  WeiXiuUpdate2016View.m
 //  Broad
 //
-//  Created by 赵腾欢 on 15/9/1.
-//  Copyright (c) 2015年 greenorange. All rights reserved.
+//  Created by Seven on 16/1/20.
+//  Copyright © 2016年 greenorange. All rights reserved.
 //
 
-#import "IQAssetsPickerController.h"
+#import "WeiXiuUpdate2016View.h"
 #import "HSDatePickerViewController.h"
-#import "WeiXiuUpdateView.h"
 #import "EnginUnit.h"
 #import "SGActionView.h"
 #import "MatnRec.h"
@@ -17,7 +16,7 @@
 
 #define ORIGINAL_MAX_WIDTH 540.0f
 
-@interface WeiXiuUpdateView ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,IQAssetsPickerControllerDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface WeiXiuUpdate2016View ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate,HSDatePickerViewControllerDelegate,UIAlertViewDelegate,UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     MatnRec *newmatnRec;
     NSMutableDictionary *imgDic;
@@ -44,13 +43,11 @@
     BOOL fromCamera;
 }
 
-
 @end
 
-@implementation WeiXiuUpdateView
+@implementation WeiXiuUpdate2016View
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     newmatnRec = [[MatnRec alloc] init];
@@ -77,23 +74,23 @@
     UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
     self.navigationItem.rightBarButtonItem = addItem;
     
-    [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
-    
-    self.imgCollectionView.hidden = YES;
-    self.imgContain_view.hidden = YES;
+//    self.imgCollectionView.hidden = YES;
+//    self.imgContain_view.hidden = YES;
     
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
     
     //初始化图片集合
     imgDic = [[NSMutableDictionary alloc] init];
-    //    imgArray = [[NSMutableArray alloc] init];
-    if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
+    if([newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
     {
         Img *img = [[Img alloc] init];
         img.img = [UIImage imageNamed:@"camera_tag"];
         [newmatnRec.imgList insertObject:img atIndex:0];
+        
     }
+    
+    [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
     
     [self bindData];
     [self initData];
@@ -122,41 +119,42 @@
     self.enginer_label.text = app.depart.Duty_Engineer;
     self.uploador_label.text = app.userinfo.UserName;
     
-    
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enginChoice)];
-    [self.engine_choice_view addGestureRecognizer:tap];
-    
     UITapGestureRecognizer *imgTap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction1)];
-    [self.img1_ImgView addGestureRecognizer:imgTap1];
-    
     UITapGestureRecognizer *imgTap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction2)];
-    [self.img2_ImgView addGestureRecognizer:imgTap2];
-    
-    UITapGestureRecognizer *imgTap3= [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction3)];
-    [self.img3_ImgView addGestureRecognizer:imgTap3];
-    
+    UITapGestureRecognizer *imgTap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction3)];
     UITapGestureRecognizer *imgTap4 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction4)];
-    [self.img4_ImgView addGestureRecognizer:imgTap4];
-    
     UITapGestureRecognizer *imgTap5 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction5)];
-    [self.img5_ImgView addGestureRecognizer:imgTap5];
-    
     UITapGestureRecognizer *imgTap6 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction6)];
-    [self.img6_ImgView addGestureRecognizer:imgTap6];
-    
     UITapGestureRecognizer *imgTap7 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction7)];
-    [self.img7_ImgView addGestureRecognizer:imgTap7];
-    
     UITapGestureRecognizer *imgTap8 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction8)];
-    [self.img8_ImgView addGestureRecognizer:imgTap8];
-    
     UITapGestureRecognizer *imgTap9 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction9)];
+    UITapGestureRecognizer *imgTap10 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction10)];
+    UITapGestureRecognizer *imgTap11 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction11)];
+    UITapGestureRecognizer *imgTap12 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction12)];
+    
+    [self.engine_choice_view addGestureRecognizer:tap];
+    [self.img1_ImgView addGestureRecognizer:imgTap1];
+    [self.img2_ImgView addGestureRecognizer:imgTap2];
+    [self.img3_ImgView addGestureRecognizer:imgTap3];
+    [self.img4_ImgView addGestureRecognizer:imgTap4];
+    [self.img5_ImgView addGestureRecognizer:imgTap5];
+    [self.img6_ImgView addGestureRecognizer:imgTap6];
+    [self.img7_ImgView addGestureRecognizer:imgTap7];
+    [self.img8_ImgView addGestureRecognizer:imgTap8];
     [self.img9_ImgView addGestureRecognizer:imgTap9];
+    [self.img10_ImgView addGestureRecognizer:imgTap10];
+    [self.img11_ImgView addGestureRecognizer:imgTap11];
+    [self.img12_ImgView addGestureRecognizer:imgTap12];
     
     
     [self enabledField];
     timeCha = [self intervalSinceNow:newmatnRec.UploadTime];
+}
+
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)enabledField
@@ -223,136 +221,122 @@
 {
     if ([newmatnRec.Project isEqualToString:@"年1次保养"])
     {
-        //判断是否为老版本数据
-        if (self.matnRec.allfilename
-            && self.matnRec.allfilename.length > 40)
-        {
-            self.imgContain_view.hidden = YES;
-        }
-        else
-        {
-            self.img1_label.text = @"蒸发器开盖检查";
-            self.img2_label.text = @"吸收器、冷凝器开盖检查";
-            self.img3_label.text = @"机组外观";
-            self.img4_label.text = @"售后服务单";
-            
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img4_view.frame.origin.y + self.img4_view.frame.size.height);
-            
-            CGRect viewFrame = self.imgContain_view.frame;
-            viewFrame.size.height = self.img4_view.frame.origin.y + self.img4_view.frame.size.height;
-            self.imgContain_view.frame = viewFrame;
-            
-            self.img5_view.hidden = YES;
-            self.img6_view.hidden = YES;
-            self.img7_view.hidden = YES;
-            self.img8_view.hidden = YES;
-            self.img9_view.hidden = YES;
-        }
+        //        self.img1_label.text = @"蒸发器";
+        //        self.img2_label.text = @"吸收器、冷凝器";
+        //        self.img3_label.text = @"真空泵极限值";
+        //        self.img4_label.text = @"售后服务单";
+        //        self.img5_label.text = @"主体真空值";
+        //        self.img6_label.text = @"最大燃烧量";
+        //        self.img7_label.text = @"最小燃烧量";
+        self.img1_label.text = @"蒸发器";
+        self.img2_label.text = @"吸收器、冷凝器";
+        self.img3_label.text = @"真空泵极限值";
+        self.img4_label.text = @"主体真空值";
+        self.img5_label.text = @"最大燃烧量";
+        self.img6_label.text = @"最小燃烧量";
+        self.img7_label.text = @"售后服务单";
+        self.img8_view.hidden = YES;
+        self.img9_view.hidden = YES;
+        self.img10_view.hidden = YES;
+        self.img11_view.hidden = YES;
+        self.img12_view.hidden = YES;
+        
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img7_view.frame.origin.y + self.img7_view.frame.size.height);
+        
+        CGRect viewFrame = self.imgContain_view.frame;
+        viewFrame.size.height = self.img7_view.frame.origin.y + self.img7_view.frame.size.height;
+        self.imgContain_view.frame = viewFrame;
+        
     }
     else if ([newmatnRec.Project isEqualToString:@"年2次保养"])
     {
+        self.img1_label.text = @"真空泵极限值";
+        self.img2_label.text = @"烟管";
+        self.img3_label.text = @"主体真空值";
+        self.img4_label.text = @"高发真空值";
+        self.img5_label.text = @"燃料过滤器清洗";
+        self.img6_label.text = @"软水器";
+        self.img7_label.text = @"最小燃烧量";
+        self.img8_label.text = @"售后服务单";
+        self.img9_view.hidden = YES;
+        self.img10_view.hidden = YES;
+        self.img11_view.hidden = YES;
+        self.img12_view.hidden = YES;
         
-        if (self.matnRec.allfilename
-            && self.matnRec.allfilename.length > 40)
-        {
-            
-            self.imgContain_view.hidden = YES;
-        }
-        else
-        {
-            self.img1_label.text = @"冷却塔检查检查";
-            self.img2_label.text = @"烟管";
-            self.img3_label.text = @"油泵过滤器清洗";
-            self.img4_label.text = @"点火电极清理";
-            self.img5_label.text = @"燃料过滤器清洗";
-            self.img6_label.text = @"软水器";
-            self.img7_label.text = @"靶片长度";
-            self.img8_label.text = @"售后服务单";
-            
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img8_view.frame.origin.y + self.img8_view.frame.size.height);
-            
-            CGRect viewFrame = self.imgContain_view.frame;
-            viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
-            self.imgContain_view.frame = viewFrame;
-            
-            self.img9_view.hidden = YES;
-            
-            
-        }
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img8_view.frame.origin.y + self.img8_view.frame.size.height);
+        
+        CGRect viewFrame = self.imgContain_view.frame;
+        viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
+        self.imgContain_view.frame = viewFrame;
+        
     }
     else if ([newmatnRec.Project isEqualToString:@"年3次保养"])
     {
-        if (self.matnRec.allfilename
-            && self.matnRec.allfilename.length > 40)
-        {
-            self.imgContain_view.hidden = YES;
-            
-        }
-        else
-        {
-            self.img1_label.text = @"盐箱盐量";
-            self.img2_label.text = @"水质药剂";
-            self.img3_label.text = @"烟管结垢";
-            self.img4_label.text = @"冷却塔布水";
-            self.img5_label.text = @"冷却塔填料";
-            self.img6_label.text = @"售后服务单";
-            
-            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img6_view.frame.origin.y + self.img6_view.frame.size.height);
-            
-            CGRect viewFrame = self.imgContain_view.frame;
-            viewFrame.size.height = self.img6_view.frame.origin.y + self.img6_view.frame.size.height;
-            self.imgContain_view.frame = viewFrame;
-            
-            self.img7_view.hidden = YES;
-            self.img8_view.hidden = YES;
-            self.img9_view.hidden = YES;
-            
-            
-        }
+        self.img1_label.text = @"真空泵极限值";
+        self.img2_label.text = @"主体真空值";
+        self.img3_label.text = @"最大燃烧量";
+        self.img4_label.text = @"最小燃烧量";
+        self.img5_label.text = @"冷却塔填料";
+        self.img6_label.text = @"售后服务单";
+        self.img7_view.hidden = YES;
+        self.img8_view.hidden = YES;
+        self.img9_view.hidden = YES;
+        self.img10_view.hidden = YES;
+        self.img11_view.hidden = YES;
+        self.img12_view.hidden = YES;
+        
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img6_view.frame.origin.y + self.img6_view.frame.size.height);
+        
+        CGRect viewFrame = self.imgContain_view.frame;
+        viewFrame.size.height = self.img6_view.frame.origin.y + self.img6_view.frame.size.height;
+        self.imgContain_view.frame = viewFrame;
     }
     else if ([newmatnRec.Project isEqualToString:@"年4次保养"])
     {
-        if (self.matnRec.allfilename
-            && self.matnRec.allfilename.length > 40)
-        {
-            self.imgContain_view.hidden = YES;
-        }
-        else
-        {
-            
-            self.img1_label.text = @"高发液位";
-            self.img2_label.text = @"烟管检查";
-            self.img3_label.text = @"热水器铜管";
-            self.img4_label.text = @"燃料过滤器清洗";
-            self.img5_label.text = @"油泵过滤器清洗";
-            self.img6_label.text = @"雾化盘清理";
-            self.img7_label.text = @"风轮清理";
-            self.img8_label.text = @"主机水侧排水";
-            self.img9_label.text = @"售后服务单";
-            
-            self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.imgContain_view.frame.origin.y + self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
-            
-            CGRect viewFrame = self.imgContain_view.frame;
-            viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
-            self.imgContain_view.frame = viewFrame;
-            NSLog(@"%f", self.imgContain_view.frame.size.height);
-            
-            CGRect viewFrame2 = self.view.frame;
-            viewFrame2.size.height = self.imgContain_view.frame.origin.y + self.imgContain_view.frame.size.height;
-            self.view.frame = viewFrame2;
-            NSLog(@"%f", self.view.frame.size.height);
-            
-        }
+        //            self.img1_label.text = @"高发液位";
+        //            self.img2_label.text = @"烟管检查";
+        //            self.img3_label.text = @"热水器铜管";
+        //            self.img4_label.text = @"燃料过滤器清洗";
+        //            self.img5_label.text = @"油泵过滤器清洗";
+        //            self.img6_label.text = @"雾化盘清理";
+        //            self.img7_label.text = @"风轮清理";
+        //            self.img8_label.text = @"主机水侧排水";
+        //            self.img9_label.text = @"售后服务单";
+        self.img1_label.text = @"高发液位";
+        self.img2_label.text = @"烟管";
+        self.img3_label.text = @"点火电极清理";
+        self.img4_label.text = @"燃料过滤器清洗";
+        self.img5_label.text = @"火焰探测器清理";
+        self.img6_label.text = @"雾化盘清理";
+        self.img7_label.text = @"风轮清理";
+        self.img8_label.text = @"主机水侧排水";
+        self.img9_label.text = @"真空泵极限值";
+        self.img10_label.text = @"主体真空值";
+        self.img11_label.text = @"高发真空值";
+        self.img12_label.text = @"售后服务单";
+        
+        self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.imgContain_view.frame.origin.y + self.img12_view.frame.origin.y + self.img12_view.frame.size.height);
+        
+        CGRect viewFrame = self.imgContain_view.frame;
+        viewFrame.size.height = self.img12_view.frame.origin.y + self.img12_view.frame.size.height;
+        self.imgContain_view.frame = viewFrame;
+        NSLog(@"%f", self.imgContain_view.frame.size.height);
+        
+        CGRect viewFrame2 = self.view.frame;
+        viewFrame2.size.height = self.imgContain_view.frame.origin.y + self.imgContain_view.frame.size.height;
+        self.view.frame = viewFrame2;
+        NSLog(@"%f", self.view.frame.size.height);
+        
     }
     else
     {
         self.imgContain_view.hidden = YES;
-        
+        self.imgCollectionView.hidden = NO;
     }
     
     if(newmatnRec.imgList && newmatnRec.imgList.count > 0)
     {
-        if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
+        if([newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
         {
             self.imgCollectionView.hidden = NO;
             self.imgContain_view.hidden = YES;
@@ -363,7 +347,6 @@
         {
             self.imgContain_view.hidden = NO;
             self.imgCollectionView.hidden = YES;
-            //            self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 200);
             [self setImg];
         }
     }
@@ -384,14 +367,7 @@
         {
             timeStr = [newmatnRec.Exec_Date substringToIndex:[newmatnRec.Exec_Date rangeOfString:@" "].location];
         }
-//        if(timeStr)
-//        {
         self.servicetime_field.text = timeStr;
-//        }
-//        else
-//        {
-//            self.servicetime_field.text = @"未知";
-//        }
     }
     if (newmatnRec.Exec_Date01 && newmatnRec.Exec_Date01.length > 0 && ![newmatnRec.Exec_Date01 isEqualToString:@"null"])
     {
@@ -400,34 +376,16 @@
         {
             timeStr = [newmatnRec.Exec_Date01 substringToIndex:[newmatnRec.Exec_Date01 rangeOfString:@" "].location];
         }
-        
-        
-        //        if(timeStr && timeStr.length > 0)
-        //        {
         self.servicetime2_field.text = timeStr;
-        //        }
-        //        else
-        //        {
-        //            self.servicetime2_field.text = @"未知";
-        //        }
     }
     if (newmatnRec.Exec_Date02.length > 0)
     {
-        //        NSString *timeStr = [newmatnRec.Exec_Date02 substringToIndex:[newmatnRec.Exec_Date02 rangeOfString:@" "].location];
         NSString *timeStr = newmatnRec.Exec_Date02;
         if([newmatnRec.Exec_Date02 rangeOfString:@" "].length > 0)
         {
             timeStr = [newmatnRec.Exec_Date02 substringToIndex:[newmatnRec.Exec_Date02 rangeOfString:@" "].location];
         }
-        
-        //        if(timeStr)
-        //        {
         self.servicetime3_field.text = timeStr;
-        //        }
-        //        else
-        //        {
-        //            self.servicetime3_field.text = @"未知";
-        //        }
     }
 }
 
@@ -493,14 +451,28 @@
     if (newmatnRec.allfilename04.length > 0)
     {
         Img *img = newmatnRec.imgList[index];
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img4_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img7_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img7_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img4_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img4_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img4_ImgView setImage:img.img];
+            }
         }
+        
         self.img4_ImgView.tag = index;
         ++index;
         if (index >= newmatnRec.imgList.count)
@@ -512,13 +484,26 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img5_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img4_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img4_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img5_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img5_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img5_ImgView setImage:img.img];
+            }
         }
         self.img5_ImgView.tag = index;
         ++index;
@@ -531,13 +516,26 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img6_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img5_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img5_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img6_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img6_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img6_ImgView setImage:img.img];
+            }
         }
         self.img6_ImgView.tag = index;
         ++index;
@@ -550,13 +548,26 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img7_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img6_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img6_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img7_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img7_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img7_ImgView setImage:img.img];
+            }
         }
         self.img7_ImgView.tag = index;
         ++index;
@@ -588,13 +599,26 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img9_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img12_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img12_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img9_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img9_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img9_ImgView setImage:img.img];
+            }
         }
         self.img9_ImgView.tag = index;
         ++index;
@@ -603,11 +627,102 @@
             return;
         }
     }
-}
-
-- (void)back
-{
-    [self.navigationController popViewControllerAnimated:YES];
+    if (newmatnRec.allfilename10.length > 0)
+    {
+        Img *img = newmatnRec.imgList[index];
+        
+        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img9_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img9_ImgView setImage:img.img];
+            }
+        }
+        else
+        {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img10_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img10_ImgView setImage:img.img];
+            }
+        }
+        self.img10_ImgView.tag = index;
+        ++index;
+        if (index >= newmatnRec.imgList.count)
+        {
+            return;
+        }
+    }
+    if (newmatnRec.allfilename11.length > 0)
+    {
+        Img *img = newmatnRec.imgList[index];
+        
+        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img10_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img10_ImgView setImage:img.img];
+            }
+        }
+        else
+        {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img11_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img11_ImgView setImage:img.img];
+            }
+        }
+        self.img11_ImgView.tag = index;
+        ++index;
+        if (index >= newmatnRec.imgList.count)
+        {
+            return;
+        }
+    }
+    if (newmatnRec.allfilename12.length > 0)
+    {
+        Img *img = newmatnRec.imgList[index];
+        
+        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img11_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img11_ImgView setImage:img.img];
+            }
+        }
+        else
+        {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img12_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img12_ImgView setImage:img.img];
+            }
+        }
+        self.img12_ImgView.tag = index;
+        ++index;
+        if (index >= newmatnRec.imgList.count)
+        {
+            return;
+        }
+    }
 }
 
 - (void)add
@@ -643,58 +758,6 @@
         return;
     }
     
-    //    if([self.servcetype_field.text isEqualToString:@"年4次保养"])
-    //    {
-    //        if([imgDic count] == 0)
-    //        {
-    //            [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if([newmatnRec.imgList count] == 0)
-    //        {
-    //            [Tool showCustomHUD:@"请上传附件" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    
-    //    if([self.serviceproject_field.text isEqualToString:@"年1次保养"])
-    //    {
-    //        if([imgDic objectForKey:@"4"] == nil)
-    //        {
-    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    //    if([self.serviceproject_field.text isEqualToString:@"年2次保养"])
-    //    {
-    //        if([imgDic objectForKey:@"8"] == nil)
-    //        {
-    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    //    if([self.serviceproject_field.text isEqualToString:@"年3次保养"])
-    //    {
-    //        if([imgDic objectForKey:@"6"] == nil)
-    //        {
-    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    //    if([self.serviceproject_field.text isEqualToString:@"年4次保养"])
-    //    {
-    //        if([imgDic objectForKey:@"9"] == nil)
-    //        {
-    //            [Tool showCustomHUD:@"请上传售后服务单" andView:self.view andImage:nil andAfterDelay:1.2f];
-    //            return;
-    //        }
-    //    }
-    
-    //    NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
-    //    NSInteger year = [datec year];
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
     //    [self updateImg];
@@ -739,19 +802,47 @@
                 }
                 else if([key isEqualToString:@"4"])
                 {
-                    project = self.img4_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+                    {
+                        project = self.img7_label.text;
+                    }
+                    else
+                    {
+                        project = self.img4_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"5"])
                 {
-                    project = self.img5_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+                    {
+                        project = self.img4_label.text;
+                    }
+                    else
+                    {
+                        project = self.img5_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"6"])
                 {
-                    project = self.img6_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+                    {
+                        project = self.img5_label.text;
+                    }
+                    else
+                    {
+                        project = self.img6_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"7"])
                 {
-                    project = self.img7_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+                    {
+                        project = self.img6_label.text;
+                    }
+                    else
+                    {
+                        project = self.img7_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"8"])
                 {
@@ -759,7 +850,47 @@
                 }
                 else if([key isEqualToString:@"9"])
                 {
-                    project = self.img9_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    {
+                        project = self.img12_label.text;
+                    }
+                    else
+                    {
+                        project = self.img9_label.text;
+                    }
+                }
+                else if([key isEqualToString:@"10"])
+                {
+                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    {
+                        project = self.img9_label.text;
+                    }
+                    else
+                    {
+                        project = self.img10_label.text;
+                    }
+                }
+                else if([key isEqualToString:@"11"])
+                {
+                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    {
+                        project = self.img10_label.text;
+                    }
+                    else
+                    {
+                        project = self.img11_label.text;
+                    }
+                }
+                else if([key isEqualToString:@"12"])
+                {
+                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    {
+                        project = self.img11_label.text;
+                    }
+                    else
+                    {
+                        project = self.img12_label.text;
+                    }
                 }
                 NSString *reName = [NSString stringWithFormat:@"%@%@%i.jpg",project,[Tool getCurrentTimeStr:@"yyyy-MM-dd-HHmmss"],y];
                 
@@ -883,7 +1014,6 @@
                             {
                                 case 1:
                                     newmatnRec.allfilename = [NSMutableString stringWithFormat:@"|%@",fileName];
-                                    
                                     break;
                                 case 2:
                                     newmatnRec.allfilename02 = [NSString stringWithFormat:@"|%@",fileName];
@@ -908,6 +1038,15 @@
                                     break;
                                 case 9:
                                     newmatnRec.allfilename09 = [NSString stringWithFormat:@"|%@",fileName];
+                                    break;
+                                case 10:
+                                    newmatnRec.allfilename10 = [NSString stringWithFormat:@"|%@",fileName];
+                                    break;
+                                case 11:
+                                    newmatnRec.allfilename11 = [NSString stringWithFormat:@"|%@",fileName];
+                                    break;
+                                case 12:
+                                    newmatnRec.allfilename12 = [NSString stringWithFormat:@"|%@",fileName];
                                     break;
                             }
                         }
@@ -944,17 +1083,19 @@
     
     NSString *sql = @"";
     if ([newmatnRec.Type isEqualToString:@"年4次保养"]) {
-        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@',allfilename10='%@',allfilename11='%@',allfilename12='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.allfilename10,newmatnRec.allfilename11,newmatnRec.allfilename12,newmatnRec.ID];
     }
     else
     {
-        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@',allfilename10='%@',allfilename11='%@',allfilename12='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.allfilename10,newmatnRec.allfilename11,newmatnRec.allfilename12,newmatnRec.ID];
         if([newsAllfilename isEqualToString:@"null"])
         {
-            sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename=%@,allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.ID];
+            sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename=%@,allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@',allfilename10='%@',allfilename11='%@',allfilename12='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newsAllfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.allfilename10,newmatnRec.allfilename11,newmatnRec.allfilename12,newmatnRec.ID];
             newsAllfilename = @"";
         }
     }
+    
+    sql = [sql stringByReplacingOccurrencesOfString:@"(null)" withString:@""];
     
     [request setPostValue:sql forKey:@"sqlstr"];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
@@ -981,7 +1122,7 @@
             newmatnRec.OutFact_Num = self.chucang_no_label.text;
             newmatnRec.Type = self.servcetype_field.text;
             newmatnRec.Project = self.serviceproject_field.text;
-            if(newmatnRec.isOld || [newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
+            if([newmatnRec.Type isEqualToString:@"异常处理"] || [newmatnRec.Type isEqualToString:@"巡视"] || [newmatnRec.Type isEqualToString:@"机房管理"])
             {
                 newmatnRec.allfilename = newsAllfilename;
             }
@@ -1101,11 +1242,6 @@
     }
     else if(textField.tag == 4 || textField.tag == 5)
     {
-//        if(self.serviceproject_field.text.length == 0)
-//        {
-//            [Tool showCustomHUD:@"请先选择服务项目" andView:self.view andImage:nil andAfterDelay:1.2f];
-//            return NO;
-//        }
         HSDatePickerViewController *hsdpvc = [HSDatePickerViewController new];
         selectTimeIndex = textField.tag;
         hsdpvc.delegate = self;
@@ -1137,17 +1273,19 @@
     float x = self.imgCollectionView.frame.origin.x;
     float y = self.imgCollectionView.frame.origin.y;
     float width = self.imgCollectionView.frame.size.width;
-    
+    self.imgCollectionView.hidden = NO;
     //调整网格布局高度
     self.imgCollectionView.frame = CGRectMake(x, y, width, height);
     
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.imgCollectionView.frame.origin.y + self.imgCollectionView.frame.size.height + 10);
+//    self.scrollView.frame = CGRectMake(self.scrollView.frame.origin.x,self.scrollView.frame.origin.y,self.scrollView.frame.size.width, self.imgCollectionView.frame.origin.y + self.imgCollectionView.frame.size.height + 10);
 }
 
 #pragma mark - 图片集合
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return newmatnRec.imgList.count;
+    NSUInteger count = newmatnRec.imgList.count;
+    return count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1178,7 +1316,6 @@
     }
     cell.repairImg.frame = CGRectMake(0, 0, 85, 85);
     
-//    cell.deleteBtn.hidden = YES;
     
     return cell;
 }
@@ -1228,7 +1365,6 @@
         [alert show];
     }
 }
-
 
 #pragma mark - HSDatePickerViewControllerDelegate
 - (void)hsDatePickerPickedDate:(NSDate *)date
@@ -1467,11 +1603,6 @@
      }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
 - (void)imgChoiceAction1
 {
     targetImg = self.img1_ImgView;
@@ -1564,9 +1695,17 @@
 - (void)imgChoiceAction4
 {
     targetImg = self.img4_ImgView;
-    targetImg.tag = 4;
+    NSString *allfilename = newmatnRec.allfilename04;
+    
+    if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+        targetImg.tag = 5;
+        allfilename = newmatnRec.allfilename05;
+    }
+    else{
+        targetImg.tag = 4;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename04 && newmatnRec.allfilename04.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1592,9 +1731,17 @@
 - (void)imgChoiceAction5
 {
     targetImg = self.img5_ImgView;
-    targetImg.tag = 5;
+    NSString *allfilename = newmatnRec.allfilename05;
+    
+    if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+        targetImg.tag = 6;
+        allfilename = newmatnRec.allfilename06;
+    }
+    else{
+        targetImg.tag = 5;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename05 && newmatnRec.allfilename05.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1620,9 +1767,17 @@
 - (void)imgChoiceAction6
 {
     targetImg = self.img6_ImgView;
-    targetImg.tag = 6;
+    NSString *allfilename = newmatnRec.allfilename06;
+    
+    if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+        targetImg.tag = 7;
+        allfilename = newmatnRec.allfilename07;
+    }
+    else{
+        targetImg.tag = 6;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename06 && newmatnRec.allfilename06.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1648,9 +1803,17 @@
 - (void)imgChoiceAction7
 {
     targetImg = self.img7_ImgView;
-    targetImg.tag = 7;
+    NSString *allfilename = newmatnRec.allfilename04;
+    
+    if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+        targetImg.tag = 4;
+        allfilename = newmatnRec.allfilename04;
+    }
+    else{
+        targetImg.tag = 7;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename07 && newmatnRec.allfilename07.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1704,9 +1867,17 @@
 - (void)imgChoiceAction9
 {
     targetImg = self.img9_ImgView;
-    targetImg.tag = 9;
+    NSString *allfilename = newmatnRec.allfilename09;
+    
+    if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        targetImg.tag = 10;
+        allfilename = newmatnRec.allfilename10;
+    }
+    else{
+        targetImg.tag = 9;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename09 && newmatnRec.allfilename09.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1725,6 +1896,114 @@
                                                         otherButtonTitles:@"拍照", @"从相册中选取", nil];
         cameraSheet.tag = self.img9_ImgView.tag;
         selectPicIndex = self.img9_ImgView.tag;
+        [cameraSheet showInView:self.view];
+    }
+}
+
+- (void)imgChoiceAction10
+{
+    targetImg = self.img10_ImgView;
+    NSString *allfilename = newmatnRec.allfilename10;
+    
+    if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        targetImg.tag = 11;
+        allfilename = newmatnRec.allfilename11;
+    }
+    else{
+        targetImg.tag = 10;
+    }
+    //如果存在图片
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    {
+        if (timeCha > 1.0) {
+            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+            return;
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+        alert.tag = self.img10_ImgView.tag;
+        [alert show];
+    }
+    else
+    {
+        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"取消"
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+        cameraSheet.tag = self.img10_ImgView.tag;
+        selectPicIndex = self.img10_ImgView.tag;
+        [cameraSheet showInView:self.view];
+    }
+}
+
+- (void)imgChoiceAction11
+{
+    targetImg = self.img11_ImgView;
+    NSString *allfilename = newmatnRec.allfilename11;
+    
+    if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        targetImg.tag = 12;
+        allfilename = newmatnRec.allfilename12;
+    }
+    else{
+        targetImg.tag = 11;
+    }
+    //如果存在图片
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    {
+        if (timeCha > 1.0) {
+            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+            return;
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+        alert.tag = self.img11_ImgView.tag;
+        [alert show];
+    }
+    else
+    {
+        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"取消"
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+        cameraSheet.tag = self.img11_ImgView.tag;
+        selectPicIndex = self.img11_ImgView.tag;
+        [cameraSheet showInView:self.view];
+    }
+}
+
+- (void)imgChoiceAction12
+{
+    targetImg = self.img12_ImgView;
+    NSString *allfilename = newmatnRec.allfilename12;
+    
+    if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        targetImg.tag = 9;
+        allfilename = newmatnRec.allfilename09;
+    }
+    else{
+        targetImg.tag = 12;
+    }
+    //如果存在图片
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    {
+        if (timeCha > 1.0) {
+            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+            return;
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+        alert.tag = self.img12_ImgView.tag;
+        [alert show];
+    }
+    else
+    {
+        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"取消"
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
+        cameraSheet.tag = self.img12_ImgView.tag;
+        selectPicIndex = self.img12_ImgView.tag;
         [cameraSheet showInView:self.view];
     }
 }
@@ -1760,146 +2039,66 @@
         }
         else
         {
-            if(newmatnRec.isOld)
+            [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
+            [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]];
+            switch(targetImg.tag)
             {
-                Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
-                NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
-                
-                if(newsAllfilename.length > 30)
-                {
-                    newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
-                }
-                else
-                {
-                    newsAllfilename = @"null";
-                }
-                
-                deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
-                [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
-                [self.imgCollectionView reloadData];
-            }
-            else
-            {
-                [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
-                [imgDic removeObjectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]];
-                switch(targetImg.tag)
-                {
-                    case 1:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
-                        newmatnRec.allfilename = @"";
-                        break;
-                    case 2:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
-                        newmatnRec.allfilename02 = @"";
-                        break;
-                    case 3:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
-                        newmatnRec.allfilename03 = @"";
-                        break;
-                    case 4:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
-                        newmatnRec.allfilename04 = @"";
-                        break;
-                    case 5:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
-                        newmatnRec.allfilename05 = @"";
-                        break;
-                    case 6:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
-                        newmatnRec.allfilename06 = @"";
-                        break;
-                    case 7:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
-                        newmatnRec.allfilename07 = @"";
-                        break;
-                    case 8:
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
-                        newmatnRec.allfilename08 = @"";
-                        break;
-                    case 9:
-                        
-                        deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
-                        newmatnRec.allfilename09 = @"";
-                        break;
-                }
+                case 1:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
+                    newmatnRec.allfilename = @"";
+                    break;
+                case 2:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
+                    newmatnRec.allfilename02 = @"";
+                    break;
+                case 3:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
+                    newmatnRec.allfilename03 = @"";
+                    break;
+                case 4:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
+                    newmatnRec.allfilename04 = @"";
+                    break;
+                case 5:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
+                    newmatnRec.allfilename05 = @"";
+                    break;
+                case 6:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
+                    newmatnRec.allfilename06 = @"";
+                    break;
+                case 7:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
+                    newmatnRec.allfilename07 = @"";
+                    break;
+                case 8:
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
+                    newmatnRec.allfilename08 = @"";
+                    break;
+                case 9:
+                    
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
+                    newmatnRec.allfilename09 = @"";
+                    break;
+                case 10:
+                    
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename10];
+                    newmatnRec.allfilename10 = @"";
+                    break;
+                case 11:
+                    
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename11];
+                    newmatnRec.allfilename11 = @"";
+                    break;
+                case 12:
+                    
+                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename12];
+                    newmatnRec.allfilename12 = @"";
+                    break;
+                    
             }
         }
     }
-    //    if(buttonIndex == 1)
-    //    {
-    //        if(newmatnRec.isOld)
-    //        {
-    //            Img *img = [newmatnRec.imgList objectAtIndex:alertView.tag];
-    //            NSString *allfilename = [NSString stringWithFormat:@"|%@", [img.Url lastPathComponent]];
-    //
-    //            if(newsAllfilename.length > 30)
-    //            {
-    //                newsAllfilename = [newsAllfilename stringByReplacingOccurrencesOfString:allfilename withString:@""];
-    //            }
-    //            else
-    //            {
-    //                newsAllfilename = @"null";
-    //            }
-    //
-    //            deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,allfilename];
-    //            [newmatnRec.imgList removeObjectAtIndex:alertView.tag];
-    //            [self.imgCollectionView reloadData];
-    //        }
-    //        else
-    //        {
-    //            [targetImg setImage:[UIImage imageNamed:@"camera_tag"]];
-    //            switch(targetImg.tag)
-    //            {
-    //                case 1:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename];
-    //                    newmatnRec.allfilename = @"";
-    //                    break;
-    //                case 2:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename02];
-    //                    newmatnRec.allfilename02 = @"";
-    //                    break;
-    //                case 3:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename03];
-    //                    newmatnRec.allfilename03 = @"";
-    //                    break;
-    //                case 4:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename04];
-    //                    newmatnRec.allfilename04 = @"";
-    //                    break;
-    //                case 5:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename05];
-    //                    newmatnRec.allfilename05 = @"";
-    //                    break;
-    //                case 6:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename06];
-    //                    newmatnRec.allfilename06 = @"";
-    //                    break;
-    //                case 7:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename07];
-    //                    newmatnRec.allfilename07 = @"";
-    //                    break;
-    //                case 8:
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename08];
-    //                    newmatnRec.allfilename08 = @"";
-    //                    break;
-    //                case 9:
-    //
-    //                    deleteImgStr = [NSString stringWithFormat:@"%@%@",deleteImgStr,newmatnRec.allfilename09];
-    //                    newmatnRec.allfilename09 = @"";
-    //                    break;
-    //            }
-    //        }
-    //    }
-    //    else if(buttonIndex == 1)
-    //    {
-    //        UIActionSheet *cameraSheet = [[UIActionSheet alloc] initWithTitle:nil
-    //                                                                 delegate:self
-    //                                                        cancelButtonTitle:@"取消"
-    //                                                   destructiveButtonTitle:nil
-    //                                                        otherButtonTitles:@"拍照", @"从相册中选取", nil];
-    //        selectPicIndex = alertView.tag;
-    //        [cameraSheet showInView:self.view];
-    //    }
 }
 
 #pragma mark UIActionSheetDelegate
@@ -1930,29 +2129,6 @@
     else if (buttonIndex == 1)
     {
         // 从相册中选取
-        //        IQAssetsPickerController *controller = [[IQAssetsPickerController alloc] init];
-        //        if(actionSheet.tag == 0)
-        //        {
-        //            controller.allowsPickingMultipleItems = NO;
-        //        }
-        //        else if(actionSheet.tag == 1)
-        //        {
-        //            controller.allowsPickingMultipleItems = YES;
-        //        }
-        //        if(selectPicIndex == -1)
-        //        {
-        //            controller.pickCount = 9;
-        //        }
-        //        else
-        //        {
-        //            controller.pickCount = 1;
-        //        }
-        //
-        //        controller.delegate = self;
-        //        controller.pickerType = IQAssetsPickerControllerAssetTypePhoto;
-        //
-        //        [self.navigationController pushViewController:controller animated:YES];
-        // 从相册中选取
         if ([self isPhotoLibraryAvailable]) {
             UIImagePickerController *controller = [[UIImagePickerController alloc] init];
             controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -1969,9 +2145,7 @@
                                  NSLog(@"Picker View Controller is presented");
                              }];
         }
-        
     }
-    
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -2012,22 +2186,79 @@
                      [self.img3_ImgView setImage:tImg];
                      break;
                  case 4:
-                     [self.img4_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+                         [self.img7_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img4_ImgView setImage:tImg];
+                     }
                      break;
                  case 5:
-                     [self.img5_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+                         [self.img4_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img5_ImgView setImage:tImg];
+                     }
                      break;
                  case 6:
-                     [self.img6_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+                         [self.img5_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img6_ImgView setImage:tImg];
+                     }
                      break;
                  case 7:
-                     [self.img7_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
+                         [self.img6_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img7_ImgView setImage:tImg];
+                     }
                      break;
                  case 8:
                      [self.img8_ImgView setImage:tImg];
                      break;
                  case 9:
-                     [self.img9_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+                         [self.img12_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img9_ImgView setImage:tImg];
+                     }
+                     break;
+                 case 10:
+                     if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+                         [self.img9_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img10_ImgView setImage:tImg];
+                     }
+                     break;
+                 case 11:
+                     if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+                         [self.img10_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img11_ImgView setImage:tImg];
+                     }
+                     break;
+                 case 12:
+                     if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+                         [self.img11_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img12_ImgView setImage:tImg];
+                     }
                      break;
              }
              [imgDic setObject:tImg forKey:[NSString stringWithFormat:@"%li",(long)selectPicIndex]];
@@ -2046,77 +2277,6 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [picker dismissViewControllerAnimated:YES completion:^(){
     }];
-}
-
-#pragma mark - IQAssetsPickerControllerDelegate
-- (void)assetsPickerController:(IQAssetsPickerController*)controller didFinishMediaWithInfo:(NSDictionary *)info
-{
-    NSMutableArray *views = [[NSMutableArray alloc] initWithArray:[controller.navigationController viewControllers]];
-    [views removeLastObject];
-    controller.navigationController.viewControllers = views;
-    [controller.navigationController popViewControllerAnimated:YES];
-    if(info)
-    {
-        NSArray *imgd = info[@"IQMediaTypeImage"];
-        for(int i = 0; i < imgd.count; ++i)
-        {
-            NSDictionary *imgdic = imgd[i];
-            UIImage *img = imgdic[@"IQMediaImage"];
-            if(img)
-            {
-                UIImage *smallImage = [self imageByScalingToMaxSize:img];
-                NSData *imageData = UIImageJPEGRepresentation(smallImage,0.8f);
-                img = [UIImage imageWithData:imageData];
-                if(selectPicIndex != -1)
-                {
-                    switch (selectPicIndex)
-                    {
-                        case 0:
-                            [self.img1_ImgView setImage:img];
-                            break;
-                        case 1:
-                            [self.img2_ImgView setImage:img];
-                            break;
-                        case 2:
-                            [self.img3_ImgView setImage:img];
-                            break;
-                        case 3:
-                            [self.img4_ImgView setImage:img];
-                            break;
-                        case 4:
-                            [self.img5_ImgView setImage:img];
-                            break;
-                        case 5:
-                            [self.img6_ImgView setImage:img];
-                            break;
-                        case 6:
-                            [self.img7_ImgView setImage:img];
-                            break;
-                        case 7:
-                            [self.img8_ImgView setImage:img];
-                            break;
-                        case 8:
-                            [self.img9_ImgView setImage:img];
-                            break;
-                    }
-                    [imgDic setObject:img forKey:[NSString stringWithFormat:@"%li",(long)selectPicIndex]];
-                }
-                else
-                {
-                    Img *tem = [[Img alloc] init];
-                    tem.img = img;
-                    [newmatnRec.imgList addObject:tem];
-                    [self reSizeCollectionView];
-                    [self.imgCollectionView reloadData];
-                }
-            }
-        }
-    }
-}
-
-- (void)assetsPickerControllerDidCancel:(IQAssetsPickerController *)controller
-{
-    
 }
 
 #pragma mark camera utility
@@ -2262,5 +2422,20 @@
         msg = @"保存图片成功" ;
     }
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

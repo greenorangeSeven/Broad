@@ -60,6 +60,7 @@
 @property (weak, nonatomic) IBOutlet UIView *img9_view;
 @property (weak, nonatomic) IBOutlet UILabel *img9_label;
 @property (weak, nonatomic) IBOutlet UIImageView *img9_ImgView;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *imgCollectionView;
 
 @end

@@ -51,6 +51,12 @@
 		04E90DA11AAD4B38005409D8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E90DA01AAD4B38005409D8 /* MobileCoreServices.framework */; };
 		04E90DA31AAD4B4D005409D8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E90DA21AAD4B4D005409D8 /* SystemConfiguration.framework */; };
 		04E90DA51AAD4BEC005409D8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E90DA41AAD4BEC005409D8 /* QuartzCore.framework */; };
+		142BB4B71C4E85BA0044459B /* WeiXiuAdd2016View.m in Sources */ = {isa = PBXBuildFile; fileRef = 142BB4B51C4E85BA0044459B /* WeiXiuAdd2016View.m */; };
+		142BB4B81C4E85BA0044459B /* WeiXiuAdd2016View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 142BB4B61C4E85BA0044459B /* WeiXiuAdd2016View.xib */; };
+		142BB4BC1C4E97DF0044459B /* WeiXiuDetail2016View.m in Sources */ = {isa = PBXBuildFile; fileRef = 142BB4BA1C4E97DF0044459B /* WeiXiuDetail2016View.m */; };
+		142BB4BD1C4E97DF0044459B /* WeiXiuDetail2016View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 142BB4BB1C4E97DF0044459B /* WeiXiuDetail2016View.xib */; };
+		142BB4C21C4EA69A0044459B /* WeiXiuUpdate2016View.m in Sources */ = {isa = PBXBuildFile; fileRef = 142BB4C01C4EA69A0044459B /* WeiXiuUpdate2016View.m */; };
+		142BB4C31C4EA69A0044459B /* WeiXiuUpdate2016View.xib in Resources */ = {isa = PBXBuildFile; fileRef = 142BB4C11C4EA69A0044459B /* WeiXiuUpdate2016View.xib */; };
 		14B6DD621BBA41FF002E90DF /* UserListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B6DD601BBA41FF002E90DF /* UserListView.m */; };
 		14B6DD631BBA41FF002E90DF /* UserListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14B6DD611BBA41FF002E90DF /* UserListView.xib */; };
 		14B6DD681BBA449D002E90DF /* UserSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B6DD661BBA449D002E90DF /* UserSearchView.m */; };
@@ -328,6 +334,15 @@
 		04E90DA01AAD4B38005409D8 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		04E90DA21AAD4B4D005409D8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		04E90DA41AAD4BEC005409D8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		142BB4B41C4E85BA0044459B /* WeiXiuAdd2016View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXiuAdd2016View.h; sourceTree = "<group>"; };
+		142BB4B51C4E85BA0044459B /* WeiXiuAdd2016View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXiuAdd2016View.m; sourceTree = "<group>"; };
+		142BB4B61C4E85BA0044459B /* WeiXiuAdd2016View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeiXiuAdd2016View.xib; sourceTree = "<group>"; };
+		142BB4B91C4E97DF0044459B /* WeiXiuDetail2016View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXiuDetail2016View.h; sourceTree = "<group>"; };
+		142BB4BA1C4E97DF0044459B /* WeiXiuDetail2016View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXiuDetail2016View.m; sourceTree = "<group>"; };
+		142BB4BB1C4E97DF0044459B /* WeiXiuDetail2016View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeiXiuDetail2016View.xib; sourceTree = "<group>"; };
+		142BB4BF1C4EA69A0044459B /* WeiXiuUpdate2016View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXiuUpdate2016View.h; sourceTree = "<group>"; };
+		142BB4C01C4EA69A0044459B /* WeiXiuUpdate2016View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXiuUpdate2016View.m; sourceTree = "<group>"; };
+		142BB4C11C4EA69A0044459B /* WeiXiuUpdate2016View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeiXiuUpdate2016View.xib; sourceTree = "<group>"; };
 		14B6DD5F1BBA41FF002E90DF /* UserListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListView.h; sourceTree = "<group>"; };
 		14B6DD601BBA41FF002E90DF /* UserListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListView.m; sourceTree = "<group>"; };
 		14B6DD611BBA41FF002E90DF /* UserListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserListView.xib; sourceTree = "<group>"; };
@@ -910,6 +925,7 @@
 		04E90ADB1AAD3E80005409D8 /* Broad */ = {
 			isa = PBXGroup;
 			children = (
+				142BB4B21C4E85730044459B /* WeiXiu2016Page */,
 				04E90AE01AAD3E80005409D8 /* AppDelegate.h */,
 				04E90AE11AAD3E80005409D8 /* AppDelegate.m */,
 				04E90AEC1AAD3E80005409D8 /* Images.xcassets */,
@@ -982,6 +998,22 @@
 				04E90D7B1AAD4380005409D8 /* libxml2.dylib */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		142BB4B21C4E85730044459B /* WeiXiu2016Page */ = {
+			isa = PBXGroup;
+			children = (
+				142BB4B41C4E85BA0044459B /* WeiXiuAdd2016View.h */,
+				142BB4B51C4E85BA0044459B /* WeiXiuAdd2016View.m */,
+				142BB4B61C4E85BA0044459B /* WeiXiuAdd2016View.xib */,
+				142BB4B91C4E97DF0044459B /* WeiXiuDetail2016View.h */,
+				142BB4BA1C4E97DF0044459B /* WeiXiuDetail2016View.m */,
+				142BB4BB1C4E97DF0044459B /* WeiXiuDetail2016View.xib */,
+				142BB4BF1C4EA69A0044459B /* WeiXiuUpdate2016View.h */,
+				142BB4C01C4EA69A0044459B /* WeiXiuUpdate2016View.m */,
+				142BB4C11C4EA69A0044459B /* WeiXiuUpdate2016View.xib */,
+			);
+			name = WeiXiu2016Page;
 			sourceTree = "<group>";
 		};
 		B719FC571B947EAC00206227 /* SDRefresh */ = {
@@ -1818,7 +1850,10 @@
 			files = (
 				B73C13181BAD82F500C34036 /* MessageListView.xib in Resources */,
 				B719FC9B1B96E3C700206227 /* bootstrap.min.js in Resources */,
+				142BB4C31C4EA69A0044459B /* WeiXiuUpdate2016View.xib in Resources */,
 				B799E5001B92B14300630829 /* LoginView.xib in Resources */,
+				142BB4BD1C4E97DF0044459B /* WeiXiuDetail2016View.xib in Resources */,
+				142BB4B81C4E85BA0044459B /* WeiXiuAdd2016View.xib in Resources */,
 				B737E45A1BABA4C300912FAB /* WeiXiuUpdateView.xib in Resources */,
 				B73C128B1BACDA5C00C34036 /* YuKaiFlowView.xib in Resources */,
 				B719FC9C1B96E3C700206227 /* jquery.min.js in Resources */,
@@ -1883,6 +1918,7 @@
 				B7D819FC1BA64390005386CE /* YuKaiDetailView.m in Sources */,
 				B798ED311B930B8800AE40F2 /* EGOImageButton.m in Sources */,
 				B719FC7F1B96903000206227 /* Depart.m in Sources */,
+				142BB4BC1C4E97DF0044459B /* WeiXiuDetail2016View.m in Sources */,
 				04E3D3CC1AD02BB00052032B /* SettingModel.m in Sources */,
 				04E3D4061AD23CBD0052032B /* MainPageView.m in Sources */,
 				B798ED221B930B8800AE40F2 /* ASIWebPageRequest.m in Sources */,
@@ -1905,6 +1941,7 @@
 				B798EDAF1B93361800AE40F2 /* Permission.m in Sources */,
 				B7D415AF1B9922CF00462F0C /* WeiXiuListView.m in Sources */,
 				B798ED9B1B930B8800AE40F2 /* ZJSwitch.m in Sources */,
+				142BB4B71C4E85BA0044459B /* WeiXiuAdd2016View.m in Sources */,
 				B7D415EE1B9D1E3500462F0C /* EnginUnit.m in Sources */,
 				B798ED6A1B930B8800AE40F2 /* SDWebImageDecoder.m in Sources */,
 				B798ED131B930B8800AE40F2 /* NSData+Base64.m in Sources */,
@@ -1924,6 +1961,7 @@
 				B798ED6F1B930B8800AE40F2 /* UIButton+WebCache.m in Sources */,
 				04B2757B1AB6C966002A7CE0 /* IQToolbar.m in Sources */,
 				04B275781AB6C966002A7CE0 /* IQTextView.m in Sources */,
+				142BB4C21C4EA69A0044459B /* WeiXiuUpdate2016View.m in Sources */,
 				B719FC651B947EAC00206227 /* SDRefreshView.m in Sources */,
 				B798ED5B1B930B8800AE40F2 /* PSTCollectionViewData.m in Sources */,
 				B798ED651B930B8800AE40F2 /* README.md in Sources */,

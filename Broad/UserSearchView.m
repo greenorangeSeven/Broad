@@ -72,7 +72,7 @@
     self.searchBar.delegate = self;
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    if(app.userinfo.xzjb == 0 || app.userinfo.xzjb == 1)
+    if(app.userinfo.xzjb == 0)
     {
         self.gcsTf.hidden = YES;
         self.gscBtn.hidden = YES;
@@ -221,7 +221,7 @@
         else if(app.userinfo.xzjb == 1)
         {
             sqlStr = [NSString stringWithFormat:
-                      @"declare @p10 int set @p10=5067 exec SP_GetProjInfoByPage @PageIndex=%i,@UserName='%@',@PageSize=20,@SearchField='%@',@searchString='%@',@OrderBy=N'Send_Date',@Sort='desc',@Ser_Dept='%@',@Engineer='全部',@IsEMC='',@Total=@p10 output select @p10",pageIndex,app.userinfo.UserName,SearchField,searchString,ser_Dept];
+                      @"declare @p10 int set @p10=5067 exec SP_GetProjInfoByPage @PageIndex=%i,@UserName='%@',@PageSize=20,@SearchField='%@',@searchString='%@',@OrderBy=N'Send_Date',@Sort='desc',@Ser_Dept='%@',@Engineer='%@',@IsEMC='',@Total=@p10 output select @p10",pageIndex,app.userinfo.UserName,SearchField,searchString,ser_Dept,selectEngineer];
         }
         else
         {
@@ -445,12 +445,14 @@
     KxMenuItem *item = sender;
     int tag = [item.tag intValue];
     NSString *menuValueStr = [refineArray objectAtIndex:tag];
+    [self.view endEditing:YES];
     if ([menuValueStr isEqualToString:@"   服务部   "]) {
 //        [self selectServiceBranch];
         [self.typeBtn setTitle:@"服务部" forState:UIControlStateNormal];
         self.searchBar.text = @"";
         self.searchBar.hidden = YES;
         self.selectView.hidden = NO;
+        [self fucSelectFwbAction];
     }
     else if([menuValueStr isEqualToString:@"  用户名称  "])
     {
@@ -488,6 +490,11 @@
 }
 
 - (IBAction)selectFwbAction:(id)sender {
+    [self fucSelectFwbAction];
+}
+
+- (void)fucSelectFwbAction
+{
     SearchField = @"全部";
     searchString = @"";
     selectServiceBranch = @"全部";
@@ -499,14 +506,20 @@
         self.fwbTf.text = selectServiceBranchMC;
         [self.view endEditing:YES];
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
-//        if(app.userinfo.xzjb == 0 || app.userinfo.xzjb == 1)
-//        {
-            isInit = true;
-            isOver = NO;
-            [self footerRefresh];
-//            return ;
-//        }
+        //        if(app.userinfo.xzjb == 0 || app.userinfo.xzjb == 1)
+        //        {
+        isInit = true;
+        isOver = NO;
+        [self footerRefresh];
+        //            return ;
+        //        }
         NSString *sql = [NSString stringWithFormat:@"EXEC sp_Get_ServDept_To_Engineer '%@','%@'",selectServiceBranchMC, app.userinfo.UserName];
+        
+        if(app.userinfo.xzjb == 1)
+        {
+            sql = [NSString stringWithFormat:@"sp_eFiles_Init_Parameter_Get_Duty_Engineer '%@','查询条件工程师'", app.userinfo.UserName];
+        }
+        
         ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url]]];
         
         [request setUseCookiePersistence:NO];
@@ -532,7 +545,14 @@
                 EngineerCNs = [[NSMutableArray alloc] init];
                 for(NSDictionary *jsonDic in jsonArray)
                 {
-                    [EngineerCNs addObject:jsonDic[@"TrueName"]];
+                    if(app.userinfo.xzjb == 1)
+                    {
+                        [EngineerCNs addObject:jsonDic[@"mc"]];
+                    }
+                    else
+                    {
+                        [EngineerCNs addObject:jsonDic[@"TrueName"]];
+                    }
                 }
             };
             [utils stringFromparserXML:response target:@"string"];
@@ -541,7 +561,7 @@
 }
 
 - (IBAction)selectGcsAction:(id)sender {
-    selectServiceBranch = @"全部";
+//    selectServiceBranch = @"全部";
     [SGActionView showSheetWithTitle:@"请选择" itemTitles:EngineerCNs itemSubTitles:nil selectedIndex:-1 selectedHandle:^(NSInteger index){
         selectEngineer = EngineerCNs[index];
         self.gcsTf.text = selectEngineer;

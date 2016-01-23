@@ -46,7 +46,7 @@
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
     
-//    self.servicetime_field.enabled = NO;
+    //    self.servicetime_field.enabled = NO;
     
     imgArray = [[NSMutableArray alloc] init];
     [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
@@ -124,7 +124,7 @@
     Img *image = [imgArray objectAtIndex:[indexPath row]];
     [cell.repairImg sd_setImageWithURL:[NSURL URLWithString:image.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
     cell.repairImg.frame = CGRectMake(0, 0, 85, 85);
-    cell.deleteBtn.hidden = YES;
+//    cell.deleteBtn.hidden = YES;
     return cell;
 }
 
@@ -206,9 +206,9 @@
              [self.solution.imgList removeAllObjects];
              if(imgArray && imgArray.count > 0)
              {
-                self.solution.imgList = [NSMutableArray arrayWithArray:imgArray];
-                self.imgCollectionView.hidden = NO;
-                [self reSizeCollectionView];
+                 self.solution.imgList = [NSMutableArray arrayWithArray:imgArray];
+                 self.imgCollectionView.hidden = NO;
+                 [self reSizeCollectionView];
              }
              [self.photos removeAllObjects];
              [self.imgCollectionView reloadData];
@@ -233,35 +233,38 @@
     self.enginer_field.text = self.solution.ExecMan;
     self.user_field.text = app.depart.CustShortName_CN;
     self.uploador_field.text = self.solution.Uploader;
-//    self.uploadtime_field.text = self.solution.UploadTime;
+    //    self.uploadtime_field.text = self.solution.UploadTime;
     self.chucang_no_label.text = self.solution.OutFactNum;
     self.engine_no_label.text = self.solution.AirCondUnitMode;
     self.create_no_label.text = self.solution.ProdNum;
     if (self.solution.ExecDate.length > 0)
     {
-        NSString *timeStr = [self.solution.ExecDate substringToIndex:[self.solution.ExecDate rangeOfString:@" "].location];
-        
-        if(timeStr)
+        NSString *timeStr = @"";
+        if([self.solution.ExecDate rangeOfString:@" "].length > 0)
         {
-            self.servicetime_field.text = timeStr;
+            timeStr = [self.solution.ExecDate substringToIndex:[self.solution.ExecDate rangeOfString:@" "].location];
         }
         else
         {
-            self.servicetime_field.text = @"未知";
+            timeStr = self.solution.ExecDate;
         }
+        self.servicetime_field.text = timeStr;
+        
     }
     if (self.solution.UploadTime.length > 0)
     {
-        NSString *timeStr = [self.solution.UploadTime substringToIndex:[self.solution.UploadTime rangeOfString:@" "].location];
-        
-        if(timeStr)
+        NSString *timeStr = @"";
+        if([self.self.solution.UploadTime rangeOfString:@" "].length > 0)
         {
-            self.uploadtime_field.text = timeStr;
+            timeStr = [self.solution.UploadTime substringToIndex:[self.solution.UploadTime rangeOfString:@" "].location];
         }
         else
         {
-            self.uploadtime_field.text = @"未知";
+            timeStr = self.solution.UploadTime;
         }
+        
+        self.uploadtime_field.text = timeStr;
+        
     }
 }
 
