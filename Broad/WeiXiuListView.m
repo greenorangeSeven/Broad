@@ -42,13 +42,13 @@
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    [self getData];
+//    [self getData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableReload) name:@"Notification_WeiXiuListReLoad" object:nil];
 }
 
 - (void)tableReload
 {
-    [self getData];
+//    [self getData];
 }
 
 - (void)add
@@ -132,10 +132,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
-    if(weixiuArray && [weixiuArray count] > 0)
-    {
-        [self tableReload];
-    }
+//    if(weixiuArray && [weixiuArray count] > 0)
+//    {
+//        [self tableReload];
+//    }
+    [self getData];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
@@ -202,7 +203,7 @@
         return [[EndCellUtils Instance] getLoadEndCell:tableView andLoadOverString:@"暂无数据"];
     }
 }
-
+ 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -218,7 +219,7 @@
         NSString *uploadTime =[Tool DateTimeRemoveTime:matnRec.UploadTime andSeparated:@" "];
         uploadTime = [uploadTime stringByReplacingOccurrencesOfString:@"-" withString:@""];
         int uploadInt =[uploadTime intValue];
-        if (uploadInt >= 20160119) {
+        if (uploadInt >= 20160125) {
             WeiXiuDetail2016View *detailView = [[WeiXiuDetail2016View alloc] init];
             detailView.matnRec = matnRec;
             [self.navigationController pushViewController:detailView animated:YES];

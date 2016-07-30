@@ -40,7 +40,7 @@
     NSString *uploadTime =[Tool DateTimeRemoveTime:self.matnRec.UploadTime andSeparated:@" "];
     uploadTime = [uploadTime stringByReplacingOccurrencesOfString:@"-" withString:@""];
     int uploadInt =[uploadTime intValue];
-    if (uploadInt >= 20160101 || uploadInt >= 20160119) {
+    if (uploadInt >= 20160101 || uploadInt >= 20160125) {
         UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         addBtn.frame = CGRectMake(0, 0, 78, 44);
         [addBtn setTitle:@"修改" forState:UIControlStateNormal];

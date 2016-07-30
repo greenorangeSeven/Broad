@@ -201,25 +201,36 @@
         NSString *start = nil;
         NSString *end = nil;
         
+        NSString *currentMonthDayStr = [Tool getCurrentTimeStr:@"MMdd"];
+        long currentMonthDayLong = [currentMonthDayStr longLongValue];
+        
         if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-01-01  00:00:00",year];
-            end = [NSString stringWithFormat:@"%li-04-01  00:00:00",year];
+            if(currentMonthDayLong >= 1226)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26  00:00:00",year];
+                end = [NSString stringWithFormat:@"%li-03-25  00:00:00",year + 1];
+            }
+            else if (currentMonthDayLong <= 0325)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26  00:00:00",year - 1];
+                end = [NSString stringWithFormat:@"%li-03-25  00:00:00",year];
+            }
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-04-01  00:00:00",year];
-            end = [NSString stringWithFormat:@"%li-07-01  00:00:00",year];
+            start = [NSString stringWithFormat:@"%li-03-26  00:00:00",year];
+            end = [NSString stringWithFormat:@"%li-06-25  00:00:00",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年3次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-07-01  00:00:00",year];
-            end = [NSString stringWithFormat:@"%li-10-01  00:00:00",year];
+            start = [NSString stringWithFormat:@"%li-06-26  00:00:00",year];
+            end = [NSString stringWithFormat:@"%li-09-25  00:00:00",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-10-01  00:00:00",year];
-            end = [NSString stringWithFormat:@"%li-01-01  00:00:00",year+1];
+            start = [NSString stringWithFormat:@"%li-09-26  00:00:00",year];
+            end = [NSString stringWithFormat:@"%li-12-25  00:00:00",year];
         }
         
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
@@ -359,11 +370,22 @@
                 }
                 else if([key isEqualToString:@"8"])
                 {
-                    project = self.img8_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+                    {
+                        project = self.img9_label.text;
+                    }
+                    else
+                    {
+                        project = self.img8_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"9"])
                 {
-                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+                    {
+                        project = self.img8_label.text;
+                    }
+                    else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
                     {
                         project = self.img12_label.text;
                     }
@@ -657,10 +679,14 @@
                                   [self.imgCollectionView reloadData];
                                   self.imgCollectionView.hidden = YES;
                                   self.imgContain_view.hidden = NO;
-                                  NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
-                                  NSInteger month = [datec month];
+//                                  NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
+//                                  NSInteger month = [datec month];
+//                                  NSInteger day = [datec day];
+                                  NSString *currentMonthDayStr = [Tool getCurrentTimeStr:@"MMdd"];
+                                  long currentMonthDayInt = [currentMonthDayStr longLongValue];
                                   //年1次保养
-                                  if (month >= 1 && month < 4)
+//                                  if (month >= 1 && month < 4)
+                                  if (currentMonthDayInt >= 1226 && currentMonthDayInt <= 325)
                                   {
                                       self.serviceproject_field.text = @"年1次保养";
                                       
@@ -675,8 +701,8 @@
                                       self.img2_label.text = @"吸收器、冷凝器";
                                       self.img3_label.text = @"真空泵极限值";
                                       self.img4_label.text = @"主体真空值";
-                                      self.img5_label.text = @"最大燃烧量";
-                                      self.img6_label.text = @"最小燃烧量";
+                                      self.img5_label.text = @"最大燃烧量(O2)";
+                                      self.img6_label.text = @"最小燃烧量(O2)";
                                       self.img7_label.text = @"售后服务单";
                                       self.img8_view.hidden = YES;
                                       self.img9_view.hidden = YES;
@@ -695,7 +721,8 @@
                                       self.imgContain_view.frame = viewFrame;
                                   }
                                   //年2次保养
-                                  else if (month >= 4 && month < 7)
+//                                  else if (month >= 4 && month < 7)
+                                  else if (currentMonthDayInt >= 326 && currentMonthDayInt <= 625)
                                   {
                                       self.serviceproject_field.text = @"年2次保养";
                                       self.img1_label.text = @"真空泵极限值";
@@ -704,26 +731,31 @@
                                       self.img4_label.text = @"高发真空值";
                                       self.img5_label.text = @"燃料过滤器清洗";
                                       self.img6_label.text = @"软水器";
-                                      self.img7_label.text = @"最小燃烧量";
-                                      self.img8_label.text = @"售后服务单";
-                                      self.img9_view.hidden = YES;
+                                      self.img7_label.text = @"三级保护靶片长度";
+                                      self.img8_label.text = @"冷却塔检查";
+                                      self.img9_label.text = @"售后服务单";
                                       self.img10_view.hidden = YES;
                                       self.img11_view.hidden = YES;
                                       self.img12_view.hidden = YES;
-                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img8_view.frame.origin.y + self.img8_view.frame.size.height + 554);
+                                      
+                                      self.img8_button.tag = 9;
+                                      self.img9_button.tag = 8;
+                                      
+                                      self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.img9_view.frame.origin.y + self.img9_view.frame.size.height + 554);
                                       
                                       CGRect viewFrame = self.imgContain_view.frame;
-                                      viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
+                                      viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
                                       self.imgContain_view.frame = viewFrame;
                                   }
                                   //年3次保养
-                                  else if (month >= 7 && month < 10)
+//                                  else if (month >= 7 && month < 10)
+                                  else if (currentMonthDayInt >= 626 && currentMonthDayInt <= 925)
                                   {
                                       self.serviceproject_field.text = @"年3次保养";
                                       self.img1_label.text = @"真空泵极限值";
                                       self.img2_label.text = @"主体真空值";
-                                      self.img3_label.text = @"最大燃烧量";
-                                      self.img4_label.text = @"最小燃烧量";
+                                      self.img3_label.text = @"最大燃烧量(O2)";
+                                      self.img4_label.text = @"最小燃烧量(O2)";
                                       self.img5_label.text = @"冷却塔填料";
                                       self.img6_label.text = @"售后服务单";
                                       self.img7_view.hidden = YES;
@@ -739,7 +771,8 @@
                                       self.imgContain_view.frame = viewFrame;
                                   }
                                   //年4次保养
-                                  else if (month >= 10 && month < 13)
+//                                  else if (month >= 10 && month < 13)
+                                  else if (currentMonthDayInt >= 926 && currentMonthDayInt <= 1225)
                                   {
                                       self.serviceproject_field.text = @"年4次保养";
 //                                      self.img1_label.text = @"高发液位";
@@ -983,26 +1016,58 @@
     {
         NSString *start = nil;
         NSString *end = nil;
+//
+//        if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-01-01",year];
+//            end = [NSString stringWithFormat:@"%li-04-01",year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-04-01",year];
+//            end = [NSString stringWithFormat:@"%li-07-01",year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年3次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-07-01",year];
+//            end = [NSString stringWithFormat:@"%li-10-01",year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-10-01",year];
+//            end = [NSString stringWithFormat:@"%li-01-01",year+1];
+//        }
+        
+        NSString *currentMonthDayStr = [Tool getCurrentTimeStr:@"MMdd"];
+        long currentMonthDayLong = [currentMonthDayStr longLongValue];
         
         if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-01-01",year];
-            end = [NSString stringWithFormat:@"%li-04-01",year];
+            if(currentMonthDayLong >= 1226)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year];
+                end = [NSString stringWithFormat:@"%li-03-25",year + 1];
+            }
+            else if (currentMonthDayLong <= 0325)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year - 1];
+                end = [NSString stringWithFormat:@"%li-03-25",year];
+            }
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-04-01",year];
-            end = [NSString stringWithFormat:@"%li-07-01",year];
+            start = [NSString stringWithFormat:@"%li-03-26",year];
+            end = [NSString stringWithFormat:@"%li-06-25",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年3次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-07-01",year];
-            end = [NSString stringWithFormat:@"%li-10-01",year];
+            start = [NSString stringWithFormat:@"%li-06-26",year];
+            end = [NSString stringWithFormat:@"%li-09-25",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-10-01",year];
-            end = [NSString stringWithFormat:@"%li-01-01",year+1];
+            start = [NSString stringWithFormat:@"%li-09-26",year];
+            end = [NSString stringWithFormat:@"%li-12-25",year];
         }
         
         int tag = [Tool compareOneDay:targetDate withAnotherDay:self.uploadtime_label.text];

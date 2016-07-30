@@ -13,6 +13,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *pwdField;
 @property (weak, nonatomic) IBOutlet UIButton *loginBtn;
 @property (weak, nonatomic) IBOutlet UIButton *contactBtn;
+@property (weak, nonatomic) IBOutlet UILabel *vesionLb;
+
+
 - (IBAction)loginAction:(id)sender;
 - (IBAction)contactAction:(id)sender;
 

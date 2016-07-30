@@ -34,6 +34,27 @@
     return self;
 }
 
+- (void)bindImg:(UIImage *)img andIndex:(NSInteger)index
+{
+    [self.repairImg setImage:img];
+    self.repairImg.frame = CGRectMake(0, 0, 85, 85);
+    if(index == 0)
+    {
+        self.deleteBtn.hidden = YES;
+    }
+    else
+    {
+        self.deleteBtn.hidden = NO;
+        self.deleteBtn.tag = index;
+        [self.deleteBtn addTarget:self action:@selector(deleteImg:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+- (void)deleteImg:(UIButton *)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteImg" object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:sender.tag] forKey:@"index"]];
+}
+
 - (void)awakeFromNib
 {
 }

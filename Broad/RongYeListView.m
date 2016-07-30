@@ -41,13 +41,13 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
         
-    [self getData];
+//    [self getData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableReload) name:@"Notification_RongYeListReLoad" object:nil];
 }
 
 - (void)tableReload
 {
-    [self getData];
+//    [self getData];
 }
 
 - (void)add
@@ -127,10 +127,11 @@
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
-    if(solutionArray && [solutionArray count] > 0)
-    {
-        [self tableReload];
-    }
+//    if(solutionArray && [solutionArray count] > 0)
+//    {
+//        [self tableReload];
+//    }
+    [self getData];
     
     self.navigationController.navigationBar.hidden = NO;
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];

@@ -41,6 +41,8 @@
     double timeCha;
     
     BOOL fromCamera;
+    
+    BOOL haveUploadImage;
 }
 
 @end
@@ -54,6 +56,7 @@
     [newmatnRec initWithMatnRec:self.matnRec];
     
     fromCamera = NO;
+    haveUploadImage = NO;
     
     deleteImgStr = @"";
     selectedServiceTypeIndex = -1;
@@ -133,7 +136,7 @@
     UITapGestureRecognizer *imgTap11 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction11)];
     UITapGestureRecognizer *imgTap12 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgChoiceAction12)];
     
-    [self.engine_choice_view addGestureRecognizer:tap];
+//    [self.engine_choice_view addGestureRecognizer:tap];
     [self.img1_ImgView addGestureRecognizer:imgTap1];
     [self.img2_ImgView addGestureRecognizer:imgTap2];
     [self.img3_ImgView addGestureRecognizer:imgTap3];
@@ -232,8 +235,8 @@
         self.img2_label.text = @"吸收器、冷凝器";
         self.img3_label.text = @"真空泵极限值";
         self.img4_label.text = @"主体真空值";
-        self.img5_label.text = @"最大燃烧量";
-        self.img6_label.text = @"最小燃烧量";
+        self.img5_label.text = @"最大燃烧量(O2)";
+        self.img6_label.text = @"最小燃烧量(O2)";
         self.img7_label.text = @"售后服务单";
         self.img8_view.hidden = YES;
         self.img9_view.hidden = YES;
@@ -256,17 +259,17 @@
         self.img4_label.text = @"高发真空值";
         self.img5_label.text = @"燃料过滤器清洗";
         self.img6_label.text = @"软水器";
-        self.img7_label.text = @"最小燃烧量";
-        self.img8_label.text = @"售后服务单";
-        self.img9_view.hidden = YES;
+        self.img7_label.text = @"三级保护靶片长度";
+        self.img8_label.text = @"冷却塔检查";
+        self.img9_label.text = @"售后服务单";
         self.img10_view.hidden = YES;
         self.img11_view.hidden = YES;
         self.img12_view.hidden = YES;
         
-        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img8_view.frame.origin.y + self.img8_view.frame.size.height);
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
         
         CGRect viewFrame = self.imgContain_view.frame;
-        viewFrame.size.height = self.img8_view.frame.origin.y + self.img8_view.frame.size.height;
+        viewFrame.size.height = self.img9_view.frame.origin.y + self.img9_view.frame.size.height;
         self.imgContain_view.frame = viewFrame;
         
     }
@@ -274,8 +277,8 @@
     {
         self.img1_label.text = @"真空泵极限值";
         self.img2_label.text = @"主体真空值";
-        self.img3_label.text = @"最大燃烧量";
-        self.img4_label.text = @"最小燃烧量";
+        self.img3_label.text = @"最大燃烧量(O2)";
+        self.img4_label.text = @"最小燃烧量(O2)";
         self.img5_label.text = @"冷却塔填料";
         self.img6_label.text = @"售后服务单";
         self.img7_view.hidden = YES;
@@ -580,13 +583,26 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if(img.Url && img.Url.length > 0)
-        {
-            [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+        if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img9_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img9_ImgView setImage:img.img];
+            }
         }
         else
         {
-            [self.img8_ImgView setImage:img.img];
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img8_ImgView setImage:img.img];
+            }
         }
         self.img8_ImgView.tag = index;
         ++index;
@@ -599,7 +615,17 @@
     {
         Img *img = newmatnRec.imgList[index];
         
-        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+            if(img.Url && img.Url.length > 0)
+            {
+                [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            }
+            else
+            {
+                [self.img8_ImgView setImage:img.img];
+            }
+        }
+        else if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
             if(img.Url && img.Url.length > 0)
             {
                 [self.img12_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
@@ -846,11 +872,22 @@
                 }
                 else if([key isEqualToString:@"8"])
                 {
-                    project = self.img8_label.text;
+                    if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+                    {
+                        project = self.img9_label.text;
+                    }
+                    else
+                    {
+                        project = self.img8_label.text;
+                    }
                 }
                 else if([key isEqualToString:@"9"])
                 {
-                    if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+                    if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+                    {
+                        project = self.img8_label.text;
+                    }
+                    else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
                     {
                         project = self.img12_label.text;
                     }
@@ -1008,6 +1045,7 @@
                     if([response rangeOfString:@"true"].length > 0)
                     {
                         isOK = YES;
+                        haveUploadImage = YES;
                         if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
                         {
                             switch (index)
@@ -1080,10 +1118,13 @@
     
     NSString *time1 = self.servicetime2_field.text.length > 0?[NSString stringWithFormat:@"'%@'",self.servicetime2_field.text]:@"null";
     NSString *time2 = self.servicetime3_field.text.length > 0?[NSString stringWithFormat:@"'%@'",self.servicetime3_field.text]:@"null";
-    
+    if (haveUploadImage) {
+        self.uploadtime_label.text = [Tool getCurrentTimeStr:@"yyyy-MM-dd HH:mm"];
+//        self.matnRec.UploadTime = self.uploadtime_label.text;
+    }
     NSString *sql = @"";
     if ([newmatnRec.Type isEqualToString:@"年4次保养"]) {
-        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@',allfilename10='%@',allfilename11='%@',allfilename12='%@' where ID='%@'",self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.allfilename10,newmatnRec.allfilename11,newmatnRec.allfilename12,newmatnRec.ID];
+        sql = [NSString stringWithFormat:@"update TB_CUST_ProjInf_MatnRec set UploadTime='%@', AirCondUnit_Mode='%@',OutFact_Num='%@',Exec_Date='%@', Exec_Date01=%@,Exec_Date02=%@,Type='%@',Project='%@',allfilename='%@',allfilename02='%@',allfilename03='%@',allfilename04='%@',allfilename05='%@',allfilename06='%@',allfilename07='%@',allfilename08='%@',allfilename09='%@',allfilename10='%@',allfilename11='%@',allfilename12='%@' where ID='%@'",self.uploadtime_label.text,self.engine_no_label.text,self.chucang_no_label.text,self.servicetime_field.text,time1,time2,self.servcetype_field.text,self.serviceproject_field.text,newmatnRec.allfilename,newmatnRec.allfilename02,newmatnRec.allfilename03,newmatnRec.allfilename04,newmatnRec.allfilename05,newmatnRec.allfilename06,newmatnRec.allfilename07,newmatnRec.allfilename08,newmatnRec.allfilename09,newmatnRec.allfilename10,newmatnRec.allfilename11,newmatnRec.allfilename12,newmatnRec.ID];
     }
     else
     {
@@ -1114,7 +1155,7 @@
         utils.parserOK = ^(NSString *string)
         {
             [Tool showCustomHUD:@"保存成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-            
+            newmatnRec.UploadTime = self.uploadtime_label.text;
             newmatnRec.Exec_Date = self.servicetime_field.text;
             newmatnRec.Exec_Date01 = self.servicetime2_field.text;
             newmatnRec.Exec_Date02 = self.servicetime3_field.text;
@@ -1385,27 +1426,58 @@
         NSString *start = nil;
         NSString *end = nil;
         
+//        if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-01-01",(long)year];
+//            end = [NSString stringWithFormat:@"%li-04-01",(long)year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-04-01",(long)year];
+//            end = [NSString stringWithFormat:@"%li-07-01",(long)year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年3次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-07-01",(long)year];
+//            end = [NSString stringWithFormat:@"%li-10-01",(long)year];
+//        }
+//        else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
+//        {
+//            start = [NSString stringWithFormat:@"%li-10-01",(long)year];
+//            end = [NSString stringWithFormat:@"%li-01-01",(long)year+1];
+//        }
+        
+        NSString *currentMonthDayStr = [Tool getCurrentTimeStr:@"MMdd"];
+        long currentMonthDayLong = [currentMonthDayStr longLongValue];
+        
         if ([self.serviceproject_field.text isEqualToString:@"年1次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-01-01",(long)year];
-            end = [NSString stringWithFormat:@"%li-04-01",(long)year];
+            if(currentMonthDayLong >= 1226)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year];
+                end = [NSString stringWithFormat:@"%li-03-25",year + 1];
+            }
+            else if (currentMonthDayLong <= 0325)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year - 1];
+                end = [NSString stringWithFormat:@"%li-03-25",year];
+            }
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年2次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-04-01",(long)year];
-            end = [NSString stringWithFormat:@"%li-07-01",(long)year];
+            start = [NSString stringWithFormat:@"%li-03-26",year];
+            end = [NSString stringWithFormat:@"%li-06-25",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年3次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-07-01",(long)year];
-            end = [NSString stringWithFormat:@"%li-10-01",(long)year];
+            start = [NSString stringWithFormat:@"%li-06-26",year];
+            end = [NSString stringWithFormat:@"%li-09-25",year];
         }
         else if ([self.serviceproject_field.text isEqualToString:@"年4次保养"])
         {
-            start = [NSString stringWithFormat:@"%li-10-01",(long)year];
-            end = [NSString stringWithFormat:@"%li-01-01",(long)year+1];
+            start = [NSString stringWithFormat:@"%li-09-26",year];
+            end = [NSString stringWithFormat:@"%li-12-25",year];
         }
-        
         
         int tag = [Tool compareOneDay:targetDate withAnotherDay:start];
         //如果为0则两个日期相等,如果为1则服务时间大于起始时间
@@ -1803,7 +1875,7 @@
 - (void)imgChoiceAction7
 {
     targetImg = self.img7_ImgView;
-    NSString *allfilename = newmatnRec.allfilename04;
+    NSString *allfilename = newmatnRec.allfilename07;
     
     if ([self.matnRec.Project isEqualToString:@"年1次保养"]) {
         targetImg.tag = 4;
@@ -1839,9 +1911,17 @@
 - (void)imgChoiceAction8
 {
     targetImg = self.img8_ImgView;
-    targetImg.tag = 8;
+    NSString *allfilename = newmatnRec.allfilename08;
+    
+    if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+        targetImg.tag = 9;
+        allfilename = newmatnRec.allfilename09;
+    }
+    else{
+        targetImg.tag = 8;
+    }
     //如果存在图片
-    if((newmatnRec.allfilename08 && newmatnRec.allfilename08.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
+    if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
         if (timeCha > 1.0) {
             [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -1869,7 +1949,11 @@
     targetImg = self.img9_ImgView;
     NSString *allfilename = newmatnRec.allfilename09;
     
-    if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+    if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+        targetImg.tag = 8;
+        allfilename = newmatnRec.allfilename08;
+    }
+    else if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
         targetImg.tag = 10;
         allfilename = newmatnRec.allfilename10;
     }
@@ -2222,10 +2306,19 @@
                      }
                      break;
                  case 8:
-                     [self.img8_ImgView setImage:tImg];
+                     if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+                         [self.img9_ImgView setImage:tImg];
+                     }
+                     else
+                     {
+                         [self.img8_ImgView setImage:tImg];
+                     }
                      break;
                  case 9:
-                     if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+                     if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+                         [self.img8_ImgView setImage:tImg];
+                     }
+                     else if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
                          [self.img12_ImgView setImage:tImg];
                      }
                      else

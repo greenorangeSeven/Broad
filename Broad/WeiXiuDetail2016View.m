@@ -415,12 +415,24 @@
     if (self.matnRec.allfilename08.length > 0)
     {
         Img *img = imgArray[index];
-        [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
         
-        self.img8_ImgView.tag = index;
-        
-        UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
-        [self.img8_ImgView addGestureRecognizer:imgTap];
+        if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+            [self.img9_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            
+            self.img9_ImgView.tag = index;
+            
+            UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
+            [self.img9_ImgView addGestureRecognizer:imgTap];
+        }
+        else
+        {
+            [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            
+            self.img8_ImgView.tag = index;
+            
+            UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
+            [self.img8_ImgView addGestureRecognizer:imgTap];
+        }
         
         ++index;
         if (index >= imgArray.count)
@@ -432,7 +444,15 @@
     {
         Img *img = imgArray[index];
         
-        if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
+        if ([self.matnRec.Project isEqualToString:@"年2次保养"]) {
+            [self.img8_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
+            
+            self.img8_ImgView.tag = index;
+            
+            UITapGestureRecognizer *imgTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTapClick:)];
+            [self.img8_ImgView addGestureRecognizer:imgTap];
+        }
+        else if ([self.matnRec.Project isEqualToString:@"年4次保养"]) {
             [self.img12_ImgView sd_setImageWithURL:[NSURL URLWithString:img.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
             
             self.img12_ImgView.tag = index;
@@ -578,8 +598,8 @@
         self.img2_label.text = @"吸收器、冷凝器";
         self.img3_label.text = @"真空泵极限值";
         self.img4_label.text = @"主体真空值";
-        self.img5_label.text = @"最大燃烧量";
-        self.img6_label.text = @"最小燃烧量";
+        self.img5_label.text = @"最大燃烧量(O2)";
+        self.img6_label.text = @"最小燃烧量(O2)";
         self.img7_label.text = @"售后服务单";
         self.img8_view.hidden = YES;
         self.img9_view.hidden = YES;
@@ -599,15 +619,15 @@
         self.img4_label.text = @"高发真空值";
         self.img5_label.text = @"燃料过滤器清洗";
         self.img6_label.text = @"软水器";
-        self.img7_label.text = @"最小燃烧量";
-        self.img8_label.text = @"售后服务单";
-        self.img9_view.hidden = YES;
+        self.img7_label.text = @"三级保护靶片长度";
+        self.img8_label.text = @"冷却塔检查";
+        self.img9_label.text = @"售后服务单";
         self.img10_view.hidden = YES;
         self.img11_view.hidden = YES;
         self.img12_view.hidden = YES;
         
-        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img8_view.frame.origin.y + self.img8_view.frame.size.height);
-        NSString *imgurl = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@",self.matnRec.allfilename,self.matnRec.allfilename02,self.matnRec.allfilename03,self.matnRec.allfilename04,self.matnRec.allfilename05,self.matnRec.allfilename06,self.matnRec.allfilename07,self.matnRec.allfilename08];
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.self.imgContain_view.frame.origin.y + self.self.img9_view.frame.origin.y + self.img9_view.frame.size.height);
+        NSString *imgurl = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",self.matnRec.allfilename,self.matnRec.allfilename02,self.matnRec.allfilename03,self.matnRec.allfilename04,self.matnRec.allfilename05,self.matnRec.allfilename06,self.matnRec.allfilename07,self.matnRec.allfilename08,self.matnRec.allfilename09];
         [self getImg:imgurl];
         
     }
@@ -615,8 +635,8 @@
     {
         self.img1_label.text = @"真空泵极限值";
         self.img2_label.text = @"主体真空值";
-        self.img3_label.text = @"最大燃烧量";
-        self.img4_label.text = @"最小燃烧量";
+        self.img3_label.text = @"最大燃烧量(O2)";
+        self.img4_label.text = @"最小燃烧量(O2)";
         self.img5_label.text = @"冷却塔填料";
         self.img6_label.text = @"售后服务单";
         self.img7_view.hidden = YES;

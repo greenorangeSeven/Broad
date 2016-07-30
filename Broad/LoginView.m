@@ -37,6 +37,8 @@
     //设置按钮带圆角
     [self.loginBtn.layer setCornerRadius:4.0f];
     [self.contactBtn.layer setCornerRadius:4.0f];
+    
+    self.vesionLb.text = [NSString stringWithFormat:@"v %@", AppVersion];
 }
 
 - (void)didReceiveMemoryWarning {

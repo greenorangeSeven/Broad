@@ -10,6 +10,7 @@
 
 @interface RepairImgCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *repairImg;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 
 - (void)bindImg:(UIImage *)img andIndex:(NSInteger)index;
 @end
