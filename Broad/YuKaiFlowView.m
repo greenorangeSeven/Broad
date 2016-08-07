@@ -39,6 +39,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self hiddenReceiptInfoView];
+    
     selectProjInfIndex = -1;
     selectProj = -1;
     selectProt = -1;
@@ -185,6 +187,21 @@
             self.kaipiao_label.text = invoice.MakeOutInvoice_Sign;
             self.fapiaono_Field.text = invoice.Invoice_No;
             
+            NSRange range = [invoice.Invoice_Type rangeOfString:@"专用"];
+            if (range.length >0)
+            {
+                [self showReceiptInfoView];
+                self.tf_TaxNumber.text = invoice.TaxNumber;
+                self.tf_TompanyAdd.text = invoice.TompanyAdd;
+                self.tf_TompanyTel.text = invoice.TompanyTel;
+                self.tf_Bank.text = invoice.Bank;
+                self.tf_Account.text = invoice.Account;
+            }
+            else
+            {
+                [self hiddenReceiptInfoView];
+            }
+            
             if (invoice.MakeOutInvoice_Date.length > 0)
             {
                 NSString *timeStr = [invoice.App_Date substringToIndex:[invoice.App_Date rangeOfString:@" "].location];
@@ -297,6 +314,25 @@
     
     NSString *invoice_proj = self.tv_invoice_proj.text;
     NSRange iStart = [invoice_proj rangeOfString:@" "];
+    
+    NSString *invoicetypeStr = self.tv_invoice_type.text;
+    NSRange range = [invoicetypeStr rangeOfString:@"专用"];
+    if (range.length <= 0)
+    {
+        for (UIView *subView in [self.receiptInfoView subviews])
+        {
+            if ([subView isKindOfClass:[UITextField class]])
+            {
+                ((UITextField *)subView).text = @"";
+            }
+        }
+    }
+    NSString *TaxNumber = self.tf_TaxNumber.text;
+    NSString *TompanyAdd = self.tf_TompanyAdd.text;
+    NSString *TompanyTel = self.tf_TompanyTel.text;
+    NSString *Bank = self.tf_Bank.text;
+    NSString *Account = self.tf_Account.text;
+    
     if(iStart.length > 0)
     {
 //        invoice_proj = [self.tv_invoice_proj.text substringToIndex:[self.tv_invoice_proj.text rangeOfString:@" "].location];
@@ -518,7 +554,7 @@
                           }
      
      
-                        NSString *sqlStr = [NSString stringWithFormat:@"update TB_CUST_ProjInf_Invoice set Invoice_ID='%@',Proj_ID='%@',App_Date='%@',CUST_Name='%@',CONTR_No='%@',BefPay_Date='%@',BefPay_AMT='%@',App_InvoiceAMT='%@',App_reason='%@',Invoice_Item='%@',Invoice_Type='%@', CONTR_SecParty='%@',Serv_Dept='%@',App_Name='%@',Leader_Opinion=%@,Leader_Sign=%@,Leader_SignDate=%@,UserGenManager_Opinion=%@,UserGenManager_Sign=%@,UserGenManager_SignDate=%@,Fin_Opinion=%@,Fin_SignDate=%@,Fin_Sign=%@,MakeOutInvoice_Sign=%@,MakeOutInvoice_Date=%@,Invoice_No=%@,SignFor_INF=%@,SignFor_Date=%@ where ID='%@'",invoice.Invoice_ID,invoice.Proj_ID,invoice.App_Date,self.tv_departname.text,self.tv_protocol.text,self.tv_prepaytime.text,self.tv_paynum.text,self.tv_paynum_p.text,self.et_cuase.text,self.tv_invoice_proj.text,self.tv_invoice_type.text,self.tv_yifang.text,invoice.Serv_Dept,invoice.App_Name,Leader_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Opinion],Leader_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Sign],Leader_SignDate,UserGenManager_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Opinion],UserGenManager_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Sign],UserGenManager_SignDate,Fin_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Opinion],Fin_SignDate,Fin_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Sign],MakeOutInvoice_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",MakeOutInvoice_Sign],MakeOutInvoice_Date,Invoice_No,SignFor_INF.length == 0?@"null":[NSString stringWithFormat:@"'%@'",SignFor_INF],SignFor_Date,invoice.ID];
+                        NSString *sqlStr = [NSString stringWithFormat:@"update TB_CUST_ProjInf_Invoice set Invoice_ID='%@',Proj_ID='%@',App_Date='%@',CUST_Name='%@',CONTR_No='%@',BefPay_Date='%@',BefPay_AMT='%@',App_InvoiceAMT='%@',App_reason='%@',Invoice_Item='%@',Invoice_Type='%@', CONTR_SecParty='%@',Serv_Dept='%@',App_Name='%@',Leader_Opinion=%@,Leader_Sign=%@,Leader_SignDate=%@,UserGenManager_Opinion=%@,UserGenManager_Sign=%@,UserGenManager_SignDate=%@,Fin_Opinion=%@,Fin_SignDate=%@,Fin_Sign=%@,MakeOutInvoice_Sign=%@,MakeOutInvoice_Date=%@,Invoice_No=%@,SignFor_INF=%@,SignFor_Date=%@, TaxNumber='%@', TompanyAdd='%@', TompanyTel='%@', Bank='%@', Account='%@' where ID='%@'",invoice.Invoice_ID,invoice.Proj_ID,invoice.App_Date,self.tv_departname.text,self.tv_protocol.text,self.tv_prepaytime.text,self.tv_paynum.text,self.tv_paynum_p.text,self.et_cuase.text,self.tv_invoice_proj.text,self.tv_invoice_type.text,self.tv_yifang.text,invoice.Serv_Dept,invoice.App_Name,Leader_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Opinion],Leader_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Sign],Leader_SignDate,UserGenManager_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Opinion],UserGenManager_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Sign],UserGenManager_SignDate,Fin_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Opinion],Fin_SignDate,Fin_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Sign],MakeOutInvoice_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",MakeOutInvoice_Sign],MakeOutInvoice_Date,Invoice_No,SignFor_INF.length == 0?@"null":[NSString stringWithFormat:@"'%@'",SignFor_INF],SignFor_Date,TaxNumber,TompanyAdd,TompanyTel,Bank,Account,invoice.ID];
                           
                           [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
                            {
@@ -799,6 +835,10 @@
              
              self.tv_invoice_proj.text = items[index];
              self.tv_invoice_type.text = @"";
+             if([self.receiptInfoView isHidden] == NO)
+             {
+                 [self hiddenReceiptInfoView];
+             }
          }];
     }
     else if(textField.tag == 4)
@@ -807,7 +847,17 @@
         [SGActionView showSheetWithTitle:@"请选择开票项目" itemTitles:items selectedIndex:selectProt selectedHandle:^(NSInteger index)
          {
              selectProt = index;
-             self.tv_invoice_type.text = items[index];
+             NSString *invoicetypeStr = items[index];
+             self.tv_invoice_type.text = invoicetypeStr;
+             NSRange range = [invoicetypeStr rangeOfString:@"专用"];
+             if (range.length >0)
+             {
+                 [self showReceiptInfoView];
+             }
+             else
+             {
+                 [self hiddenReceiptInfoView];
+             }
          }];
     }
     else if(textField.tag == 5)
@@ -922,6 +972,24 @@
         self.fapiaono_Field.enabled = NO;
         self.kaipiao_time_Field.enabled = NO;
     }
+}
+
+- (void)hiddenReceiptInfoView
+{
+    self.receiptInfoView.hidden = YES;
+    
+    self.receiptBottomView.frame = CGRectMake(self.receiptBottomView.frame.origin.x, self.receiptInfoView.frame.origin.y, self.receiptBottomView.frame.size.width, self.receiptBottomView.frame.size.height);
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.receiptBottomView.frame.origin.y + self.receiptBottomView.frame.size.height);
+}
+
+- (void)showReceiptInfoView
+{
+    self.receiptInfoView.hidden = NO;
+    
+    self.receiptBottomView.frame = CGRectMake(self.receiptBottomView.frame.origin.x, self.receiptBottomView.frame.origin.y + self.receiptInfoView.frame.size.height, self.receiptBottomView.frame.size.width, self.receiptBottomView.frame.size.height);
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.receiptBottomView.frame.origin.y + self.receiptBottomView.frame.size.height);
 }
 
 @end

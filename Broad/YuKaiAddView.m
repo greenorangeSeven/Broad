@@ -40,7 +40,7 @@
     selectProt = -1;
     selectYi = -1;
     
-    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.tv_applicant.frame.origin.y + 250);
+    [self hiddenReceiptInfoView];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
@@ -94,6 +94,12 @@
     NSString *paynump = self.tv_paynum_p.text;
     NSString *cuase = self.et_cuase.text;
     NSString *yifang = self.tv_yifang.text;
+    
+    NSString *TaxNumber = self.tf_TaxNumber.text;
+    NSString *TompanyAdd = self.tf_TompanyAdd.text;
+    NSString *TompanyTel = self.tf_TompanyTel.text;
+    NSString *Bank = self.tf_Bank.text;
+    NSString *Account = self.tf_Account.text;
     
     if (departname.length == 0)
     {
@@ -162,7 +168,7 @@
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate  date] timeIntervalSince1970]];
     invoceId = [NSString stringWithFormat:@"%@%@", timeSp, random];
     
-    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_Invoice(Invoice_ID,Proj_ID,App_Date,CUST_Name,CONTR_No,BefPay_Date,BefPay_AMT,App_InvoiceAMT,App_reason,Invoice_Item,Invoice_Type,CONTR_SecParty,Serv_Dept,App_Name,Invoice_No,MakeOutInvoice_Sign) values('%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','','否')",invoceId,app.depart.PROJ_ID,self.tv_departname.text,protocol,prepaytime,paynum,paynump,cuase,invoice_proj,invoice_type,yifang,app.depart.Serv_Dept,app.userinfo.UserName];
+    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_Invoice(Invoice_ID,Proj_ID,App_Date,CUST_Name,CONTR_No,BefPay_Date,BefPay_AMT,App_InvoiceAMT,App_reason,Invoice_Item,Invoice_Type,CONTR_SecParty,Serv_Dept,App_Name,Invoice_No,MakeOutInvoice_Sign,TaxNumber,TompanyAdd,TompanyTel,Bank,Account) values('%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','','否','%@','%@','%@','%@','%@')",invoceId,app.depart.PROJ_ID,self.tv_departname.text,protocol,prepaytime,paynum,paynump,cuase,invoice_proj,invoice_type,yifang,app.depart.Serv_Dept,app.userinfo.UserName,TaxNumber,TompanyAdd,TompanyTel,Bank,Account];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@DoActionInDZDA", api_base_url];
     
@@ -457,6 +463,11 @@
             
             self.tv_invoice_proj.text = items[index];
             self.tv_invoice_type.text = @"";
+            if([self.receiptInfoView isHidden] == NO)
+            {
+                [self hiddenReceiptInfoView];
+            }
+            
         }];
     }
     else if(textField.tag == 4)
@@ -465,7 +476,17 @@
         [SGActionView showSheetWithTitle:@"请选择开票项目" itemTitles:items selectedIndex:selectProt selectedHandle:^(NSInteger index)
          {
              selectProt = index;
-             self.tv_invoice_type.text = items[index];
+             NSString *invoicetypeStr = items[index];
+             self.tv_invoice_type.text = invoicetypeStr;
+             NSRange range = [invoicetypeStr rangeOfString:@"专用"];
+             if (range.length >0)
+             {
+                 [self showReceiptInfoView];
+             }
+             else
+             {
+                 [self hiddenReceiptInfoView];
+             }
          }];
     }
     else if(textField.tag == 5)
@@ -617,6 +638,32 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)hiddenReceiptInfoView
+{
+    self.receiptInfoView.hidden = YES;
+    
+    self.receiptBottomView.frame = CGRectMake(self.receiptBottomView.frame.origin.x, self.receiptInfoView.frame.origin.y, self.receiptBottomView.frame.size.width, self.receiptBottomView.frame.size.height);
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.receiptBottomView.frame.origin.y + self.receiptBottomView.frame.size.height);
+    
+    for (UIView *subView in [self.receiptInfoView subviews])
+    {
+        if ([subView isKindOfClass:[UITextField class]])
+        {
+            ((UITextField *)subView).text = @"";
+        }
+    }
+}
+
+- (void)showReceiptInfoView
+{
+    self.receiptInfoView.hidden = NO;
+    
+    self.receiptBottomView.frame = CGRectMake(self.receiptBottomView.frame.origin.x, self.receiptBottomView.frame.origin.y + self.receiptInfoView.frame.size.height, self.receiptBottomView.frame.size.width, self.receiptBottomView.frame.size.height);
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.receiptBottomView.frame.origin.y + self.receiptBottomView.frame.size.height);
 }
 
 /*

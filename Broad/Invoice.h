@@ -163,4 +163,11 @@
  * 	财务签名
  */
 @property (nonatomic, copy) NSString *Fin_Sign;
+
+@property (nonatomic, copy) NSString *TaxNumber;
+@property (nonatomic, copy) NSString *TompanyAdd;
+@property (nonatomic, copy) NSString *TompanyTel;
+@property (nonatomic, copy) NSString *Bank;
+@property (nonatomic, copy) NSString *Account;
+
 @end

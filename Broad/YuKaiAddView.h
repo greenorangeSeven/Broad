@@ -25,4 +25,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *tv_applicant;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
+@property (weak, nonatomic) IBOutlet UIView *receiptInfoView;
+@property (weak, nonatomic) IBOutlet UIView *receiptBottomView;
+
+@property (weak, nonatomic) IBOutlet UITextField *tf_TaxNumber;
+@property (weak, nonatomic) IBOutlet UITextField *tf_TompanyAdd;
+@property (weak, nonatomic) IBOutlet UITextField *tf_TompanyTel;
+@property (weak, nonatomic) IBOutlet UITextField *tf_Bank;
+@property (weak, nonatomic) IBOutlet UITextField *tf_Account;
+
 @end

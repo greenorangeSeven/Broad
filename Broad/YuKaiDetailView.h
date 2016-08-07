@@ -33,4 +33,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *tv_caiwu;
 @property (weak, nonatomic) IBOutlet UILabel *tv_qianshou;
 
+@property (weak, nonatomic) IBOutlet UIView *receiptInfoView;
+@property (weak, nonatomic) IBOutlet UIView *receiptBottomView;
+
+@property (weak, nonatomic) IBOutlet UILabel *tf_TaxNumber;
+@property (weak, nonatomic) IBOutlet UILabel *tf_TompanyAdd;
+@property (weak, nonatomic) IBOutlet UILabel *tf_TompanyTel;
+@property (weak, nonatomic) IBOutlet UILabel *tf_Bank;
+@property (weak, nonatomic) IBOutlet UILabel *tf_Account;
+
 @end
