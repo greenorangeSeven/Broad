@@ -97,9 +97,7 @@
     
     NSString *TaxNumber = self.tf_TaxNumber.text;
     NSString *TompanyAdd = self.tf_TompanyAdd.text;
-    NSString *TompanyTel = self.tf_TompanyTel.text;
     NSString *Bank = self.tf_Bank.text;
-    NSString *Account = self.tf_Account.text;
     
     if (departname.length == 0)
     {
@@ -160,6 +158,7 @@
         [Tool showCustomHUD:@"请选择合同乙方" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
 //    invoceId = [Tool generateTradeNO];
@@ -168,7 +167,7 @@
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate  date] timeIntervalSince1970]];
     invoceId = [NSString stringWithFormat:@"%@%@", timeSp, random];
     
-    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_Invoice(Invoice_ID,Proj_ID,App_Date,CUST_Name,CONTR_No,BefPay_Date,BefPay_AMT,App_InvoiceAMT,App_reason,Invoice_Item,Invoice_Type,CONTR_SecParty,Serv_Dept,App_Name,Invoice_No,MakeOutInvoice_Sign,TaxNumber,TompanyAdd,TompanyTel,Bank,Account) values('%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','','否','%@','%@','%@','%@','%@')",invoceId,app.depart.PROJ_ID,self.tv_departname.text,protocol,prepaytime,paynum,paynump,cuase,invoice_proj,invoice_type,yifang,app.depart.Serv_Dept,app.userinfo.UserName,TaxNumber,TompanyAdd,TompanyTel,Bank,Account];
+    NSString *sql = [NSString stringWithFormat:@"insert into TB_CUST_ProjInf_Invoice(Invoice_ID,Proj_ID,App_Date,CUST_Name,CONTR_No,BefPay_Date,BefPay_AMT,App_InvoiceAMT,App_reason,Invoice_Item,Invoice_Type,CONTR_SecParty,Serv_Dept,App_Name,Invoice_No,MakeOutInvoice_Sign,TaxNumber,TompanyAdd,Bank) values('%@','%@',getdate(),'%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','','否','%@','%@','%@')",invoceId,app.depart.PROJ_ID,self.tv_departname.text,protocol,prepaytime,paynum,paynump,cuase,invoice_proj,invoice_type,yifang,app.depart.Serv_Dept,app.userinfo.UserName,TaxNumber,TompanyAdd,Bank];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@DoActionInDZDA", api_base_url];
     
@@ -235,6 +234,7 @@
         else
         {
             [Tool showCustomHUD:@"新增失败,请重试" andView:self.view andImage:nil andAfterDelay:1.2f];
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             return;
         }
     };
@@ -304,6 +304,7 @@
                           utils.parserFail = ^()
                           {
                               hud.hidden = YES;
+                              self.navigationItem.rightBarButtonItem.enabled = YES;
                               [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                               [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
                           };
@@ -324,6 +325,7 @@
                       } failure:^(AFHTTPRequestOperation *operation, NSError *error)
                       {
                           hud.hidden = YES;
+                          self.navigationItem.rightBarButtonItem.enabled = YES;
                           [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                           [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
                       }];
@@ -333,6 +335,7 @@
              } failure:^(AFHTTPRequestOperation *operation, NSError *error)
              {
                  hud.hidden = YES;
+                 self.navigationItem.rightBarButtonItem.enabled = YES;
                  [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
                  [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
              }];

@@ -169,7 +169,7 @@
         
         cell.name_label.text = [NSString stringWithFormat:@"申请人：%@",invoice.App_Name];
         cell.type_label.text = [NSString stringWithFormat:@"协议编号：%@",invoice.CONTR_No];
-        cell.no_label.text = [NSString stringWithFormat:@"开票金额：%.2f万",invoice.App_InvoiceAMT];
+        cell.no_label.text = [NSString stringWithFormat:@"开票金额：%.6f万",invoice.App_InvoiceAMT];
         
         if(invoice.App_Date.length > 0)
         {

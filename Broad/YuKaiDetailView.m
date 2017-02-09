@@ -34,9 +34,9 @@
     self.tv_invoice_proj.text = self.invoice.Invoice_Item;
     
     
-    self.tv_paynum_p.text = [NSString stringWithFormat:@"%.2f",self.invoice.App_InvoiceAMT];
+    self.tv_paynum_p.text = [NSString stringWithFormat:@"%.6f",self.invoice.App_InvoiceAMT];
     
-    self.tv_paynum.text = [NSString stringWithFormat:@"%.2f",self.invoice.BefPay_AMT];
+    self.tv_paynum.text = [NSString stringWithFormat:@"%.6f",self.invoice.BefPay_AMT];
     
     if(self.invoice.BefPay_Date.length > 0)
     {
@@ -69,9 +69,7 @@
         [self showReceiptInfoView];
         self.tf_TaxNumber.text = self.invoice.TaxNumber;
         self.tf_TompanyAdd.text = self.invoice.TompanyAdd;
-        self.tf_TompanyTel.text = self.invoice.TompanyTel;
         self.tf_Bank.text = self.invoice.Bank;
-        self.tf_Account.text = self.invoice.Account;
     }
     else
     {

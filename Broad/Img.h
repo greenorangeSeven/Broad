@@ -15,6 +15,8 @@
  */
 @property (copy, nonatomic) NSString *Url;
 
+@property (copy, nonatomic) NSString *fileName;
+
 /**
  * 前端本地图片
  */

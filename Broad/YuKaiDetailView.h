@@ -38,8 +38,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *tf_TaxNumber;
 @property (weak, nonatomic) IBOutlet UILabel *tf_TompanyAdd;
-@property (weak, nonatomic) IBOutlet UILabel *tf_TompanyTel;
 @property (weak, nonatomic) IBOutlet UILabel *tf_Bank;
-@property (weak, nonatomic) IBOutlet UILabel *tf_Account;
 
 @end

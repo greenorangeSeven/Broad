@@ -12,13 +12,15 @@
 #import "RepairImgCell.h"
 #import "Img.h"
 #import "UIImageView+WebCache.h"
-#import "RongYeUpdateView.h"
+#import "RongYeUpdate2017View.h"
 
 @interface RongYeDetailView ()<UICollectionViewDataSource, UICollectionViewDelegate>
 {
     NSMutableDictionary *imgDic;
     NSArray *imgArray;
     BOOL isOld;
+    
+    NSString *systemTime;
 }
 
 @end
@@ -36,12 +38,7 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"修改" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
+    
     
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
@@ -54,6 +51,39 @@
     [self bindData];
 }
 
+- (void)getSystemTime
+{
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@GetNowDateTime",api_base_url] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             systemTime = [Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyy-MM-dd"];
+             long systemTimeLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"MMdd"] longLongValue];
+             long systemYearLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyy"] longLongValue];
+             //取样年份
+             long execTimeLong = [[Tool transformDateFormat:self.servicetime_field.text andFromFormatterStr:@"yyyy-MM-dd" andToFormatterStr:@"yyyy"] longLongValue];
+             if ((execTimeLong == systemYearLong) && systemTimeLong <= 630) {
+                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                 addBtn.frame = CGRectMake(0, 0, 78, 44);
+                 [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+                 [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = addItem;
+             }
+         };
+         
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
 - (void)notifireSolution:(NSNotification *)notification
 {
     self.solution = notification.userInfo[@"solution"];
@@ -63,7 +93,7 @@
 
 - (void)update
 {
-    RongYeUpdateView *updateView = [[RongYeUpdateView alloc] init];
+    RongYeUpdate2017View *updateView = [[RongYeUpdate2017View alloc] init];
     updateView.solution = self.solution;
     [self.navigationController pushViewController:updateView animated:YES];
 }
@@ -266,6 +296,7 @@
         self.uploadtime_field.text = timeStr;
         
     }
+    [self getSystemTime];
 }
 
 - (void)didReceiveMemoryWarning

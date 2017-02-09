@@ -48,6 +48,9 @@
     self.allfilename07 = matnRec.allfilename07;
     self.allfilename08 = matnRec.allfilename08;
     self.allfilename09 = matnRec.allfilename09;
+    self.allfilename10 = matnRec.allfilename10;
+    self.allfilename11 = matnRec.allfilename11;
+    self.allfilename12 = matnRec.allfilename12;
     self.EngineerNote = matnRec.EngineerNote;
     self.EngineerSign = matnRec.EngineerSign;
     self.EngineerSignDate = matnRec.EngineerSignDate;
@@ -61,6 +64,7 @@
     self.imgList = [NSMutableArray arrayWithArray:matnRec.imgList];
     self.isOld = matnRec.isOld;
     self.dayType = matnRec.dayType;
+    self.MachineOther = matnRec.MachineOther;
 }
 
 @end

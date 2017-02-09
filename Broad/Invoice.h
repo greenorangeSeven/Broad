@@ -166,8 +166,6 @@
 
 @property (nonatomic, copy) NSString *TaxNumber;
 @property (nonatomic, copy) NSString *TompanyAdd;
-@property (nonatomic, copy) NSString *TompanyTel;
 @property (nonatomic, copy) NSString *Bank;
-@property (nonatomic, copy) NSString *Account;
 
 @end

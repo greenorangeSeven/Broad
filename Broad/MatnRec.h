@@ -153,6 +153,11 @@
  */
 @property BOOL dayType;
 
+/**
+ * 空调类型（普通，节电）
+ */
+@property (copy, nonatomic) NSString *MachineOther;
+
 -(void)initWithMatnRec:(MatnRec *)matnRec;
 
 @end

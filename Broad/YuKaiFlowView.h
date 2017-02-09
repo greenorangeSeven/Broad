@@ -16,7 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *tv_departname;
 @property (weak, nonatomic) IBOutlet UITextField *tv_protocol;
 @property (weak, nonatomic) IBOutlet UITextField *tv_prepaytime;
-@property (weak, nonatomic) IBOutlet UITextField *tv_paynum;
+//@property (weak, nonatomic) IBOutlet UITextField *tv_paynum;
 @property (weak, nonatomic) IBOutlet UITextField *tv_paynum_p;
 @property (weak, nonatomic) IBOutlet UITextField *tv_invoice_proj;
 @property (weak, nonatomic) IBOutlet UITextField *tv_invoice_type;
@@ -44,9 +44,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *tf_TaxNumber;
 @property (weak, nonatomic) IBOutlet UITextField *tf_TompanyAdd;
-@property (weak, nonatomic) IBOutlet UITextField *tf_TompanyTel;
 @property (weak, nonatomic) IBOutlet UITextField *tf_Bank;
-@property (weak, nonatomic) IBOutlet UITextField *tf_Account;
 
 
 @end

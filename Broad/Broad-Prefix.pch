@@ -77,8 +77,8 @@
 
 #define HTML_Bottom @"<div style='margin-bottom:60px'/>"
 
-#define AppVersion @"1.3.9"
-#define AppVersionCode @"12"
+#define AppVersion @"1.5.1"
+#define AppVersionCode @"21"
 
 #define noConnect @"noConnect"
 #define wifi @"wifi"

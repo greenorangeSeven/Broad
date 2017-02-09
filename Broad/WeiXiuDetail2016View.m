@@ -35,12 +35,76 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"修改" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    NSString *targetDate = [dateFormatter stringFromDate:[NSDate date]];
+    NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
+    NSInteger year = [datec year];
+    if ([self.matnRec.Type isEqualToString:@"年4次保养"])
+    {
+        NSString *start = nil;
+        NSString *end = nil;
+        
+        NSString *currentMonthDayStr = [Tool getCurrentTimeStr:@"MMdd"];
+        long currentMonthDayLong = [currentMonthDayStr longLongValue];
+        
+        if ([self.matnRec.Project isEqualToString:@"年1次保养"])
+        {
+            if(currentMonthDayLong >= 1226)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year];
+                end = [NSString stringWithFormat:@"%li-03-25",year + 1];
+            }
+            else if (currentMonthDayLong <= 0325)
+            {
+                start = [NSString stringWithFormat:@"%li-12-26",year - 1];
+                end = [NSString stringWithFormat:@"%li-03-25",year];
+            }
+        }
+        else if ([self.matnRec.Project isEqualToString:@"年2次保养"])
+        {
+            start = [NSString stringWithFormat:@"%li-03-26",year];
+            end = [NSString stringWithFormat:@"%li-06-25",year];
+        }
+        else if ([self.matnRec.Project isEqualToString:@"年3次保养"])
+        {
+            start = [NSString stringWithFormat:@"%li-06-26",year];
+            end = [NSString stringWithFormat:@"%li-09-25",year];
+        }
+        else if ([self.matnRec.Project isEqualToString:@"年4次保养"])
+        {
+            start = [NSString stringWithFormat:@"%li-09-26",year];
+            end = [NSString stringWithFormat:@"%li-12-25",year];
+        }
+            int tag = [Tool compareOneDay:targetDate withAnotherDay:start];
+            //如果为0则两个日期相等,如果为1则服务时间大于起始时间
+            if(tag == 0 || tag == 1)
+            {
+                int tag = [Tool compareOneDay:targetDate withAnotherDay:end];
+                //如果为0则两个日期相等,如果为-1则服务时间小于起始时间
+                if(tag == 0 || tag == -1)
+                {
+                    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                    addBtn.frame = CGRectMake(0, 0, 78, 44);
+                    [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+                    [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+                    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                    self.navigationItem.rightBarButtonItem = addItem;
+                }
+            }
+    }
+    else
+    {
+        UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        addBtn.frame = CGRectMake(0, 0, 78, 44);
+        [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+        [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+        self.navigationItem.rightBarButtonItem = addItem;
+    }
+    
     
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;

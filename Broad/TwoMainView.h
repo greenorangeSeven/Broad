@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UIView *weixiuView;
 @property (weak, nonatomic) IBOutlet UIView *rongyeView;
 @property (weak, nonatomic) IBOutlet UIView *fapiaoView;
+@property (weak, nonatomic) IBOutlet UIView *securityView;
 
 @end

@@ -14,9 +14,13 @@
 #import "WeiXiuAdd2016View.h"
 #import "WeiXiuDetail2016View.h"
 
+#import "WeiXiuAdd2017View.h"
+#import "WeiXiuDetail2017View.h"
+
 @interface WeiXiuListView ()
 {
     NSArray *weixiuArray;
+    NSString *systemTimeStr;
 }
 
 @end
@@ -54,14 +58,17 @@
 - (void)add
 {
 //    WeiXiuAddView *addView = [[WeiXiuAddView alloc] init];
-    WeiXiuAdd2016View *addView = [[WeiXiuAdd2016View alloc] init];
+//    WeiXiuAdd2016View *addView = [[WeiXiuAdd2016View alloc] init];
+    WeiXiuAdd2017View *addView = [[WeiXiuAdd2017View alloc] init];
     [self.navigationController pushViewController:addView animated:YES];
+
 }
 
 - (void)getData
 {
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sqlStr = [NSString stringWithFormat:@"select * From TB_CUST_ProjInf_MatnRec Where PROJ_ID='%@' order by UploadTime desc",app.depart.PROJ_ID];
+//    NSString *sqlStr = [NSString stringWithFormat:@"select * From TB_CUST_ProjInf_MatnRec Where PROJ_ID='%@' order by UploadTime desc",app.depart.PROJ_ID];
+    NSString *sqlStr = [NSString stringWithFormat:@"SELECT a.*,b.MachineOther from TB_CUST_ProjInf_MatnRec as a,[Tb_CUST_ProjInf_AirCondUnit] as b where a.OutFact_Num=b.OutFact_Num and a.PROJ_ID='%@' order by UploadTime desc",app.depart.PROJ_ID];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@JsonDataInDZDA", api_base_url];
     
@@ -219,8 +226,13 @@
         NSString *uploadTime =[Tool DateTimeRemoveTime:matnRec.UploadTime andSeparated:@" "];
         uploadTime = [uploadTime stringByReplacingOccurrencesOfString:@"-" withString:@""];
         int uploadInt =[uploadTime intValue];
-        if (uploadInt >= 20160125) {
+        if (uploadInt >= 20160125 && uploadInt < 20161226) {
             WeiXiuDetail2016View *detailView = [[WeiXiuDetail2016View alloc] init];
+            detailView.matnRec = matnRec;
+            [self.navigationController pushViewController:detailView animated:YES];
+        }
+        else if (uploadInt >= 20161226) {
+            WeiXiuDetail2017View *detailView = [[WeiXiuDetail2017View alloc] init];
             detailView.matnRec = matnRec;
             [self.navigationController pushViewController:detailView animated:YES];
         }
@@ -231,6 +243,33 @@
             [self.navigationController pushViewController:detailView animated:YES];
         }
     }
+}
+
+- (void)getSystemTime
+{
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@GetNowDateTime",api_base_url] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+             [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+
+             //             NSString *timeStr = [string substringToIndex:[string rangeOfString:@" "].location];
+             systemTimeStr = [Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyyMMdd"];
+         };
+         
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+         
+     }];
 }
 
 /*

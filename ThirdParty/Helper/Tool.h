@@ -17,6 +17,10 @@
 #import <objc/runtime.h>
 #import "Jastor.h"
 
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+
 @interface Tool : NSObject
 
 + (UIAlertView *)getLoadingView:(NSString *)title andMessage:(NSString *)message;
@@ -99,6 +103,8 @@
 //获取年月日
 + (NSDateComponents *)getCurrentYear_Month_Day;
 
++ (NSString *)transformDateFormat:(NSString *)theDate andFromFormatterStr:(NSString *)fromFormatter andToFormatterStr:(NSString *)toFormatter;
+
 //判断两个日期大小
 +(int)compareOneDay:(NSString *)oneDay withAnotherDay:(NSString *)anotherDay;
 
@@ -150,5 +156,9 @@
 
 //unicode转string
 +(NSString *)unicode2String:(NSString *)str;
+
++ (NSString *)deviceIPAdress;
++ (NSString *)getIPAddress:(BOOL)preferIPv4;
++ (NSString *)getIPAddressIPv4:(BOOL)preferIPv4;
 
 @end

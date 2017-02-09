@@ -11,6 +11,7 @@
 #import "RongYeListView.h"
 #import "YuKaiListView.h"
 #import "UserInfoView.h"
+#import "SecurityTableView.h"
 
 @interface TwoMainView ()
 
@@ -41,6 +42,9 @@
     
     UITapGestureRecognizer *yukaiTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(yukaiAction)];
     [self.fapiaoView addGestureRecognizer:yukaiTap];
+    
+    UITapGestureRecognizer *securityTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(securityAction)];
+    [self.securityView addGestureRecognizer:securityTap];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,6 +85,12 @@
 {
     YuKaiListView *yukaiView = [[YuKaiListView alloc] init];
     [self.navigationController pushViewController:yukaiView animated:YES];
+}
+
+- (void)securityAction
+{
+    SecurityTableView *securityView = [[SecurityTableView alloc] init];
+    [self.navigationController pushViewController:securityView animated:YES];
 }
 
 /*

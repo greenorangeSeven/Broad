@@ -60,4 +60,9 @@
  */
 @property (copy, nonatomic) NSString *AirCondUnit_Mode;
 
+/**
+ * 空调类型（普通，节电）
+ */
+@property (copy, nonatomic) NSString *MachineOther;
+
 @end

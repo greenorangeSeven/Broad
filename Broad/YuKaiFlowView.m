@@ -177,8 +177,8 @@
             self.et_cuase.text = invoice.App_reason;
             self.tv_invoice_type.text = invoice.Invoice_Type;
             self.tv_invoice_proj.text = invoice.Invoice_Item;
-            self.tv_paynum_p.text = [NSString stringWithFormat:@"%.2f",invoice.App_InvoiceAMT];
-            self.tv_paynum.text = [NSString stringWithFormat:@"%.2f",invoice.BefPay_AMT];
+            self.tv_paynum_p.text = [NSString stringWithFormat:@"%.6f",invoice.App_InvoiceAMT];
+//            self.tv_paynum.text = [NSString stringWithFormat:@"%.6f",invoice.BefPay_AMT];
             self.tv_prepaytime.text = invoice.BefPay_Date;
             self.tv_protocol.text = invoice.CONTR_No;
             self.tv_departname.text = invoice.CUST_Name;
@@ -193,9 +193,7 @@
                 [self showReceiptInfoView];
                 self.tf_TaxNumber.text = invoice.TaxNumber;
                 self.tf_TompanyAdd.text = invoice.TompanyAdd;
-                self.tf_TompanyTel.text = invoice.TompanyTel;
                 self.tf_Bank.text = invoice.Bank;
-                self.tf_Account.text = invoice.Account;
             }
             else
             {
@@ -267,7 +265,7 @@
                     self.tv_departname.enabled = NO;
                     self.tv_protocol.enabled = NO;
                     self.tv_prepaytime.enabled = NO;
-                    self.tv_paynum.enabled = NO;
+//                    self.tv_paynum.enabled = NO;
                     self.tv_paynum_p.enabled = NO;
                     self.tv_invoice_proj.enabled = NO;
                     self.tv_invoice_type.enabled = NO;
@@ -309,7 +307,7 @@
     NSString *departname = self.tv_departname.text;
     NSString *protocol = self.tv_protocol.text;
     NSString *prepaytime = self.tv_prepaytime.text;
-    NSString *paynum = self.tv_paynum.text;
+//    NSString *paynum = self.tv_paynum.text;
     NSString *paynump = self.tv_paynum_p.text;
     
     NSString *invoice_proj = self.tv_invoice_proj.text;
@@ -329,9 +327,7 @@
     }
     NSString *TaxNumber = self.tf_TaxNumber.text;
     NSString *TompanyAdd = self.tf_TompanyAdd.text;
-    NSString *TompanyTel = self.tf_TompanyTel.text;
     NSString *Bank = self.tf_Bank.text;
-    NSString *Account = self.tf_Account.text;
     
     if(iStart.length > 0)
     {
@@ -369,14 +365,14 @@
         [Tool showCustomHUD:@"请选择预付款日期" andView:self.view andImage:nil andAfterDelay:1.2f];
         return;
     }
-    if (paynum.length > 0)
-    {
-        if([paynum isEqualToString:@"0"])
-        {
-            [Tool showCustomHUD:@"付款金额不能为0" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-    }
+//    if (paynum.length > 0)
+//    {
+//        if([paynum isEqualToString:@"0"])
+//        {
+//            [Tool showCustomHUD:@"付款金额不能为0" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//    }
     if (paynump.length == 0)
     {
         [Tool showCustomHUD:@"请填写申请开票金额" andView:self.view andImage:nil andAfterDelay:1.2f];
@@ -554,7 +550,8 @@
                           }
      
      
-                        NSString *sqlStr = [NSString stringWithFormat:@"update TB_CUST_ProjInf_Invoice set Invoice_ID='%@',Proj_ID='%@',App_Date='%@',CUST_Name='%@',CONTR_No='%@',BefPay_Date='%@',BefPay_AMT='%@',App_InvoiceAMT='%@',App_reason='%@',Invoice_Item='%@',Invoice_Type='%@', CONTR_SecParty='%@',Serv_Dept='%@',App_Name='%@',Leader_Opinion=%@,Leader_Sign=%@,Leader_SignDate=%@,UserGenManager_Opinion=%@,UserGenManager_Sign=%@,UserGenManager_SignDate=%@,Fin_Opinion=%@,Fin_SignDate=%@,Fin_Sign=%@,MakeOutInvoice_Sign=%@,MakeOutInvoice_Date=%@,Invoice_No=%@,SignFor_INF=%@,SignFor_Date=%@, TaxNumber='%@', TompanyAdd='%@', TompanyTel='%@', Bank='%@', Account='%@' where ID='%@'",invoice.Invoice_ID,invoice.Proj_ID,invoice.App_Date,self.tv_departname.text,self.tv_protocol.text,self.tv_prepaytime.text,self.tv_paynum.text,self.tv_paynum_p.text,self.et_cuase.text,self.tv_invoice_proj.text,self.tv_invoice_type.text,self.tv_yifang.text,invoice.Serv_Dept,invoice.App_Name,Leader_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Opinion],Leader_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Sign],Leader_SignDate,UserGenManager_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Opinion],UserGenManager_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Sign],UserGenManager_SignDate,Fin_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Opinion],Fin_SignDate,Fin_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Sign],MakeOutInvoice_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",MakeOutInvoice_Sign],MakeOutInvoice_Date,Invoice_No,SignFor_INF.length == 0?@"null":[NSString stringWithFormat:@"'%@'",SignFor_INF],SignFor_Date,TaxNumber,TompanyAdd,TompanyTel,Bank,Account,invoice.ID];
+//                        NSString *sqlStr = [NSString stringWithFormat:@"update TB_CUST_ProjInf_Invoice set Invoice_ID='%@',Proj_ID='%@',App_Date='%@',CUST_Name='%@',CONTR_No='%@',BefPay_Date='%@',BefPay_AMT='%@',App_InvoiceAMT='%@',App_reason='%@',Invoice_Item='%@',Invoice_Type='%@', CONTR_SecParty='%@',Serv_Dept='%@',App_Name='%@',Leader_Opinion=%@,Leader_Sign=%@,Leader_SignDate=%@,UserGenManager_Opinion=%@,UserGenManager_Sign=%@,UserGenManager_SignDate=%@,Fin_Opinion=%@,Fin_SignDate=%@,Fin_Sign=%@,MakeOutInvoice_Sign=%@,MakeOutInvoice_Date=%@,Invoice_No=%@,SignFor_INF=%@,SignFor_Date=%@, TaxNumber='%@', TompanyAdd='%@', Bank='%@' where ID='%@'",invoice.Invoice_ID,invoice.Proj_ID,invoice.App_Date,self.tv_departname.text,self.tv_protocol.text,self.tv_prepaytime.text,self.tv_paynum.text,self.tv_paynum_p.text,self.et_cuase.text,self.tv_invoice_proj.text,invoice_type,self.tv_yifang.text,invoice.Serv_Dept,invoice.App_Name,Leader_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Opinion],Leader_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Sign],Leader_SignDate,UserGenManager_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Opinion],UserGenManager_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Sign],UserGenManager_SignDate,Fin_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Opinion],Fin_SignDate,Fin_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Sign],MakeOutInvoice_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",MakeOutInvoice_Sign],MakeOutInvoice_Date,Invoice_No,SignFor_INF.length == 0?@"null":[NSString stringWithFormat:@"'%@'",SignFor_INF],SignFor_Date,TaxNumber,TompanyAdd,Bank,invoice.ID];
+                          NSString *sqlStr = [NSString stringWithFormat:@"update TB_CUST_ProjInf_Invoice set Invoice_ID='%@',Proj_ID='%@',App_Date='%@',CUST_Name='%@',CONTR_No='%@',BefPay_Date='%@',App_InvoiceAMT='%@',App_reason='%@',Invoice_Item='%@',Invoice_Type='%@', CONTR_SecParty='%@',Serv_Dept='%@',App_Name='%@',Leader_Opinion=%@,Leader_Sign=%@,Leader_SignDate=%@,UserGenManager_Opinion=%@,UserGenManager_Sign=%@,UserGenManager_SignDate=%@,Fin_Opinion=%@,Fin_SignDate=%@,Fin_Sign=%@,MakeOutInvoice_Sign=%@,MakeOutInvoice_Date=%@,Invoice_No=%@,SignFor_INF=%@,SignFor_Date=%@, TaxNumber='%@', TompanyAdd='%@', Bank='%@' where ID='%@'",invoice.Invoice_ID,invoice.Proj_ID,invoice.App_Date,self.tv_departname.text,self.tv_protocol.text,self.tv_prepaytime.text,self.tv_paynum_p.text,self.et_cuase.text,self.tv_invoice_proj.text,invoice_type,self.tv_yifang.text,invoice.Serv_Dept,invoice.App_Name,Leader_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Opinion],Leader_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Leader_Sign],Leader_SignDate,UserGenManager_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Opinion],UserGenManager_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",UserGenManager_Sign],UserGenManager_SignDate,Fin_Opinion.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Opinion],Fin_SignDate,Fin_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",Fin_Sign],MakeOutInvoice_Sign.length == 0?@"null":[NSString stringWithFormat:@"'%@'",MakeOutInvoice_Sign],MakeOutInvoice_Date,Invoice_No,SignFor_INF.length == 0?@"null":[NSString stringWithFormat:@"'%@'",SignFor_INF],SignFor_Date,TaxNumber,TompanyAdd,Bank,invoice.ID];
                           
                           [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
                            {

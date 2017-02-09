@@ -81,51 +81,51 @@
     [_window setRootViewController:navigation];
     [_window makeKeyAndVisible];
     
-    //集成信鸽start
-    [XGPush startApp:2200143921 appKey:@"IMX4ZU5H158X"];
-    
-    //注销之后需要再次注册前的准备
-    void (^successCallback)(void) = ^(void){
-        //如果变成需要注册状态
-        if(![XGPush isUnRegisterStatus])
-        {
-            //iOS8注册push方法
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= _IPHONE80_
-            
-            float sysVer = [[[UIDevice currentDevice] systemVersion] floatValue];
-            if(sysVer < 8){
-                [self registerPush];
-            }
-            else{
-                [self registerPushForIOS8];
-            }
-#else
-            //iOS8之前注册push方法
-            //注册Push服务，注册后才能收到推送
-            [self registerPush];
-#endif
-        }
-    };
-    [XGPush initForReregister:successCallback];
-    
-    //推送反馈(app不在前台运行时，点击推送激活时)
-    [XGPush handleLaunching:launchOptions];
-    
-    //推送反馈回调版本示例
-    void (^successBlock)(void) = ^(void){
-        //成功之后的处理
-        NSLog(@"[XGPush]handleLaunching's successBlock");
-    };
-    
-    void (^errorBlock)(void) = ^(void){
-        //失败之后的处理
-        //        NSLog(@"[XGPush]handleLaunching's errorBlock");
-    };
-    //清除所有通知(包含本地通知)
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    [XGPush handleLaunching:launchOptions successCallback:successBlock errorCallback:errorBlock];
-    //信鸽END
+//    //集成信鸽start
+//    [XGPush startApp:2200143921 appKey:@"IMX4ZU5H158X"];
+//    
+//    //注销之后需要再次注册前的准备
+//    void (^successCallback)(void) = ^(void){
+//        //如果变成需要注册状态
+//        if(![XGPush isUnRegisterStatus])
+//        {
+//            //iOS8注册push方法
+//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= _IPHONE80_
+//            
+//            float sysVer = [[[UIDevice currentDevice] systemVersion] floatValue];
+//            if(sysVer < 8){
+//                [self registerPush];
+//            }
+//            else{
+//                [self registerPushForIOS8];
+//            }
+//#else
+//            //iOS8之前注册push方法
+//            //注册Push服务，注册后才能收到推送
+//            [self registerPush];
+//#endif
+//        }
+//    };
+//    [XGPush initForReregister:successCallback];
+//    
+//    //推送反馈(app不在前台运行时，点击推送激活时)
+//    [XGPush handleLaunching:launchOptions];
+//    
+//    //推送反馈回调版本示例
+//    void (^successBlock)(void) = ^(void){
+//        //成功之后的处理
+//        NSLog(@"[XGPush]handleLaunching's successBlock");
+//    };
+//    
+//    void (^errorBlock)(void) = ^(void){
+//        //失败之后的处理
+//        //        NSLog(@"[XGPush]handleLaunching's errorBlock");
+//    };
+//    //清除所有通知(包含本地通知)
+//    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+//    
+//    [XGPush handleLaunching:launchOptions successCallback:successBlock errorCallback:errorBlock];
+//    //信鸽END
 
     return YES;
 }

@@ -1417,9 +1417,10 @@
     NSDateComponents *datec = [Tool getCurrentYear_Month_Day];
     NSInteger year = [datec year];
     
+    //2016年底修改为:服务时间小于等于当前时间
     NSString *now = [dateFormatter stringFromDate:[[NSDate alloc] init]];
     
-    NSString *uploadTimeStr = [self.uploadtime_label.text substringToIndex:[self.uploadtime_label.text rangeOfString:@" "].location];
+//    NSString *uploadTimeStr = [self.uploadtime_label.text substringToIndex:[self.uploadtime_label.text rangeOfString:@" "].location];
     
     if ([self.servcetype_field.text isEqualToString:@"年4次保养"])
     {
@@ -1489,7 +1490,7 @@
             {
                 if(selectTimeIndex == 4)
                 {
-                    int tag = [Tool compareOneDay:targetDate withAnotherDay:uploadTimeStr];
+                    int tag = [Tool compareOneDay:targetDate withAnotherDay:now];
                     //如果为0则两个日期相等,如果为1则服务时间大于起始时间
                     if(tag == 0 || tag == -1)
                     {
@@ -1503,7 +1504,7 @@
                 }
                 else if(selectTimeIndex == 5)
                 {
-                    int tag = [Tool compareOneDay:targetDate withAnotherDay:uploadTimeStr];
+                    int tag = [Tool compareOneDay:targetDate withAnotherDay:now];
                     //如果为0则两个日期相等,如果为1则服务时间大于起始时间
                     if(tag == 0 || tag == -1)
                     {
@@ -1538,14 +1539,14 @@
     }
     else
     {
-        int tag1 = [Tool compareOneDay:targetDate withAnotherDay:uploadTimeStr];
+        int tag1 = [Tool compareOneDay:targetDate withAnotherDay:now];
         //如果为0则两个日期相等,如果为-1则服务时间小于于起始时间
         if(tag1 == 0 || tag1 == -1)
         {
             if(selectTimeIndex == 4)
             {
                 
-                int tag = [Tool compareOneDay:targetDate withAnotherDay:uploadTimeStr];
+                int tag = [Tool compareOneDay:targetDate withAnotherDay:now];
                 //如果为0则两个日期相等,如果为1则服务时间大于起始时间
                 if(tag == 0 || tag == -1)
                 {
@@ -1560,7 +1561,7 @@
             }
             else if(selectTimeIndex == 5)
             {
-                int tag = [Tool compareOneDay:targetDate withAnotherDay:uploadTimeStr];
+                int tag = [Tool compareOneDay:targetDate withAnotherDay:now];
                 //如果为0则两个日期相等,如果为1则服务时间大于起始时间
                 if(tag == 0 || tag == -1)
                 {
@@ -1675,6 +1676,55 @@
      }];
 }
 
+- (void)checkImgUploadTime:(NSString *)fileName andImgTag:(NSInteger )imgTag
+{
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url]]];
+    
+    [request setUseCookiePersistence:NO];
+    [request setTimeOutSeconds:30];
+    fileName = [fileName stringByReplacingOccurrencesOfString:@"|" withString:@""];
+
+    NSString *sql = [NSString stringWithFormat:@"SELECT ROW_NUMBER() OVER (ORDER BY UploadTime desc) AS ROWID,ID,OldName,UploadTime,NowName,IsMany,UploadUser =Case when Uploader is null Then '' Else Uploader End FROM ERPSaveFileName where NowName in ('%@')", fileName];
+    
+    [request setPostValue:sql forKey:@"sqlstr"];
+    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    [request startSynchronous];
+    
+    NSError *error = [request error];
+    if (!error)
+    {
+        NSString *response = [request responseString];
+        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+        utils.parserFail = ^()
+        {
+            [Tool showCustomHUD:@"连接失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+        };
+        utils.parserOK = ^(NSString *string)
+        {
+            NSError *error;
+            NSLog(@"%@",string);
+            NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+            
+            NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            if (array && array.count > 0) {
+                NSDictionary *dic = array[0];
+                NSString *uploadTime = [dic objectForKey:@"UploadTime"];
+                double uploadTimeCha = [self intervalSinceNow:uploadTime];
+                if (uploadTimeCha > 1.0) {
+                    [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+                    return;
+                }
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+                alert.tag = imgTag;
+                [alert show];
+            }
+        };
+//        NSLog(@"%@", response);
+        [utils stringFromparserXML:response target:@"string"];
+    }
+}
+
 - (void)imgChoiceAction1
 {
     targetImg = self.img1_ImgView;
@@ -1682,15 +1732,16 @@
     //如果存在图片
     if((newmatnRec.allfilename && newmatnRec.allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img1_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:newmatnRec.allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+//        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img1_ImgView.tag;
+//        [alert show];
         
     }
     else
@@ -1713,13 +1764,14 @@
     //如果存在图片
     if((newmatnRec.allfilename02 && newmatnRec.allfilename02.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img2_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:newmatnRec.allfilename02 andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img2_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1742,14 +1794,15 @@
     //如果存在图片
     if((newmatnRec.allfilename03 && newmatnRec.allfilename03.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img3_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:newmatnRec.allfilename03 andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"修改", @"删除图片", nil];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img3_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1779,13 +1832,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img4_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img4_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1815,13 +1869,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img5_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img5_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1851,13 +1906,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img6_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img6_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1887,13 +1943,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img7_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img7_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1923,13 +1980,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img8_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img8_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1963,13 +2021,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img9_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img9_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -1999,13 +2058,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img10_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img10_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -2035,13 +2095,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img11_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img11_ImgView.tag;
+//        [alert show];
     }
     else
     {
@@ -2071,13 +2132,14 @@
     //如果存在图片
     if((allfilename && allfilename.length > 0) || [imgDic objectForKey:[NSString stringWithFormat:@"%li",targetImg.tag]])
     {
-        if (timeCha > 1.0) {
-            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
-            return;
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
-        alert.tag = self.img12_ImgView.tag;
-        [alert show];
+        [self checkImgUploadTime:allfilename andImgTag:targetImg.tag];
+//        if (timeCha > 1.0) {
+//            [Tool showCustomHUD:@"附件超过24小时，不能修改" andView:self.view andImage:nil andAfterDelay:1.2f];
+//            return;
+//        }
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示:" message:@"请选择?" delegate:self cancelButtonTitle:@"删除图片" otherButtonTitles:@"取消", nil];
+//        alert.tag = self.img12_ImgView.tag;
+//        [alert show];
     }
     else
     {

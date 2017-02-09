@@ -9,8 +9,10 @@
 #import "RongYeListView.h"
 #import "Solution.h"
 #import "WeiXiuCell.h"
-#import "RongYeAddView.h"
+#import "RongYeAdd2017View.h"
+#import "RongYeHandleDetailView.h"
 #import "RongYeDetailView.h"
+#import "SolutionMgmt.h"
 
 @interface RongYeListView ()
 {
@@ -26,7 +28,7 @@
     [super viewDidLoad];
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 44)];
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    titleLabel.text = @"溶液取样列表";
+    titleLabel.text = @"溶液管理列表";
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -52,7 +54,7 @@
 
 - (void)add
 {
-    RongYeAddView *addView = [[RongYeAddView alloc] init];
+    RongYeAdd2017View *addView = [[RongYeAdd2017View alloc] init];
     [self.navigationController pushViewController:addView animated:YES];
 }
 
@@ -218,15 +220,52 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger row = [indexPath row];
+    Solution *solution = solutionArray[indexPath.row];
     //点击“下面20条”
     if (row >= [solutionArray count])
     {
     }
     else
     {
-        RongYeDetailView *detailView = [[RongYeDetailView alloc] init];
-        detailView.solution = solutionArray[indexPath.row];
-        [self.navigationController pushViewController:detailView animated:YES];
+        NSString *sql = [NSString stringWithFormat:@"SELECT a.*,b.* from [TB_CUST_ProjInf_SolutionMgmt] as a LEFT OUTER JOIN SolutionSample as b ON a.OutFact_Num=b.OutFactNum and a.Exec_Date=b.ExecDate where OutFactNum='%@' and Exec_Date='%@'",solution.OutFactNum, solution.ExecDate];
+        
+        [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+             utils.parserFail = ^()
+             {
+                 [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+             };
+             utils.parserOK = ^(NSString *string)
+             {
+                 NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+                 NSError *error;
+                 
+                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                 if([jsonArray count] > 0)
+                 {
+                     NSDictionary *jsonDic = [jsonArray objectAtIndex:0];
+                     SolutionMgmt *solutionMgmt = [Tool readJsonDicToObj:jsonDic andObjClass:[SolutionMgmt class]];
+                     RongYeHandleDetailView *detailView = [[RongYeHandleDetailView alloc] init];
+                     detailView.solutionMgmt = solutionMgmt;
+                     [self.navigationController pushViewController:detailView animated:YES];
+                 }
+                 else
+                 {
+                     RongYeDetailView *detailView = [[RongYeDetailView alloc] init];
+                     detailView.solution = solution;
+                     [self.navigationController pushViewController:detailView animated:YES];
+                 }
+             };
+             
+             [utils stringFromparserXML:operation.responseString target:@"string"];
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             self.navigationItem.rightBarButtonItem.enabled = YES;
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         }];
+        
+        
     }
 }
 

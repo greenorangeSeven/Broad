@@ -222,8 +222,7 @@
             AppDelegate *app = [[UIApplication sharedApplication] delegate];
             app.userinfo = userinfo;
             [XGPush setTag:self.usernameField.text];
-            [Tool showCustomHUD:@"登录成功" andView:self.view andImage:nil andAfterDelay:1.2f];
-            [self performSelector:@selector(goNext) withObject:nil afterDelay:1.3f];
+            [self writeLog];
         }
         else
         {
@@ -233,6 +232,34 @@
     
     [utils stringFromparserXML:request.responseString target:@"string"];
     
+}
+
+- (void)writeLog
+{
+    //写日志
+    NSString *ip = [Tool getIPAddressIPv4:YES];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@DoActionInDZDA",api_base_url]]];
+    [request setUseCookiePersistence:NO];
+    [request setTimeOutSeconds:30];
+    NSString *sql = [NSString stringWithFormat:@"exec sp_executesql N'insert into [ERPRiZhi] (UserName,Operation,Plate,ProjName,DoSomething,IpStr) values (@UserName,@Operation,@Plate,@ProjName,@DoSomething,@IpStr);select @@IDENTITY',N'@UserName varchar(50),@Operation varchar(20),@Plate varchar(100),@ProjName varchar(500),@DoSomething varchar(1000),@IpStr varchar(50)',@UserName='%@',@Operation='登陆',@Plate='',@ProjName='',@DoSomething='用户登陆系统(中文app:IOS)',@IpStr='%@'", self.usernameField.text, ip];
+    
+    [request setPostValue:sql forKey:@"sqlstr"];
+    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error)
+    {
+        NSString *response = [request responseString];
+        if([response rangeOfString:@"true"].length > 0)
+        {
+            [Tool showCustomHUD:@"登录成功" andView:self.view andImage:nil andAfterDelay:1.2f];
+            [self performSelector:@selector(goNext) withObject:nil afterDelay:1.3f];
+        }
+        else
+        {
+            [Tool showCustomHUD:@"登录失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -12,6 +12,7 @@
 #import "TwoMainView.h"
 #import "MsgCell.h"
 #import "YuKaiFlowView.h"
+#import "RongYeHandleView.h"
 
 @interface MessageListView ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -251,15 +252,15 @@
         {
             cell.no_label.text = @"申请日期:未知";
         }
-        if (![flow.FlowName isEqualToString:@"预开发票申请审批"])
-        {
-            cell.tag_img.hidden = YES;
-            cell.tag_label.hidden = YES;
-        }
-        else
+        if ([flow.FlowName isEqualToString:@"预开发票申请审批"] || [flow.FlowName isEqualToString:@"溶液管理录入"])
         {
             cell.tag_img.hidden = NO;
             cell.tag_label.hidden = NO;
+        }
+        else
+        {
+            cell.tag_img.hidden = YES;
+            cell.tag_label.hidden = YES;
         }
         return cell;
     }
@@ -283,6 +284,12 @@
         if ([flow.FlowName isEqualToString:@"预开发票申请审批"])
         {
             YuKaiFlowView *flowView = [[YuKaiFlowView alloc] init];
+            flowView.Mark = flow.Mark;
+            [self.navigationController pushViewController:flowView animated:YES];
+        }
+        else if ([flow.FlowName isEqualToString:@"溶液管理录入"])
+        {
+            RongYeHandleView *flowView = [[RongYeHandleView alloc] init];
             flowView.Mark = flow.Mark;
             [self.navigationController pushViewController:flowView animated:YES];
         }
