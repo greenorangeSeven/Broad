@@ -33,18 +33,86 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 58, 44);
-    [addBtn setTitle:@"新增" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
+    
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
         
 //    [self getData];
+    [self getRongYeSecurity];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableReload) name:@"Notification_RongYeListReLoad" object:nil];
+}
+
+- (void)getRongYeSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0302'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0302"] && [s.PermissionName isEqualToString:@"新建"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                 addBtn.frame = CGRectMake(0, 0, 58, 44);
+                 [addBtn setTitle:@"新增" forState:UIControlStateNormal];
+                 [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
+                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = addItem;
+                 [self getSystemTime];
+             }
+         };
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
+- (void)getSystemTime
+{
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@GetNowDateTime",api_base_url] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             long systemTimeLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"MMdd"] longLongValue];
+             //取样年份
+             if (systemTimeLong > 630) {
+//                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//                 addBtn.frame = CGRectMake(0, 0, 58, 44);
+//                 [addBtn setTitle:@"新增" forState:UIControlStateNormal];
+//                 [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
+//                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = nil;
+             }
+         };
+         
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
 }
 
 - (void)tableReload
@@ -78,8 +146,6 @@
     [request startAsynchronous];
     request.hud = [[MBProgressHUD alloc] initWithView:self.view];
     [Tool showHUD:@"请稍后..." andView:self.view andHUD:request.hud];
-    
-    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request

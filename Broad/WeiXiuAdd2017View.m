@@ -70,13 +70,6 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
     
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(add) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
-    
     self.imgCollectionView.delegate = self;
     self.imgCollectionView.dataSource = self;
     

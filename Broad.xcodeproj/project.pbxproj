@@ -63,6 +63,7 @@
 		142D14701E07B91A0035B3FD /* SecurityInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 142D146F1E07B91A0035B3FD /* SecurityInfo.m */; };
 		143D6DFC1E08399C00F8E368 /* SecurityDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 143D6DFA1E08399C00F8E368 /* SecurityDetailView.m */; };
 		143D6DFD1E08399C00F8E368 /* SecurityDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 143D6DFB1E08399C00F8E368 /* SecurityDetailView.xib */; };
+		1444D1831E5296F300793B97 /* UserSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1444D1821E5296F300793B97 /* UserSecurity.m */; };
 		1454A29D1E4C17D0007FE812 /* RongYeHandleDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1454A29B1E4C17D0007FE812 /* RongYeHandleDetailView.m */; };
 		1454A29E1E4C17D0007FE812 /* RongYeHandleDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1454A29C1E4C17D0007FE812 /* RongYeHandleDetailView.xib */; };
 		1466B27C1E49685300589680 /* RongYeHandleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1466B27A1E49685300589680 /* RongYeHandleView.m */; };
@@ -369,6 +370,8 @@
 		143D6DF91E08399C00F8E368 /* SecurityDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecurityDetailView.h; sourceTree = "<group>"; };
 		143D6DFA1E08399C00F8E368 /* SecurityDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecurityDetailView.m; sourceTree = "<group>"; };
 		143D6DFB1E08399C00F8E368 /* SecurityDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SecurityDetailView.xib; sourceTree = "<group>"; };
+		1444D1811E5296F300793B97 /* UserSecurity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserSecurity.h; sourceTree = "<group>"; };
+		1444D1821E5296F300793B97 /* UserSecurity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserSecurity.m; sourceTree = "<group>"; };
 		1454A29A1E4C17D0007FE812 /* RongYeHandleDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RongYeHandleDetailView.h; sourceTree = "<group>"; };
 		1454A29B1E4C17D0007FE812 /* RongYeHandleDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RongYeHandleDetailView.m; sourceTree = "<group>"; };
 		1454A29C1E4C17D0007FE812 /* RongYeHandleDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RongYeHandleDetailView.xib; sourceTree = "<group>"; };
@@ -906,6 +909,8 @@
 				B7F337E11BA258BE00708F75 /* ProjInf.m */,
 				B73C131A1BAD8A2300C34036 /* Flow.h */,
 				B73C131B1BAD8A2300C34036 /* Flow.m */,
+				1444D1811E5296F300793B97 /* UserSecurity.h */,
+				1444D1821E5296F300793B97 /* UserSecurity.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2026,6 +2031,7 @@
 				B798ED331B930B8800AE40F2 /* EGOImageLoader.m in Sources */,
 				B798ED451B930B8800AE40F2 /* UIView+Toast.m in Sources */,
 				B701944C1B97E12F008F77F7 /* UserInfoUpdateView.m in Sources */,
+				1444D1831E5296F300793B97 /* UserSecurity.m in Sources */,
 				B798ED6B1B930B8800AE40F2 /* SDWebImageDownloader.m in Sources */,
 				B798ED2D1B930B8800AE40F2 /* IconDownloader.m in Sources */,
 				B7D415DA1B9996EA00462F0C /* SGActionView.m in Sources */,
@@ -2282,8 +2288,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Changsha Zhile Information Technology Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Changsha Zhile Information Technology Co., Ltd.";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2315,7 +2321,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Broad;
-				PROVISIONING_PROFILE = "c3e33fe4-b5cd-41bb-9e73-a3343280298f";
+				PROVISIONING_PROFILE = "ad2c9707-90e4-4c08-b8af-02a8acf582dd";
 			};
 			name = Debug;
 		};
@@ -2325,8 +2331,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: WEN XIKE (KPRX6RYNKY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Changsha Zhile Information Technology Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Changsha Zhile Information Technology Co., Ltd.";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2358,7 +2364,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Broad;
-				PROVISIONING_PROFILE = "c3e33fe4-b5cd-41bb-9e73-a3343280298f";
+				PROVISIONING_PROFILE = "ad2c9707-90e4-4c08-b8af-02a8acf582dd";
 			};
 			name = Release;
 		};

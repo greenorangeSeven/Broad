@@ -116,6 +116,43 @@
     [self.imgCollectionView registerClass:[RepairImgCell class] forCellWithReuseIdentifier:@"RepairImgCell"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifire:) name:@"notifire" object:nil];
     [self bindData];
+    [self getWeiHuSecurity];
+}
+
+- (void)getWeiHuSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0301'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0301"] && [s.PermissionName isEqualToString:@"修改"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(!haveQueryRecord)
+             {
+                 self.navigationItem.rightBarButtonItem = nil;
+             }
+         };
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
 }
 
 - (void)notifire:(NSNotification *)notification

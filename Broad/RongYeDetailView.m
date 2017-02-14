@@ -51,6 +51,48 @@
     [self bindData];
 }
 
+- (void)getRongYeSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0302'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0302"] && [s.PermissionName isEqualToString:@"修改"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                 addBtn.frame = CGRectMake(0, 0, 78, 44);
+                 [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+                 [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = addItem;
+                 [self getSystemTime];
+             }
+         };
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
 - (void)getSystemTime
 {
     [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@GetNowDateTime",api_base_url] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
@@ -67,14 +109,15 @@
              long systemYearLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyy"] longLongValue];
              //取样年份
              long execTimeLong = [[Tool transformDateFormat:self.servicetime_field.text andFromFormatterStr:@"yyyy-MM-dd" andToFormatterStr:@"yyyy"] longLongValue];
-             if ((execTimeLong == systemYearLong) && systemTimeLong <= 630) {
-                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                 addBtn.frame = CGRectMake(0, 0, 78, 44);
-                 [addBtn setTitle:@"修改" forState:UIControlStateNormal];
-                 [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
-                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-                 self.navigationItem.rightBarButtonItem = addItem;
+             if ((execTimeLong != systemYearLong) || systemTimeLong > 630) {
+                 //                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                 //                 addBtn.frame = CGRectMake(0, 0, 78, 44);
+                 //                 [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+                 //                 [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+                 //                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = nil;
              }
+             
          };
          
          [utils stringFromparserXML:operation.responseString target:@"string"];
@@ -154,7 +197,7 @@
     Img *image = [imgArray objectAtIndex:[indexPath row]];
     [cell.repairImg sd_setImageWithURL:[NSURL URLWithString:image.Url] placeholderImage:[UIImage imageNamed:@"loadingpic"]];
     cell.repairImg.frame = CGRectMake(0, 0, 85, 85);
-//    cell.deleteBtn.hidden = YES;
+    //    cell.deleteBtn.hidden = YES;
     return cell;
 }
 
@@ -263,7 +306,7 @@
     self.enginer_field.text = self.solution.ExecMan;
     self.user_field.text = app.depart.CustShortName_CN;
     self.uploador_field.text = self.solution.Uploader;
-    //    self.uploadtime_field.text = self.solution.UploadTime;
+    self.uploadtime_field.text = self.solution.UploadTime;
     self.chucang_no_label.text = self.solution.OutFactNum;
     self.engine_no_label.text = self.solution.AirCondUnitMode;
     self.create_no_label.text = self.solution.ProdNum;
@@ -296,7 +339,7 @@
         self.uploadtime_field.text = timeStr;
         
     }
-    [self getSystemTime];
+    [self getRongYeSecurity];
 }
 
 - (void)didReceiveMemoryWarning

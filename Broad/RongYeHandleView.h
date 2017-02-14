@@ -62,6 +62,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *Result_field;
 @property (weak, nonatomic) IBOutlet UITextField *UploadTime1_field;
 @property (weak, nonatomic) IBOutlet UIImageView *quyangfilename_image;
+@property (weak, nonatomic) IBOutlet UILabel *hint_lable;
 @property (weak, nonatomic) IBOutlet UITextField *Uploader1_field;
 
 @property (weak, nonatomic) IBOutlet UILabel *Handle_label;

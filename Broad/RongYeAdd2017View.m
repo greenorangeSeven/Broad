@@ -45,7 +45,7 @@
     selectedServiceNameIndex = -1;
     selectedEnginIndex = -1;
     
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, self.view.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake(SCREENWIDTH, self.view.frame.size.height);
     
     fromCamera = NO;
     
@@ -113,7 +113,7 @@
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
     EnginUnit *enginUnit = enginUnitArray[selectedEnginIndex];
-    NSString *sql = [NSString stringWithFormat:@"select * from TB_CUST_ProjInf_SolutionMgmt where  OutFact_Num='%@' and Exec_Date='%@'",enginUnit.OutFact_Num, sysTimeStr];
+    NSString *sql = [NSString stringWithFormat:@"select * from SolutionSample where OutFactNum='%@' and ExecDate='%@'",enginUnit.OutFact_Num, self.servicetime_field.text];
     
     [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
@@ -137,13 +137,58 @@
                  if (hud) {
                      [hud hide:YES];
                  }
-                 [Tool showCustomHUD:@"取样上传时间晚于报表上传时间，不可上传" andView:self.view andImage:nil andAfterDelay:1.2f];
+                 ALERT(@"溶液取样记录重复，无法提交！");
                  self.navigationItem.rightBarButtonItem.enabled = YES;
                  return;
              }
              else
              {
-                 [self updateImg];
+                 NSString *sql2 = [NSString stringWithFormat:@"select * from TB_CUST_ProjInf_SolutionMgmt where  OutFact_Num='%@' and Exec_Date='%@'",enginUnit.OutFact_Num, self.servicetime_field.text];
+                 
+                 [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql2,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation2, id responseObject)
+                  {
+                      XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+                      utils.parserFail = ^()
+                      {
+                          if (hud) {
+                              [hud hide:YES];
+                          }
+                          [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+                          [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+                      };
+                      utils.parserOK = ^(NSString *string2)
+                      {
+                          NSData *data2 = [string2 dataUsingEncoding:NSUTF8StringEncoding];
+                          NSError *error2;
+                          
+                          NSArray *table2 = [NSJSONSerialization JSONObjectWithData:data2 options:kNilOptions error:&error2];
+                          if([table2 count] > 0)
+                          {
+                              if (hud) {
+                                  [hud hide:YES];
+                              }
+                              //                 [Tool showCustomHUD:@"取样上传时间晚于报表上传时间，不可上传" andView:self.view andImage:nil andAfterDelay:1.2f];
+                              //                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"取样上传时间晚于报表上传时间，不可上传！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+                              //                 [alert show];
+                              ALERT(@"取样上传时间晚于报表上传时间，不可上传！");
+                              self.navigationItem.rightBarButtonItem.enabled = YES;
+                              return;
+                          }
+                          else
+                          {
+                              [self updateImg];
+                          }
+                      };
+                      
+                      [utils stringFromparserXML:operation2.responseString target:@"string"];
+                  } failure:^(AFHTTPRequestOperation *operation2, NSError *error)
+                  {
+                      if (hud) {
+                          [hud hide:YES];
+                      }
+                      self.navigationItem.rightBarButtonItem.enabled = YES;
+                      [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+                  }];
              }
          };
          
@@ -156,6 +201,11 @@
          self.navigationItem.rightBarButtonItem.enabled = YES;
          [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
      }];
+    
+    
+    
+//    NSString *sql = [NSString stringWithFormat:@"select * from TB_CUST_ProjInf_SolutionMgmt where  OutFact_Num='%@' and Exec_Date='%@'",enginUnit.OutFact_Num, [Tool DateTimeRemoveTime:sysTimeStr andSeparated:@" "]];
+    
 
 }
 
@@ -354,7 +404,7 @@
     }
     else
     {
-        [Tool showCustomHUD:@"取样时间 <= 上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
+        [Tool showCustomHUD:@"取样时间不能晚于上传时间" andView:self.view andImage:nil andAfterDelay:3.8f];
         return;
     }
 }

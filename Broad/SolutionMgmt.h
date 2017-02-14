@@ -169,4 +169,9 @@
  */
 @property (copy, nonatomic) NSString *allfilename1;
 
+/**
+ * 机型
+ */
+@property (copy, nonatomic) NSString *ReportUpdateTime;
+
 @end

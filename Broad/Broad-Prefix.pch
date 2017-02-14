@@ -44,6 +44,7 @@
 #import "Permission.h"
 #import "AppDelegate.h"
 #import "Depart.h"
+#import "UserSecurity.h"
 
 #define AppSecret @"U8di3Du5"
 
@@ -77,8 +78,11 @@
 
 #define HTML_Bottom @"<div style='margin-bottom:60px'/>"
 
-#define AppVersion @"1.5.1"
-#define AppVersionCode @"21"
+#define AppVersion @"1.5.2"
+#define AppVersionCode @"22"
+
+#define SCREENHEIGHT [UIScreen mainScreen].bounds.size.height
+#define SCREENWIDTH [UIScreen mainScreen].bounds.size.width
 
 #define noConnect @"noConnect"
 #define wifi @"wifi"

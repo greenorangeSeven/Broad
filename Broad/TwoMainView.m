@@ -65,20 +65,17 @@
 
 - (void)userinfoAction
 {
-    UserInfoView *userinfoView = [[UserInfoView alloc] init];
-    [self.navigationController pushViewController:userinfoView animated:YES];
+    [self getUserinfoSecurity];
 }
 
 - (void)weihuAction
 {
-    WeiXiuListView *weixiuView = [[WeiXiuListView alloc] init];
-    [self.navigationController pushViewController:weixiuView animated:YES];
+    [self getWeiHuSecurity];
 }
 
 - (void)rongyeAction
 {
-    RongYeListView *rongyeView = [[RongYeListView alloc] init];
-    [self.navigationController pushViewController:rongyeView animated:YES];
+    [self getRongYeSecurity];
 }
 
 - (void)yukaiAction
@@ -89,18 +86,234 @@
 
 - (void)securityAction
 {
-    SecurityTableView *securityView = [[SecurityTableView alloc] init];
-    [self.navigationController pushViewController:securityView animated:YES];
+    [self getAnQuanSecurity];
+}
+
+- (void)getUserinfoSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA01'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA01"] && [s.PermissionName isEqualToString:@"查看"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 UserInfoView *userinfoView = [[UserInfoView alloc] init];
+                 [self.navigationController pushViewController:userinfoView animated:YES];
+             }
+             else
+             {
+                 [Tool showCustomHUD:@"您无查看权限" andView:self.view andImage:nil andAfterDelay:1.2f];
+             }
+         };
+         
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
+- (void)getWeiHuSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0301'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0301"] && [s.PermissionName isEqualToString:@"查看"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 WeiXiuListView *weixiuView = [[WeiXiuListView alloc] init];
+                 [self.navigationController pushViewController:weixiuView animated:YES];
+             }
+             else
+             {
+                 [Tool showCustomHUD:@"您无查看权限" andView:self.view andImage:nil andAfterDelay:1.2f];
+             }
+         };
+         NSLog(@"%@", operation.responseString);
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
+- (void)getAnQuanSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0305'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0305"] && [s.PermissionName isEqualToString:@"查看"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 SecurityTableView *securityView = [[SecurityTableView alloc] init];
+                 [self.navigationController pushViewController:securityView animated:YES];
+             }
+             else
+             {
+                 [Tool showCustomHUD:@"您无查看权限" andView:self.view andImage:nil andAfterDelay:1.2f];
+             }
+         };
+         NSLog(@"%@", operation.responseString);
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
+- (void)getRongYeSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA0302'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA0302"] && [s.PermissionName isEqualToString:@"查看"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 RongYeListView *rongyeView = [[RongYeListView alloc] init];
+                 [self.navigationController pushViewController:rongyeView animated:YES];
+             }
+             else
+             {
+                 [Tool showCustomHUD:@"您无查看权限" andView:self.view andImage:nil andAfterDelay:1.2f];
+             }
+         };
+         NSLog(@"%@", operation.responseString);
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
+}
+
+- (BOOL)getSecurity:(NSString *)SecurityCode andSecurityTxt:(NSString *)reName
+{
+    static BOOL haveQueryRecord = NO;
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','%@'", app.userinfo.JiaoSe, SecurityCode];
+    
+        ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url]]];
+        
+        [request setUseCookiePersistence:NO];
+        [request setTimeOutSeconds:30];
+        
+        [request setPostValue:sqlStr forKey:@"sqlstr"];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request startSynchronous];
+        
+        NSError *error = [request error];
+        if (!error)
+        {
+            NSString *response = [request responseString];
+            XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+            utils.parserFail = ^()
+            {
+                [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+            };
+            utils.parserOK = ^(NSString *string)
+            {
+                NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *error;
+                NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+                BOOL haveQueryRecord = NO;
+                for (UserSecurity *s in securityList) {
+                    if ([s.ModuleCode isEqualToString:@"DA01"] && [s.PermissionName isEqualToString:@"查看"]) {
+                        haveQueryRecord = YES;
+                        break;
+                    }
+                }
+            };
+            
+            [utils stringFromparserXML:response target:@"string"];
+        }
+        else
+        {
+            haveQueryRecord = NO;
+        }
+    
+    return haveQueryRecord;
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

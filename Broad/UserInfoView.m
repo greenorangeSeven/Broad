@@ -29,15 +29,53 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 58, 44);
-    [addBtn setTitle:@"修改" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
     
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
     self.webView.delegate = self;
     [self getData];
+    [self getUserinfoSecurity];
+}
+
+- (void)getUserinfoSecurity
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    NSString *sqlStr = [NSString stringWithFormat:@"Sp_GetPermissionByRoleNameInModule '%@','DA01'", app.userinfo.JiaoSe];
+    [[AFOSCClient  sharedClient] getPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sqlStr,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string)
+         {
+             NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSArray *securityList = [Tool readJsonToObjArray:jsonArray andObjClass:[UserSecurity class]];
+             BOOL haveQueryRecord = NO;
+             for (UserSecurity *s in securityList) {
+                 if ([s.ModuleCode isEqualToString:@"DA01"] && [s.PermissionName isEqualToString:@"修改"]) {
+                     haveQueryRecord = YES;
+                     break;
+                 }
+             }
+             if(haveQueryRecord)
+             {
+                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                 addBtn.frame = CGRectMake(0, 0, 58, 44);
+                 [addBtn setTitle:@"修改" forState:UIControlStateNormal];
+                 [addBtn addTarget:self action:@selector(update) forControlEvents:UIControlEventTouchUpInside];
+                 
+                 UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                 self.navigationItem.rightBarButtonItem = addItem;
+             }
+         };
+         
+         [utils stringFromparserXML:operation.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+     }];
 }
 
 - (void)getData

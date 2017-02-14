@@ -252,7 +252,8 @@
         {
             cell.no_label.text = @"申请日期:未知";
         }
-        if ([flow.FlowName isEqualToString:@"预开发票申请审批"] || [flow.FlowName isEqualToString:@"溶液管理录入"])
+//        if ([flow.FlowName isEqualToString:@"预开发票申请审批"] || [flow.FlowName isEqualToString:@"溶液管理录入"])
+        if ([flow.FlowName isEqualToString:@"溶液管理录入"])
         {
             cell.tag_img.hidden = NO;
             cell.tag_label.hidden = NO;
@@ -281,13 +282,14 @@
     else
     {
         Flow *flow = flowList[indexPath.row];
-        if ([flow.FlowName isEqualToString:@"预开发票申请审批"])
-        {
-            YuKaiFlowView *flowView = [[YuKaiFlowView alloc] init];
-            flowView.Mark = flow.Mark;
-            [self.navigationController pushViewController:flowView animated:YES];
-        }
-        else if ([flow.FlowName isEqualToString:@"溶液管理录入"])
+//        if ([flow.FlowName isEqualToString:@"预开发票申请审批"])
+//        {
+//            YuKaiFlowView *flowView = [[YuKaiFlowView alloc] init];
+//            flowView.Mark = flow.Mark;
+//            [self.navigationController pushViewController:flowView animated:YES];
+//        }
+//        else
+        if ([flow.FlowName isEqualToString:@"溶液管理录入"])
         {
             RongYeHandleView *flowView = [[RongYeHandleView alloc] init];
             flowView.Mark = flow.Mark;

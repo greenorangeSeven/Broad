@@ -13,6 +13,7 @@
 #import "SGActionView.h"
 #import "MatnRec.h"
 #import "Img.h"
+#import "SolutionMgmt.h"
 
 #define ORIGINAL_MAX_WIDTH 700.0f
 
@@ -68,12 +69,6 @@
     titleLabel.textColor = [Tool getColorForTitle];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLabel;
-    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(0, 0, 78, 44);
-    [addBtn setTitle:@"提交" forState:UIControlStateNormal];
-    [addBtn addTarget:self action:@selector(submit) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
-    self.navigationItem.rightBarButtonItem = addItem;
     
     self.servicetime_field.delegate = self;
     self.servicetime_field.tag = 3;
@@ -153,16 +148,60 @@
     [Tool showHUD:@"请稍后..." andView:self.view andHUD:hud];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    //异步请求启动文件上传及后续写库操作！SQL无意义，只为启动提示稍后
-    //    [self updateImg];
-    NSString *sql = @"select getdate() ";
     
-    [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation, id responseObject)
+    NSString *sql2 = [NSString stringWithFormat:@"select * from TB_CUST_ProjInf_SolutionMgmt where  OutFact_Num='%@' and Exec_Date='%@'",self.chucang_no_label.text, self.servicetime_field.text];
+    
+    [[AFOSCClient  sharedClient] postPath:[NSString stringWithFormat:@"%@JsonDataInDZDA",api_base_url] parameters:[NSDictionary dictionaryWithObjectsAndKeys:sql2,@"sqlstr", nil] success:^(AFHTTPRequestOperation *operation2, id responseObject)
      {
-         [self updateImg];
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+         utils.parserFail = ^()
+         {
+             if (hud) {
+                 [hud hide:YES];
+             }
+             [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
+             [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+         };
+         utils.parserOK = ^(NSString *string2)
+         {
+             NSData *data2 = [string2 dataUsingEncoding:NSUTF8StringEncoding];
+             NSError *error2;
+             
+             NSArray *table2 = [NSJSONSerialization JSONObjectWithData:data2 options:kNilOptions error:&error2];
+             if([table2 count] > 0)
+             {
+                 NSDictionary *jsonDic = [table2 objectAtIndex:0];
+                 
+                 SolutionMgmt *solutionMgmt = [Tool readJsonDicToObj:jsonDic andObjClass:[SolutionMgmt class]];
+                 long reportUpdateTime = [[Tool transformDateFormat:solutionMgmt.ReportUpdateTime andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyyMMddHHmm"] longLongValue];
+                 long qyUploadTime = [[Tool transformDateFormat:self.solution.UploadTime andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyyMMddHHmm"] longLongValue];
+                 if (qyUploadTime>reportUpdateTime) {
+                     if (hud) {
+                         [hud hide:YES];
+                     }
+                     ALERT(@"取样上传时间晚于报表上传时间，不可上传！");
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
+                     return;
+                 }
+                 else
+                 {
+                     [self updateImg];
+                 }
+             }
+             else
+             {
+                 [self updateImg];
+             }
+         };
+         
+         [utils stringFromparserXML:operation2.responseString target:@"string"];
+     } failure:^(AFHTTPRequestOperation *operation2, NSError *error)
      {
-         [self updateImg];
+         if (hud) {
+             [hud hide:YES];
+         }
+         self.navigationItem.rightBarButtonItem.enabled = YES;
+         [Tool showCustomHUD:@"网络连接错误" andView:self.view andImage:nil andAfterDelay:1.2f];
      }];
     
 }
@@ -315,10 +354,12 @@
     [request setTimeOutSeconds:30];
     
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSString *sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename='%@' where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
+//    NSString *sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename='%@' where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
+    NSString *sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename='%@' where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
     if([newsAllfilename isEqualToString:@"null"])
     {
-        sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename=%@ where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
+//        sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',UploadTime='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename=%@ where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.uploadtime_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
+        sql = [NSString stringWithFormat:@"update SolutionSample set ProjID='%@',ExecMan='%@',ExecDate='%@',Uploader='%@',OutFactNum='%@',AirCondUnitMode='%@',ProdNum='%@',allfilename=%@ where ID='%@'",app.depart.PROJ_ID,self.enginer_field.text,self.servicetime_field.text,self.uploador_field.text,self.chucang_no_label.text,self.engine_no_label.text,create_no_labelStr,newsAllfilename,newsolution.ID];
         newsAllfilename = @"";
     }
     
@@ -330,30 +371,45 @@
     if (!error)
     {
         NSString *response = [request responseString];
-        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
-        utils.parserFail = ^()
-        {
-            [Tool showCustomHUD:@"保存失败" andView:self.view andImage:nil andAfterDelay:1.2f];
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-        };
-        utils.parserOK = ^(NSString *string)
+        if ([response rangeOfString:@"true"].length > 0)
         {
             [Tool showCustomHUD:@"保存成功" andView:self.view andImage:nil andAfterDelay:1.2f];
             newsolution.ExecMan = self.enginer_field.text;
+            newsolution.ExecDate = self.servicetime_field.text;
             newsolution.Uploader = self.uploador_field.text;
             newsolution.UploadTime = self.uploadtime_field.text;
             newsolution.OutFactNum = self.chucang_no_label.text;
             newsolution.AirCondUnitMode = self.engine_no_label.text;
             newsolution.allfilename = newsAllfilename;
-            
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notifireSolution" object:nil userInfo:[NSDictionary dictionaryWithObject:newsolution forKey:@"solution"]];
-            
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:@"Notification_RongYeListReLoad" object:nil];
-            
             [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
-        };
-        
-        [utils stringFromparserXML:response target:@"string"];
+        }
+        else
+        {
+            [Tool showCustomHUD:@"保存失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
+        //        XMLParserUtils *utils = [[XMLParserUtils alloc] init];
+        //        utils.parserFail = ^()
+        //        {
+        //            [Tool showCustomHUD:@"保存失败" andView:self.view andImage:nil andAfterDelay:1.2f];
+        //            self.navigationItem.rightBarButtonItem.enabled = YES;
+        //        };
+        //        utils.parserOK = ^(NSString *string)
+        //        {
+        //            [Tool showCustomHUD:@"保存成功" andView:self.view andImage:nil andAfterDelay:1.2f];
+        //            newsolution.ExecMan = self.enginer_field.text;
+        //            newsolution.ExecDate = self.servicetime_field.text;
+        //            newsolution.Uploader = self.uploador_field.text;
+        //            newsolution.UploadTime = self.uploadtime_field.text;
+        //            newsolution.OutFactNum = self.chucang_no_label.text;
+        //            newsolution.AirCondUnitMode = self.engine_no_label.text;
+        //            newsolution.allfilename = newsAllfilename;
+        //            [[NSNotificationCenter defaultCenter] postNotificationName:@"notifireSolution" object:nil userInfo:[NSDictionary dictionaryWithObject:newsolution forKey:@"solution"]];
+        //            [self performSelector:@selector(back) withObject:nil afterDelay:1.2f];
+        //        };
+        //
+        //        [utils stringFromparserXML:response target:@"string"];
     }
 }
 
@@ -402,7 +458,21 @@
                           hud.hidden = YES;
                           sysTimeStr = string;
                           NSString *timeStr = [string substringToIndex:[string rangeOfString:@" "].location];
-                          self.uploadtime_field.text = timeStr;
+//                          self.uploadtime_field.text = timeStr;
+                          
+                          long systemTimeLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"MMdd"] longLongValue];
+                          long systemYearLong = [[Tool transformDateFormat:string andFromFormatterStr:@"yyyy-MM-dd HH:mm" andToFormatterStr:@"yyyy"] longLongValue];
+                          //取样年份
+                          long execTimeLong = [[Tool transformDateFormat:[newsolution.ExecDate substringToIndex:[newsolution.ExecDate rangeOfString:@" "].location] andFromFormatterStr:@"yyyy-MM-dd" andToFormatterStr:@"yyyy"] longLongValue];
+                          if ((execTimeLong == systemYearLong) && systemTimeLong <= 630) {
+                              UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                              addBtn.frame = CGRectMake(0, 0, 78, 44);
+                              [addBtn setTitle:@"提交" forState:UIControlStateNormal];
+                              [addBtn addTarget:self action:@selector(submit) forControlEvents:UIControlEventTouchUpInside];
+                              UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithCustomView:addBtn];
+                              self.navigationItem.rightBarButtonItem = addItem;
+                          }
+                          
                       };
                       
                       [utils stringFromparserXML:operation.responseString target:@"string"];
